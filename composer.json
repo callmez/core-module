@@ -8,6 +8,26 @@
             "email": "callme-z@qq.com"
         }
     ],
+    "require": {
+        "laravel/framework": "^7.0",
+        "guzzlehttp/guzzle": "^6.5",
+        "iidestiny/laravel-filesystem-oss": "^1.3",
+        "intervention/image": "^2.5",
+        "langleyfoxall/laravel-nist-password-rules": "^4.2",
+        "laravel/sanctum": "^2.0",
+        "laravel/socialite": "^4.1",
+        "laravel/ui": "^2.0",
+        "leonis/easysms-notification-channel": "^1.0",
+        "maatwebsite/excel": "^3.1",
+        "nwidart/laravel-modules": "7.0.x-dev",
+        "nyholm/psr7": "^1.2",
+        "overtrue/easy-sms": "^1.1",
+        "plank/laravel-mediable": "^4.2",
+        "simplesoftwareio/simple-qrcode": "^2.0",
+        "spatie/laravel-permission": "^3.11",
+        "symfony/psr-http-message-bridge": "^2.0",
+        "torann/geoip": "^1.0"
+    },
     "extra": {
         "laravel": {
             "providers": [
