@@ -39,7 +39,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Modules\\Core\\": ""
+            "Modules\\Core\\": "src/"
         }
     }
 }
