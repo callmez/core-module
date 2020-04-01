@@ -2,8 +2,10 @@
 
 namespace Modules\Core\Providers;
 
+use Modules\Core\Captcha\Captcha;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Validation\Factory as ValidationFactory;
 
 class CoreServiceProvider extends ServiceProvider
 {
@@ -28,6 +30,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->registerFactories();
+        $this->registerValidators();
         $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
     }
 
@@ -39,6 +42,8 @@ class CoreServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->register(RouteServiceProvider::class);
+        $this->registerCaptcha();
+
     }
 
     /**
@@ -121,5 +126,34 @@ class CoreServiceProvider extends ServiceProvider
             }
         }
         return $paths;
+    }
+
+    protected function registerCaptcha()
+    {
+        // Bind captcha
+        $this->app->bind('captcha', function ($app) {
+            return new Captcha(
+                $app['Illuminate\Filesystem\Filesystem'],
+                $app['Illuminate\Contracts\Config\Repository'],
+                $app['Intervention\Image\ImageManager'],
+                $app['Illuminate\Session\Store'],
+                $app['Illuminate\Hashing\BcryptHasher'],
+                $app['Illuminate\Support\Str']
+            );
+        });
+    }
+
+    protected function registerValidators()
+    {
+        /** @var ValidationFactory $validator */
+        $validator = $this->app['validator'];
+
+        $validator->extend('captcha', function ($attribute, $value, $parameters) {
+            return \Captcha::check($value);
+        });
+
+        $validator->extend('captcha_api', function ($attribute, $value, $parameters) {
+            return \Captcha::check_api($value, $parameters[0]);
+        });
     }
 }
