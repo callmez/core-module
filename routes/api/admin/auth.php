@@ -16,14 +16,14 @@ Route::group([
         Route::post('v1/login', [LoginController::class, 'login'])->name('login'); // 密码登录
     });
 
-    Route::group(['middleware' => ['admin']], function () {
+    Route::group(['middleware' => ['auth:admin']], function () {
         Route::post('v1/logout', [LogoutController::class, 'logout'])->name('logout'); // 退出登录
 
     });
 
     Route::group([
         'prefix' => 'auth',
-        'middleware' => ['admin']
+        'middleware' => ['auth:admin']
     ], function () {
         Route::get('permissions', [PermissionController::class, 'index'])->name('permissions');
 

@@ -23,3 +23,27 @@ if (! function_exists('home_route')) {
         return 'frontend.index';
     }
 }
+
+if (! function_exists('in_admin')) {
+    /**
+     * Return the route to the "home" page depending on authentication/authorization status.
+     *
+     * @return string
+     */
+    function in_admin()
+    {
+        return auth()->getDefaultDriver() == 'admin';
+    }
+}
+
+if (! function_exists('app_name')) {
+    /**
+     * Helper to grab the application name.
+     *
+     * @return mixed
+     */
+    function app_name()
+    {
+        return config('app.name');
+    }
+}

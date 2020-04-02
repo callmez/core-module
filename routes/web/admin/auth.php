@@ -15,12 +15,12 @@ Route::group([
     'as'        => 'auth.',
 ], function () {
 
-    Route::group(['middleware' => ['use_guard:admin', 'guest']], function () {
+    Route::group(['middleware' => ['guest']], function () {
         Route::get('login', [LoginController::class, 'showLoginForm'])->name('login'); // 密码登录
         Route::post('login', [LoginController::class, 'login'])->name('login.post'); // 提交密码登录
     });
 
-    Route::group(['prefix' => 'auth', 'middleware' => ['admin']], function () {
+    Route::group(['prefix' => 'auth', 'middleware' => ['auth:admin']], function () {
 
         Route::post('logout', [LoginController::class, 'logout'])->name('logout'); // 退出登录
 

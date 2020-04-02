@@ -34,7 +34,12 @@ Route::group(['namespace' => 'Frontend\Api', 'as' => 'frontend.api.'], function 
  * Admin Routes
  * Namespaces indicate folder structure
  */
-Route::group(['namespace' => 'Admin\Api', 'prefix' => 'admin', 'as' => 'admin.api.'], function () {
+Route::group([
+    'namespace' => 'Admin\Api',
+    'prefix' => 'admin',
+    'as' => 'admin.api.',
+    'middleware' => [\Modules\Core\Http\Middleware\UseGuard::class . ':admin'],
+], function () {
     /*
      * These routes need view-admin permission
      * (good if you want to allow more than one group in the admin,

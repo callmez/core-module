@@ -2,13 +2,15 @@
 
 namespace Modules\Core\Providers;
 
+use Illuminate\Contracts\Http\Kernel;
 use Modules\Core\Auth\Guards\AdminGuard;
 use Modules\Core\Captcha\Captcha;
+use Modules\Core\Config\Repository as ConfigRepository;
+use Modules\Core\Http\Middleware\UseGuard;
 use Illuminate\Database\Eloquent\Factory;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Factory as ValidationFactory;
 use Illuminate\Support\Facades\Auth;
-use Modules\Core\Config\Repository as ConfigRepository;
 
 class CoreServiceProvider extends ServiceProvider
 {
@@ -203,6 +205,7 @@ class CoreServiceProvider extends ServiceProvider
         }
 
         $this->configureGuard();
+        $this->configureMiddleware();
     }
 
     /**
@@ -215,6 +218,18 @@ class CoreServiceProvider extends ServiceProvider
         Auth::resolved(function ($auth) {
             $auth->viaRequest('admin', new AdminGuard($auth, config('core::admin.guard_expiration')));
         });
+    }
+
+    /**
+     * Configure the Admin middleware and priority.
+     *
+     * @return void
+     */
+    protected function configureMiddleware()
+    {
+        $kernel = $this->app->make(Kernel::class);
+
+        $kernel->prependToMiddlewarePriority(UseGuard::class);
     }
 
     public function registerHelpers()
