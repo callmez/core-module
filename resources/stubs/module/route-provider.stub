@@ -1,18 +1,19 @@
 <?php
 
-namespace Modules\Core\Providers;
+namespace $NAMESPACE$;
 
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
-class RouteServiceProvider extends ServiceProvider
+class $CLASS$ extends ServiceProvider
 {
     /**
      * The module namespace to assume when generating URLs to actions.
      *
      * @var string
      */
-    protected $moduleNamespace = 'Modules\Core\Http\Controllers';
+    protected $moduleNamespace = '$MODULE_NAMESPACE$\$MODULE$\$CONTROLLER_NAMESPACE$';
 
     /**
      * Called before routes are registered.
@@ -33,9 +34,15 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map()
     {
-        $this->mapApiRoutes();
+        $module = Str::snake('$MODULE$');
+        Route::group([
+            'prefix' => 'm/' . $module,
+            'as' => 'm.' . $module . '.'
+        ], function() {
+            $this->mapApiRoutes();
 
-        $this->mapWebRoutes();
+            $this->mapWebRoutes();
+        });
     }
 
     /**
@@ -49,7 +56,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::middleware('web')
             ->namespace($this->moduleNamespace)
-            ->group(module_path('Core', '/routes/web.php'));
+            ->group(module_path('$MODULE$', '$WEB_ROUTES_PATH$'));
     }
 
     /**
@@ -62,8 +69,9 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapApiRoutes()
     {
         Route::prefix('api')
+            ->as('api.')
             ->middleware('api')
             ->namespace($this->moduleNamespace)
-            ->group(module_path('Core', '/routes/api.php'));
+            ->group(module_path('$MODULE$', '$API_ROUTES_PATH$'));
     }
 }

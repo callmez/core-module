@@ -1,0 +1,31 @@
+<?php
+
+use $MODULE_NAMESPACE$\$STUDLY_NAME$\Http\Controllers\$STUDLY_NAME$Controller;
+// use $MODULE_NAMESPACE$\$STUDLY_NAME$\Http\Controllers\Admin\DefaultController;
+
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
+|
+*/
+
+// 前台路由
+Route::get('/', [$STUDLY_NAME$Controller::class, 'index'])->name('index');
+
+// 后台路由
+/*
+Route::group([
+    'middleware' => ['admin']
+    'as' => 'admin.'
+], function() {
+
+    Route::get('/default', [DefaultController::class, 'index'])->name('home');
+
+});
+*/
