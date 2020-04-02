@@ -41,7 +41,7 @@
             "Modules\\Core\\": "src/"
         },
         "files": [
-            "src/global.php"
+            "src/helpers.php"
         ]
     }
 }

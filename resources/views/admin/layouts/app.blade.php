@@ -11,7 +11,7 @@
     @stack('before-styles')
     {{ style('static/layuiadmin/layui/css/layui.css') }}
     {{ style('static/layuiadmin/style/admin.css') }}
-    {{ style(mix('build/css/admin.css')) }}
+    {{ style(mix('css/admin.css')) }}
     @stack('after-styles')
 </head>
 
@@ -24,9 +24,9 @@
     <!-- Scripts -->
     @stack('before-scripts')
     {!! script('static/layuiadmin/layui/layui.js') !!}
-    {!! script(mix('build/js/manifest.js')) !!}
-    {!! script(mix('build/js/vendor.js')) !!}
-    {!! script(mix('build/js/admin.js')) !!}
+    {!! script(mix('js/manifest.js')) !!}
+    {!! script(mix('js/vendor.js')) !!}
+    {!! script(mix('js/admin.js')) !!}
     @stack('after-scripts')
 </body>
 </html>

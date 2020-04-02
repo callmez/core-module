@@ -2,11 +2,15 @@
 
 namespace Modules\Core\Providers;
 
-use Illuminate\Contracts\Http\Kernel;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 use Modules\Core\Auth\Guards\AdminGuard;
 use Modules\Core\Captcha\Captcha;
+use Modules\Core\Captcha\Facades\Captcha as CaptchaFacade;
 use Modules\Core\Config\Repository as ConfigRepository;
 use Modules\Core\Http\Middleware\UseGuard;
+use Illuminate\Foundation\AliasLoader;
+use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Database\Eloquent\Factory;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Factory as ValidationFactory;
@@ -52,6 +56,7 @@ class CoreServiceProvider extends ServiceProvider
 
     protected function registerCaptcha()
     {
+
         // Bind captcha
         $this->app->bind('captcha', function ($app) {
             return new Captcha(
@@ -63,6 +68,7 @@ class CoreServiceProvider extends ServiceProvider
                 $app['Illuminate\Support\Str']
             );
         });
+        AliasLoader::getInstance()->alias('Captcha', CaptchaFacade::class);
     }
 
     protected function registerValidators()
@@ -234,6 +240,22 @@ class CoreServiceProvider extends ServiceProvider
 
     public function registerHelpers()
     {
+        $rdi = new RecursiveDirectoryIterator($this->modulePath . '/src/Helpers/Global');
+        $it = new RecursiveIteratorIterator($rdi);
+
+        while ($it->valid()) {
+            if (
+                ! $it->isDot() &&
+                $it->isFile() &&
+                $it->isReadable() &&
+                $it->current()->getExtension() === 'php' &&
+                strpos($it->current()->getFilename(), 'Helper')
+            ) {
+                require $it->key();
+            }
+
+            $it->next();
+        }
         require $this->modulePath . '/src/helpers.php';
     }
 

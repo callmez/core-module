@@ -1,94 +1,61 @@
 <?php
-use Modules\Core\Models\Auth\User;
-use Modules\Core\Models\Admin\AdminUser;
-use Modules\Core\Services\Frontend\UserService;
 
-if (! function_exists('include_files_in_folder')) {
+if (! function_exists('app_name')) {
     /**
-     * Loops through a folder and requires all PHP files
-     * Searches sub-directories as well.
-     *
-     * @param $folder
-     */
-    function include_files_in_folder($folder)
-    {
-        $rdi = new RecursiveDirectoryIterator($folder);
-        $it = new RecursiveIteratorIterator($rdi);
-
-        while ($it->valid()) {
-            if (! $it->isDot() && $it->isFile() && $it->isReadable() && $it->current()->getExtension() === 'php') {
-                require $it->key();
-            }
-
-            $it->next();
-        }
-    }
-}
-
-if (! function_exists('include_route_files')) {
-    /**
-     * Loops through a folder and requires all PHP files
-     * Searches sub-directories as well.
-     *
-     * @param $folder
-     */
-    function include_route_files($folder)
-    {
-        include_files_in_folder($folder);
-    }
-}
-
-
-
-
-if (! function_exists('with_admin_user')) {
-    /**
-     * @param $userIdOrUser
+     * Helper to grab the application name.
      *
      * @return mixed
      */
-    function with_admin_user($userIdOrUser)
+    function app_name()
     {
-        if ($userIdOrUser instanceof AdminUser) {
-            return $userIdOrUser;
-        }
-
-        return AdminUser::first($userIdOrUser);
+        return config('app.name');
     }
 }
 
-if (! function_exists('with_user')) {
+if (! function_exists('home_route')) {
     /**
-     * @param $userIdOrUser
+     * Return the route to the "home" page depending on authentication/authorization status.
      *
-     * @return User
+     * @return string
      */
-    function with_user($userIdOrUser)
+    function home_route()
     {
-        if ($userIdOrUser instanceof User) {
-            return $userIdOrUser;
+        if (in_admin()) {
+            if (auth()->check()) {
+                return 'admin.dashboard';
+            }
+
+            return 'admin.auth.login';
         }
 
-        return app(UserService::class)->getUserById($userIdOrUser);
+        if (auth()->check()) {
+            return 'frontend.user.dashboard';
+        }
+
+        return 'frontend.index';
     }
 }
 
-
-if (! function_exists('with_user_id')) {
+if (! function_exists('in_admin')) {
     /**
-     * @param $userIdOrUser
+     * Return the route to the "home" page depending on authentication/authorization status.
      *
-     * @return int
-     * @throws InvalidArgumentException
+     * @return string
      */
-    function with_user_id($userIdOrUser)
+    function in_admin()
     {
-        if (is_numeric($userIdOrUser)) {
-            return $userIdOrUser;
-        } elseif ($userIdOrUser instanceof User) {
-            return $userIdOrUser->id;
-        }
+        return auth()->getDefaultDriver() == 'admin';
+    }
+}
 
-        throw new InvalidArgumentException('The argument must be instance of User or user id.');
+if (! function_exists('app_name')) {
+    /**
+     * Helper to grab the application name.
+     *
+     * @return mixed
+     */
+    function app_name()
+    {
+        return config('app.name');
     }
 }
