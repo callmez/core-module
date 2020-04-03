@@ -2,19 +2,21 @@
 
 namespace Modules\Core\Providers;
 
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
+use View;
+use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Foundation\AliasLoader;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Factory as ValidationFactory;
+use Modules\Core\Module\ModuleServiceProvider as ServiceProvider;
 use Modules\Core\Auth\Guards\AdminGuard;
 use Modules\Core\Captcha\Captcha;
 use Modules\Core\Captcha\Facades\Captcha as CaptchaFacade;
 use Modules\Core\Config\Repository as ConfigRepository;
+use Modules\Core\Http\Composers\GlobalComposer;
 use Modules\Core\Http\Middleware\UseGuard;
-use Illuminate\Foundation\AliasLoader;
-use Illuminate\Contracts\Http\Kernel;
-use Illuminate\Database\Eloquent\Factory;
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Validation\Factory as ValidationFactory;
-use Illuminate\Support\Facades\Auth;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 
 class CoreServiceProvider extends ServiceProvider
 {
@@ -40,23 +42,17 @@ class CoreServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-//        if (!$this->app->runningInConsole()) {
-//            /** @var Kernel $kernel */
-//            $kernel = $this->app->make(Kernel::class);
-//            $kernel->prependMiddleware();
-//        }
-
         $this->registerCaptcha();
         $this->registerValidators();
         $this->registerTranslations();
         $this->registerViews();
         $this->registerFactories();
-        $this->loadMigrationsFrom(module_path($this->moduleName, 'database/migrations'));
+        $this->loadMigrationsFrom($this->modulePath . '/database/migrations');
+        $this->loadSeedsFrom($this->modulePath . '/database/seeders');
     }
 
     protected function registerCaptcha()
     {
-
         // Bind captcha
         $this->app->bind('captcha', function ($app) {
             return new Captcha(
@@ -110,13 +106,15 @@ class CoreServiceProvider extends ServiceProvider
     {
         $viewPath = resource_path('views/modules/' . $this->moduleNameLower);
 
-        $sourcePath = module_path($this->moduleName, 'resources/views');
+        $sourcePath = $this->modulePath . '/resources/views';
 
         $this->publishes([
             $sourcePath => $viewPath,
         ], ['views', $this->moduleNameLower . '-module-views']);
 
         $this->loadViewsFrom(array_merge($this->getPublishableViewPaths(), [$sourcePath]), $this->moduleNameLower);
+
+        $this->configureComposer();
     }
 
     private function getPublishableViewPaths(): array
@@ -129,6 +127,16 @@ class CoreServiceProvider extends ServiceProvider
         }
 
         return $paths;
+    }
+
+    /**
+     * Configure the admin authentication guard.
+     *
+     * @return void
+     */
+    protected function configureComposer()
+    {
+        View::composer('*', GlobalComposer::class);
     }
 
     /**
@@ -164,16 +172,14 @@ class CoreServiceProvider extends ServiceProvider
     protected function registerConfig()
     {
         // 覆盖使用新的config设置
-        $this->app->extend('config', function($config) {
+        $this->app->extend('config', function ($config) {
             $newConfig = new ConfigRepository($config->all());
             $newConfig->loadSettingsFromCachedFile();
 
             return $newConfig;
         });
 
-//        $this->publishes([
-//            $this->modulePath . '/config/core.php' => config_path($this->moduleNameLower . '.php'),
-//        ], 'config');
+        // 合并默认模块参数 TODO 增加模块合并函数
 //        $this->mergeConfigFrom(
 //            $this->modulePath . '/config/core.php', $this->moduleNameLower
 //        );
@@ -194,7 +200,7 @@ class CoreServiceProvider extends ServiceProvider
                     ],
 
                     'admin' => [
-                        'driver'   => 'sanctum',
+                        'driver'   => 'admin',
                         'provider' => 'admin_users',
                     ],
                 ], config('auth.guards', [])),
@@ -256,7 +262,6 @@ class CoreServiceProvider extends ServiceProvider
 
             $it->next();
         }
-        require $this->modulePath . '/src/helpers.php';
     }
 
     /**

@@ -3,17 +3,17 @@
 namespace Modules\Core\Config\Traits;
 
 use InvalidArgumentException;
-use Modules\Core\Models\Setting;
+use Modules\Core\Models\Config;
 use Illuminate\Filesystem\Filesystem;
 
-trait SettingStore
+trait ConfigStore
 {
     /**
-     * @return Illuminate\Database\Eloquent\Model
+     * @return Config
      */
     public function getModel()
     {
-        return Setting::class;
+        return Config::class;
     }
 
     public function loadSettingsFromCachedFile()

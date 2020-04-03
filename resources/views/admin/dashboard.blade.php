@@ -42,7 +42,7 @@
 
                         <dl class="layui-nav-child" style="overflow-y: auto; max-height: 300px;">
                             <dd>
-                                @foreach(array_keys(config('locale.languages')) as $lang)
+                                @foreach(array_keys(config('locale.languages', [])) as $lang)
                                     @if($lang != app()->getLocale())
                                         <a href="{{ '/lang/'.$lang }}" class="dropdown-item pt-1 pb-1">@lang('menus.language-picker.langs.'.$lang)</a>
                                     @endif

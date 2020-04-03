@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+@extends('core::admin.layouts.app')
 
 @section('title', __('labels.admin.access.roles.management') . ' | ' . __('labels.admin.access.roles.create'))
 
