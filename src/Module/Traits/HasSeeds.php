@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Module\Traits;
 
+use Illuminate\Support\Str;
 use Illuminate\Console\Events\CommandFinished;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Event;
@@ -40,7 +41,7 @@ trait HasSeeds
         $args = Request::server('argv', null);
         if (is_array($args)) {
             $command = implode(' ', $args);
-            if (str_contains($command, $contains) && ($excludes == null || !str_contains($command, $excludes))) {
+            if (Str::contains($command, $contains) && ($excludes == null || !Str::contains($command, $excludes))) {
                 return true;
             }
         }

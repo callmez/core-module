@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Models\Admin\AdminMenu;
+use Modules\Core\Models\Admin\AdminMenu;
 
 class AdminMenuTableSeeder extends Seeder
 {
