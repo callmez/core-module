@@ -39,7 +39,7 @@ class UserController extends Controller
      */
     public function index(ManageUserRequest $request)
     {
-        return view('admin.auth.user.index')
+        return view('core::admin.auth.user.index')
             ->withUsers($this->userRepository->getActivePaginated(25, 'id', 'asc'));
     }
 
@@ -52,7 +52,7 @@ class UserController extends Controller
      */
     public function create(ManageUserRequest $request, RoleRepository $roleRepository, PermissionRepository $permissionRepository)
     {
-        return view('admin.auth.user.create')
+        return view('core::admin.auth.user.create')
             ->withRoles($roleRepository->with('permissions')->get(['id', 'name']))
             ->withPermissions($permissionRepository->get(['id', 'name']));
     }
@@ -88,7 +88,7 @@ class UserController extends Controller
      */
     public function show(ManageUserRequest $request, User $user)
     {
-        return view('admin.auth.user.show')
+        return view('core::admin.auth.user.show')
             ->withUser($user);
     }
 
@@ -102,7 +102,7 @@ class UserController extends Controller
      */
     public function edit(ManageUserRequest $request, RoleRepository $roleRepository, PermissionRepository $permissionRepository, User $user)
     {
-        return view('admin.auth.user.edit')
+        return view('core::admin.auth.user.edit')
             ->withUser($user)
             ->withRoles($roleRepository->get())
             ->withUserRoles($user->roles->pluck('name')->all())

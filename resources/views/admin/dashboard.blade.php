@@ -9,8 +9,8 @@
     <meta name="author" content="@yield('meta_author', 'tokenio.cn')">
     @yield('meta')
 
-    {{ style('static/layuiadmin/layui/css/layui.css') }}
-    {{ style('static/layuiadmin/style/admin.css') }}
+    {{ style('js/layuiadmin/layui/css/layui.css') }}
+    {{ style('js/layuiadmin/style/admin.css') }}
     {{ style(mix('css/admin.css')) }}
 </head>
 <body class="layui-layout-body">
@@ -161,7 +161,7 @@
         </div>
     </div>
 
-    {!! script('static/layuiadmin/layui/layui.js') !!}
+    {!! script('js/layuiadmin/layui/layui.js') !!}
     {!! script(mix('js/manifest.js')) !!}
     {!! script(mix('js/vendor.js')) !!}
     {!! script(mix('js/admin.js')) !!}

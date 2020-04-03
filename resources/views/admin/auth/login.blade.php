@@ -5,9 +5,9 @@
     <title>@yield('title', app_name())</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    {{ style('static/layuiadmin/layui/css/layui.css') }}
-    {{ style('static/layuiadmin/style/admin.css') }}
-    {{ style('static/layuiadmin/style/login.css') }}
+    {{ style('js/layuiadmin/layui/css/layui.css') }}
+    {{ style('js/layuiadmin/style/admin.css') }}
+    {{ style('js/layuiadmin/style/login.css') }}
     {{ style(mix('css/admin.css')) }}
 </head>
 <body>
@@ -58,7 +58,7 @@
 
 </div>
 
-{!! script('static/layuiadmin/layui/layui.js') !!}
+{!! script('js/layuiadmin/layui/layui.js') !!}
 {!! script(mix('js/manifest.js')) !!}
 {!! script(mix('js/vendor.js')) !!}
 {!! script(mix('js/admin.js')) !!}

@@ -11,6 +11,6 @@ class WelcomeController extends Controller
      */
     public function index()
     {
-        return view('admin.welcome');
+        return view('core::admin.welcome');
     }
 }

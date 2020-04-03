@@ -9,8 +9,8 @@
     @yield('meta')
 
     @stack('before-styles')
-    {{ style('static/layuiadmin/layui/css/layui.css') }}
-    {{ style('static/layuiadmin/style/admin.css') }}
+    {{ style('js/layuiadmin/layui/css/layui.css') }}
+    {{ style('js/layuiadmin/style/admin.css') }}
     {{ style(mix('css/admin.css')) }}
     @stack('after-styles')
 </head>
@@ -23,7 +23,7 @@
 
     <!-- Scripts -->
     @stack('before-scripts')
-    {!! script('static/layuiadmin/layui/layui.js') !!}
+    {!! script('js/layuiadmin/layui/layui.js') !!}
     {!! script(mix('js/manifest.js')) !!}
     {!! script(mix('js/vendor.js')) !!}
     {!! script(mix('js/admin.js')) !!}

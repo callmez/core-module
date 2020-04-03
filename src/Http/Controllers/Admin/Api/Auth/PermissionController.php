@@ -53,7 +53,7 @@ class PermissionController extends Controller
      */
     public function create(ManageRoleRequest $request)
     {
-        return view('admin.auth.role.create')
+        return view('core::admin.auth.role.create')
             ->withPermissions($this->permissionRepository->get());
     }
 
@@ -83,7 +83,7 @@ class PermissionController extends Controller
             return redirect()->route('admin.auth.roles')->withFlashDanger('You can not edit the administrator role.');
         }
 
-        return view('admin.auth.role.edit')
+        return view('core::admin.auth.role.edit')
             ->withRole($role)
             ->withRolePermissions($role->permissions->pluck('name')->all())
             ->withPermissions($this->permissionRepository->get());

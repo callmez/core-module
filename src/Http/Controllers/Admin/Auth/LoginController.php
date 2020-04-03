@@ -75,7 +75,9 @@ class LoginController extends Controller
             auth()->logoutOtherDevices($request->password);
         }
 
-        return $user;
+        return $request->wantsJson()
+            ? $user
+            : redirect()->intended(route(home_route()));
     }
 
     /**
@@ -109,6 +111,6 @@ class LoginController extends Controller
      */
     protected function guard()
     {
-        return auth('admin');
+        return auth('admin_web');
     }
 }

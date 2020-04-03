@@ -32,7 +32,7 @@ class UserStatusController extends Controller
      */
     public function getDeactivated(ManageUserRequest $request)
     {
-        return view('admin.auth.user.deactivated')
+        return view('core::admin.auth.user.deactivated')
             ->withUsers($this->userRepository->getInactivePaginated(25, 'id', 'asc'));
     }
 
@@ -43,7 +43,7 @@ class UserStatusController extends Controller
      */
     public function getDeleted(ManageUserRequest $request)
     {
-        return view('admin.auth.user.deleted')
+        return view('core::admin.auth.user.deleted')
             ->withUsers($this->userRepository->getDeletedPaginated(25, 'id', 'asc'));
     }
 

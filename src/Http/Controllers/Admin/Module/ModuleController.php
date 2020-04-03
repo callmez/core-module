@@ -11,6 +11,6 @@ class ModuleController extends Controller
      */
     public function index()
     {
-        return view('admin.module.index');
+        return view('core::admin.module.index');
     }
 }

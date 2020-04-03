@@ -43,7 +43,7 @@ class RoleController extends Controller
      */
     public function index(ManageRoleRequest $request)
     {
-        return view('admin.auth.role.index');
+        return view('core::admin.auth.role.index');
     }
 
     /**
@@ -53,7 +53,7 @@ class RoleController extends Controller
      */
     public function create(ManageRoleRequest $request)
     {
-        return view('admin.auth.role.edit');
+        return view('core::admin.auth.role.edit');
     }
 
     /**
@@ -65,7 +65,7 @@ class RoleController extends Controller
     public function edit(ManageRoleRequest $request, Role $role)
     {
 
-        return view('admin.auth.role.edit')
+        return view('core::admin.auth.role.edit')
             ->withRole($role);
     }
 
