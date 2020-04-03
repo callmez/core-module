@@ -48,7 +48,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->registerViews();
         $this->registerFactories();
         $this->loadMigrationsFrom($this->modulePath . '/database/migrations');
-        $this->loadSeedsFrom($this->modulePath . '/database/seeders');
+        $this->loadSeedsFrom($this->modulePath . '/database/seeds');
     }
 
     protected function registerCaptcha()
