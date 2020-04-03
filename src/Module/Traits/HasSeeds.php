@@ -11,6 +11,11 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 
 trait HasSeeds
 {
+    /**
+     * !!!需注意Seeds的里的文件必须在composer有索引的php文件. 否则会出现找不到文件的报错!!!
+     *
+     * @param $path
+     */
     protected function loadSeedsFrom($path)
     {
         if (

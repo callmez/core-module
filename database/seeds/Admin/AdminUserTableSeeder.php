@@ -1,5 +1,7 @@
 <?php
 
+namespace Modules\Core\Seeds\Admin;
+
 use Illuminate\Database\Seeder;
 use Modules\Core\Models\Admin\AdminUser;
 

@@ -1,6 +1,11 @@
 <?php
 
+namespace Modules\Core\Seeds;
+
 use Illuminate\Database\Seeder;
+use Modules\Core\Seeds\Admin\AdminUserTableSeeder;
+use Modules\Core\Seeds\Admin\AdminMenuTableSeeder;
+use Modules\Core\Seeds\Admin\AdminPermissionTableSeeder;
 
 class CoreDatabaseSeeder extends Seeder
 {

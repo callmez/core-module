@@ -1,16 +1,16 @@
 <?php
 
+namespace Modules\Core\Seeds\Admin;
+
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
 class AdminPermissionTableSeeder extends Seeder
 {
-    use DisableForeignKeys;
 
     public function run()
     {
-        $this->disableForeignKeys();
 
         // Create Roles
         Role::create([
@@ -29,7 +29,5 @@ class AdminPermissionTableSeeder extends Seeder
         // Assign Permissions to other Roles
         // Note: Admin (User 1) Has all permissions via a gate in the AuthServiceProvider
         // $user->givePermissionTo('view admin');
-
-        $this->enableForeignKeys();
     }
 }
