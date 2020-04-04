@@ -20,18 +20,18 @@ use Spatie\Permission\Traits\HasRoles;
 /**
  * Class User.
  */
-class User extends Authenticatable
+abstract class BaseUser extends Authenticatable
 {
-    use TableName,
-        DynamicRelationship,
-        HasApiTokens,
+    use Uuid,
+        TableName,
+        Mediable,
         HasRoles,
         Notifiable,
         SoftDeletes,
-        Uuid;
+        HasApiTokens,
+        DynamicRelationship;
 
-    use Mediable,
-        UserScope,
+    use UserScope,
         UserMethod,
         UserAttribute,
         UserRelationship,

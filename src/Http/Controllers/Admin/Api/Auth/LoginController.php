@@ -3,7 +3,7 @@
 namespace Modules\Core\Http\Controllers\Admin\Api\Auth;
 
 use Hash;
-use Modules\Core\Models\Admin\AdminUser;
+use App\Models\AdminUser;
 use Modules\Core\Http\Controllers\Controller;
 use Modules\Core\Events\Admin\Auth\UserLoggedIn;
 use Illuminate\Http\Request;

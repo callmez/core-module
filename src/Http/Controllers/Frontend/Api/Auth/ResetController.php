@@ -5,7 +5,7 @@ namespace Modules\Core\Http\Controllers\Frontend\Api\Auth;
 use Modules\Core\Http\Requests\Frontend\Auth\ResetPayPasswordRequest;
 use Str;
 use Carbon\Carbon;
-use Modules\Core\Models\Auth\User;
+use Modules\Core\Models\Auth\BaseUser;
 use Modules\Core\Models\Auth\UserVerify;
 use Modules\Core\Http\Controllers\Controller;
 use Modules\Core\Http\Requests\Frontend\Auth\ResetEmailRequest;
@@ -16,7 +16,7 @@ class ResetController extends Controller
 {
     public function requestResetEmail(ResetEmailRequest $request)
     {
-        /** @var User $user */
+        /** @var BaseUser $user */
         $user = $request->user();
 
         $email = $request->email ?: $user->email;
@@ -51,7 +51,7 @@ class ResetController extends Controller
 
     public function requestResetMobile(ResetMobileRequest $request)
     {
-        /** @var User $user */
+        /** @var BaseUser $user */
         $user = $request->user();
 
         $mobile = $request->mobile ?: $user->mobile;

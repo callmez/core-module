@@ -3,7 +3,7 @@
 namespace Modules\Core\Services\Frontend;
 
 use Cache;
-use Modules\Core\Models\Auth\User;
+use Modules\Core\Models\Auth\BaseUser;
 use Modules\Core\Exceptions\Frontend\Auth\UserPayPasswordCheckException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -13,14 +13,14 @@ class UserService
     /**
      * @param $id
      *
-     * @return User
+     * @return BaseUser
      */
     public function getUserById($id, array $options = [])
     {
         $key = 'user_' . $id;
         return Cache::tags(['user_' . $id])
             ->rememberForever($key, function() use ($id, $options) {
-                $user = User::first(['id' => $id]);
+                $user = BaseUser::first(['id' => $id]);
 
                 if (!$user && $options['exception'] ?? false) {
                     throw new ModelNotFoundException();

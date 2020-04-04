@@ -7,7 +7,7 @@ use Modules\Core\Http\Controllers\Controller;
 use Modules\Core\Http\Requests\Admin\Auth\Role\ManageRoleRequest;
 use Modules\Core\Http\Requests\Admin\Auth\Role\StoreRoleRequest;
 use Modules\Core\Http\Requests\Admin\Auth\Role\UpdateRoleRequest;
-use Modules\Core\Models\Auth\Role;
+use Modules\Core\Models\Admin\AdminRole;
 use Modules\Core\Repositories\Admin\Auth\PermissionRepository;
 use Modules\Core\Repositories\Admin\Auth\RoleRepository;
 
@@ -62,9 +62,8 @@ class RoleController extends Controller
      *
      * @return mixed
      */
-    public function edit(ManageRoleRequest $request, Role $role)
+    public function edit(ManageRoleRequest $request, AdminRole $role)
     {
-
         return view('core::admin.auth.role.edit')
             ->withRole($role);
     }

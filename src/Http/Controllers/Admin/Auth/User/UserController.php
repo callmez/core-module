@@ -7,7 +7,7 @@ use Modules\Core\Http\Controllers\Controller;
 use Modules\Core\Http\Requests\Admin\Auth\User\ManageUserRequest;
 use Modules\Core\Http\Requests\Admin\Auth\User\StoreUserRequest;
 use Modules\Core\Http\Requests\Admin\Auth\User\UpdateUserRequest;
-use Modules\Core\Models\Auth\User;
+use Modules\Core\Models\Auth\BaseUser;
 use Modules\Core\Repositories\Admin\Auth\PermissionRepository;
 use Modules\Core\Repositories\Admin\Auth\RoleRepository;
 use Modules\Core\Repositories\Admin\Auth\UserRepository;
@@ -82,11 +82,11 @@ class UserController extends Controller
 
     /**
      * @param ManageUserRequest $request
-     * @param User              $user
+     * @param BaseUser              $user
      *
      * @return mixed
      */
-    public function show(ManageUserRequest $request, User $user)
+    public function show(ManageUserRequest $request, BaseUser $user)
     {
         return view('core::admin.auth.user.show')
             ->withUser($user);
@@ -96,11 +96,11 @@ class UserController extends Controller
      * @param ManageUserRequest    $request
      * @param RoleRepository       $roleRepository
      * @param PermissionRepository $permissionRepository
-     * @param User                 $user
+     * @param BaseUser                 $user
      *
      * @return mixed
      */
-    public function edit(ManageUserRequest $request, RoleRepository $roleRepository, PermissionRepository $permissionRepository, User $user)
+    public function edit(ManageUserRequest $request, RoleRepository $roleRepository, PermissionRepository $permissionRepository, BaseUser $user)
     {
         return view('core::admin.auth.user.edit')
             ->withUser($user)
@@ -112,13 +112,13 @@ class UserController extends Controller
 
     /**
      * @param UpdateUserRequest $request
-     * @param User              $user
+     * @param BaseUser              $user
      *
      * @throws \Modules\Core\Exceptions\GeneralException
      * @throws \Throwable
      * @return mixed
      */
-    public function update(UpdateUserRequest $request, User $user)
+    public function update(UpdateUserRequest $request, BaseUser $user)
     {
         $this->userRepository->update($user, $request->only(
             'first_name',
@@ -133,12 +133,12 @@ class UserController extends Controller
 
     /**
      * @param ManageUserRequest $request
-     * @param User              $user
+     * @param BaseUser              $user
      *
      * @throws \Exception
      * @return mixed
      */
-    public function destroy(ManageUserRequest $request, User $user)
+    public function destroy(ManageUserRequest $request, BaseUser $user)
     {
         $this->userRepository->deleteById($user->id);
 

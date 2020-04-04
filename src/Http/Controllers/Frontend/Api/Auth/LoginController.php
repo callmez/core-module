@@ -3,7 +3,7 @@
 namespace Modules\Core\Http\Controllers\Frontend\Api\Auth;
 
 use Hash;
-use Modules\Core\Models\Auth\User;
+use Modules\Core\Models\Auth\BaseUser;
 use Modules\Core\Http\Controllers\Controller;
 use Modules\Core\Events\Frontend\Auth\UserLoggedIn;
 use Modules\Core\Exceptions\Frontend\Auth\UserEmailVerifyException;
@@ -102,16 +102,16 @@ class LoginController extends Controller
         if (filter_var($username, FILTER_VALIDATE_EMAIL )) {
             $isEmail = true;
 
-            $query = User::where('email', $username);
+            $query = BaseUser::where('email', $username);
         } elseif (is_numeric($username) && mb_strlen($username) == 11) {
             $isMobile = true;
 
-            $query = User::where('mobile', $username);
+            $query = BaseUser::where('mobile', $username);
         } else {
-            $query = User::where('username', $username);
+            $query = BaseUser::where('username', $username);
         }
 
-        /** @var User $user */
+        /** @var BaseUser $user */
         $user = $query->first();
 
         if (! $user || ! $user->checkPassword($request->password)) {

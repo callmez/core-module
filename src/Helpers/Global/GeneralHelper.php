@@ -1,6 +1,7 @@
 <?php
-use Modules\Core\Models\Auth\User;
-use Modules\Core\Models\Admin\AdminUser;
+use App\Models\User;
+use App\Models\AdminUser;
+use Modules\Core\Models\Auth\BaseUser;
 use Modules\Core\Services\Frontend\UserService;
 
 if (! function_exists('with_admin_user')) {
@@ -23,7 +24,7 @@ if (! function_exists('with_user')) {
     /**
      * @param $userIdOrUser
      *
-     * @return User
+     * @return BaseUser
      */
     function with_user($userIdOrUser)
     {

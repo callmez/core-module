@@ -2,7 +2,7 @@
 
 namespace Modules\Core\Observers\User;
 
-use Modules\Core\Models\Auth\User;
+use Modules\Core\Models\Auth\BaseUser;
 
 /**
  * Class UserObserver.
@@ -12,9 +12,9 @@ class UserObserver
     /**
      * Listen to the User created event.
      *
-     * @param  \Modules\Core\Models\Auth\User  $user
+     * @param  \Modules\Core\Models\Auth\BaseUser  $user
      */
-    public function created(User $user): void
+    public function created(BaseUser $user): void
     {
         $this->logPasswordHistory($user);
     }
@@ -22,9 +22,9 @@ class UserObserver
     /**
      * Listen to the User updated event.
      *
-     * @param  \Modules\Core\Models\Auth\User  $user
+     * @param  \Modules\Core\Models\Auth\BaseUser  $user
      */
-    public function updated(User $user): void
+    public function updated(BaseUser $user): void
     {
         // Only log password history on update if the password actually changed
         if ($user->isDirty('password')) {
@@ -33,9 +33,9 @@ class UserObserver
     }
 
     /**
-     * @param User $user
+     * @param BaseUser $user
      */
-    private function logPasswordHistory(User $user): void
+    private function logPasswordHistory(BaseUser $user): void
     {
         if (config('access.users.password_history')) {
             $user->passwordHistories()->create([

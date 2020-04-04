@@ -9,8 +9,6 @@ use Hash;
  */
 trait UserMethod
 {
-
-
     /**
      * @return mixed
      */

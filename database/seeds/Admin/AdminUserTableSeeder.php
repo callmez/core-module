@@ -2,8 +2,8 @@
 
 namespace Modules\Core\Seeds\Admin;
 
+use App\Models\AdminUser;
 use Illuminate\Database\Seeder;
-use Modules\Core\Models\Admin\AdminUser;
 
 class AdminUserTableSeeder extends Seeder
 {

@@ -2,7 +2,7 @@
 
 namespace Modules\Core\Events\Frontend\Auth;
 
-use Modules\Core\Models\Auth\User;
+use Modules\Core\Models\Auth\BaseUser;
 use Illuminate\Queue\SerializesModels;
 
 /**
@@ -20,7 +20,7 @@ class UserProviderRegistered
     /**
      * @param $user
      */
-    public function __construct(User $user)
+    public function __construct(BaseUser $user)
     {
         $this->user = $user;
     }

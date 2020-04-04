@@ -22,7 +22,7 @@ Route::group([
     });
 
     Route::group([
-        'prefix' => 'auth',
+        'prefix' => 'v1/auth',
         'middleware' => ['auth:admin']
     ], function () {
         Route::get('permissions', [PermissionController::class, 'index'])->name('permissions');

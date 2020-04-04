@@ -2,8 +2,11 @@
 
 namespace Modules\Core\Models\Admin;
 
-use Modules\Core\Models\Auth\AdminPermission;
+use Modules\Core\Models\Traits\Uuid;
 use Modules\Core\Models\Traits\TableName;
+use Modules\Core\Models\Auth\AdminPermission;
+use Modules\Core\Models\Traits\DynamicRelationship;
+use Modules\Core\Models\Admin\Traits\Method\UserMethod;
 use Modules\Core\Models\Admin\Traits\Attribute\UserAttribute;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -11,16 +14,21 @@ use Plank\Mediable\Mediable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
-class AdminUser extends Authenticatable
+abstract class BaseAdminUser extends Authenticatable
 {
-    use TableName,
-        UserAttribute,
+    use Uuid,
+        TableName,
         HasRoles,
         HasApiTokens,
         Notifiable,
-        Mediable;
+        Mediable,
+        DynamicRelationship;
 
-    /**
+    use UserMethod,
+        UserAttribute;
+
+
+        /**
      * The attributes that should be hidden for arrays.
      *
      * @var array

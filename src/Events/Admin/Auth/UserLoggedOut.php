@@ -2,7 +2,7 @@
 
 namespace Modules\Core\Events\Admin\Auth;
 
-use Modules\Core\Models\Admin\AdminUser;
+use App\Models\AdminUser;
 use Illuminate\Queue\SerializesModels;
 
 /**

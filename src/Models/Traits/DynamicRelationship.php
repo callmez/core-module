@@ -1,9 +1,6 @@
 <?php
 
-namespace Modules\Core\Models\Auth\Traits\Relationship;
-
-use LogicException;
-use Illuminate\Database\Eloquent\Relations\Relation;
+namespace Modules\Core\Models\Traits;
 
 trait DynamicRelationship
 {

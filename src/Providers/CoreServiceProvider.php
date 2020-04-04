@@ -210,7 +210,7 @@ class CoreServiceProvider extends ServiceProvider
                 'auth.providers' => array_merge([
                     'admin_users' => [
                         'driver' => 'eloquent',
-                        'model'  => \Modules\Core\Models\Admin\AdminUser::class,
+                        'model'  => \App\Models\AdminUser::class,
                     ],
                 ], config('auth.providers', [])),
             ]);

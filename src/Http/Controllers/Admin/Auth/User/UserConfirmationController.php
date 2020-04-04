@@ -4,7 +4,7 @@ namespace Modules\Core\Http\Controllers\Admin\Auth\User;
 
 use Modules\Core\Http\Controllers\Controller;
 use Modules\Core\Http\Requests\Admin\Auth\User\ManageUserRequest;
-use Modules\Core\Models\Auth\User;
+use Modules\Core\Models\Auth\BaseUser;
 use Modules\Core\Notifications\Frontend\Auth\UserNeedsConfirmation;
 use Modules\Core\Repositories\Admin\Auth\UserRepository;
 
@@ -28,11 +28,11 @@ class UserConfirmationController extends Controller
 
     /**
      * @param ManageUserRequest $request
-     * @param User              $user
+     * @param BaseUser              $user
      *
      * @return mixed
      */
-    public function sendConfirmationEmail(ManageUserRequest $request, User $user)
+    public function sendConfirmationEmail(ManageUserRequest $request, BaseUser $user)
     {
         // Shouldn't allow users to confirm their own accounts when the application is set to manual confirmation
         if (config('access.users.requires_approval')) {
@@ -50,12 +50,12 @@ class UserConfirmationController extends Controller
 
     /**
      * @param ManageUserRequest $request
-     * @param User              $user
+     * @param BaseUser              $user
      *
      * @throws \Modules\Core\Exceptions\GeneralException
      * @return mixed
      */
-    public function confirm(ManageUserRequest $request, User $user)
+    public function confirm(ManageUserRequest $request, BaseUser $user)
     {
         $this->userRepository->confirm($user);
 
@@ -64,12 +64,12 @@ class UserConfirmationController extends Controller
 
     /**
      * @param ManageUserRequest $request
-     * @param User              $user
+     * @param BaseUser              $user
      *
      * @throws \Modules\Core\Exceptions\GeneralException
      * @return mixed
      */
-    public function unconfirm(ManageUserRequest $request, User $user)
+    public function unconfirm(ManageUserRequest $request, BaseUser $user)
     {
         $this->userRepository->unconfirm($user);
 
