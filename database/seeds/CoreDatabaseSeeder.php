@@ -3,9 +3,10 @@
 namespace Modules\Core\Seeds;
 
 use Illuminate\Database\Seeder;
+use Modules\Core\Models\Admin\AdminRole;
 use Modules\Core\Seeds\Admin\AdminUserTableSeeder;
 use Modules\Core\Seeds\Admin\AdminMenuTableSeeder;
-use Modules\Core\Seeds\Admin\AdminPermissionTableSeeder;
+use Modules\Core\Seeds\Admin\AdminRolePermissionTableSeeder;
 
 class CoreDatabaseSeeder extends Seeder
 {
@@ -16,8 +17,8 @@ class CoreDatabaseSeeder extends Seeder
      */
     public function run()
     {
+        $this->call(AdminRolePermissionTableSeeder::class);
         $this->call(AdminUserTableSeeder::class);
         $this->call(AdminMenuTableSeeder::class);
-        $this->call(AdminPermissionTableSeeder::class);
     }
 }

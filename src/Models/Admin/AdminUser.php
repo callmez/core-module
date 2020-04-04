@@ -2,16 +2,19 @@
 
 namespace Modules\Core\Models\Admin;
 
+use Modules\Core\Models\Auth\AdminPermission;
 use Modules\Core\Models\Traits\TableName;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Modules\Core\Models\Admin\Traits\Attribute\UserAttribute;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Plank\Mediable\Mediable;
+use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
 class AdminUser extends Authenticatable
 {
     use TableName,
+        UserAttribute,
         HasRoles,
         HasApiTokens,
         Notifiable,
@@ -27,31 +30,35 @@ class AdminUser extends Authenticatable
         'remember_token',
     ];
 
-    public function setPasswordAttribute($value)
+    /**
+     * @return AdminRole
+     */
+    public function getRoleClass()
     {
-        $this->attributes['password'] = bcrypt($value);
+        if (! isset($this->roleClass)) {
+            $this->roleClass = resolve(AdminRole::class);
+        }
+
+        return $this->roleClass;
     }
 
     /**
-     * @return mixed
+     * @return AdminPermission
      */
-    public function isAdmin()
+    public function getPermissionClass()
     {
-        return $this->hasRole('admin', 'admin');
+        if (! isset($this->permissionClass)) {
+            $this->permissionClass = resolve(AdminPermission::class);
+        }
+
+        return $this->permissionClass;
     }
 
     /**
-     * @return bool
+     * @return string
      */
-    public function isActive()
+    protected function getDefaultGuardName(): string
     {
-        return $this->active;
+        return $this->getRoleClass()->guardName();
     }
-
-    public function canChangePassword()
-    {
-        return true;
-    }
-
-
 }
