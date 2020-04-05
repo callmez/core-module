@@ -53,7 +53,7 @@ class $CLASS$ extends ServiceProvider
             module_path($this->moduleName, '$PATH_CONFIG$/config.php') => config_path($this->moduleNameLower . '.php'),
         ], 'config');
         $this->mergeConfigFrom(
-            module_path($this->moduleName, '$PATH_CONFIG$/config.php'), $this->moduleNameLower
+            module_path($this->moduleName, '$PATH_CONFIG$/config.php'), '$LOWER_NAME$::'
         );
     }
 

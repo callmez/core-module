@@ -179,10 +179,10 @@ class CoreServiceProvider extends ServiceProvider
             return $newConfig;
         });
 
-        // 合并默认模块参数 TODO 增加模块合并函数
-//        $this->mergeConfigFrom(
-//            $this->modulePath . '/config/core.php', $this->moduleNameLower
-//        );
+        // 合并默认模块参数
+        $this->mergeConfigFrom(
+            $this->modulePath . '/config/config.php', 'core::'
+        );
 
         $this->publishes([
             $this->modulePath . '/config/captcha.php' => config_path('captcha.php'),

@@ -27,29 +27,27 @@ trait ConfigStore
 
     public function getSettingsCachedPath()
     {
-        return storage_path('framework/settings.php');
+        return storage_path('framework/config.php');
     }
 
     public function cacheSettingsToFile()
     {
         $modelClass = $this->getModel();
 
-        $items = $modelClass::all()
-            ->map(function ($setting) {
-                return [
-                    'key'   => (! empty($setting->module) ? $setting->module . '::' : '') . $setting->key,
-                    'value' => $setting->value,
-                ];
-            })
-            ->keyBy('key')
-            ->map(function ($setting) {
-                return $setting['value'];
-            })
-            ->toArray();
+        $items = [];
+        foreach ($modelClass::all() as $setting) {
+            if (! empty($setting->module)) {
+                $items[$setting->module . '::'] = array_merge($items[$setting->module . '::'] ?? [], [
+                    $setting->key => $setting->value
+                ]);
+            } else {
+                $items[$setting->key] = $setting->value;
+            }
+        }
 
         $path = $this->getSettingsCachedPath();
 
-        app(Filesystem::class)
+        resolve(Filesystem::class)
             ->put($path, '<?php return ' . var_export($items, true) . ';' . PHP_EOL);
     }
 

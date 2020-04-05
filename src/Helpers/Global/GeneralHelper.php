@@ -55,3 +55,13 @@ if (! function_exists('with_user_id')) {
         throw new InvalidArgumentException('The argument must be instance of User or user id.');
     }
 }
+
+if (! function_exists('store_config')) {
+    /**
+     * @param string|array $key
+     * @param mixed $value
+     */
+    function store_config($key, $value = null) {
+        return config()->store($key, $value);
+    }
+}
