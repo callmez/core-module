@@ -8,6 +8,16 @@ use Illuminate\Database\Eloquent\Factory;
 class $CLASS$ extends ServiceProvider
 {
     /**
+     * @var string $moduleName
+     */
+    protected $moduleName = '$MODULE$';
+
+    /**
+     * @var string $moduleNameLower
+     */
+    protected $moduleNameLower = '$LOWER_NAME$';
+
+    /**
      * Boot the application events.
      *
      * @return void
@@ -18,8 +28,7 @@ class $CLASS$ extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->registerFactories();
-        $this->loadMigrationsFrom(module_path('$MODULE$', '$MIGRATIONS_PATH$'));
-//        $this->registerModelRelations();
+        $this->loadMigrationsFrom(module_path($this->moduleName, '$MIGRATIONS_PATH$'));
     }
 
     /**
@@ -40,10 +49,10 @@ class $CLASS$ extends ServiceProvider
     protected function registerConfig()
     {
         $this->publishes([
-            module_path('$MODULE$', '$PATH_CONFIG$/config.php') => config_path('$LOWER_NAME$.php'),
+            module_path($this->moduleName, '$PATH_CONFIG$/config.php') => config_path($this->moduleNameLower . '.php'),
         ], 'config');
         $this->mergeConfigFrom(
-            module_path('$MODULE$', '$PATH_CONFIG$/config.php'), '$LOWER_NAME$'
+            module_path($this->moduleName, '$PATH_CONFIG$/config.php'), $this->moduleNameLower
         );
     }
 
@@ -54,17 +63,15 @@ class $CLASS$ extends ServiceProvider
      */
     public function registerViews()
     {
-        $viewPath = resource_path('views/modules/$LOWER_NAME$');
+        $viewPath = resource_path('views/modules/' . $this->moduleNameLower);
 
-        $sourcePath = module_path('$MODULE$', '$PATH_VIEWS$');
+        $sourcePath = module_path($this->moduleName, '$PATH_VIEWS$');
 
         $this->publishes([
             $sourcePath => $viewPath
-        ],'views');
+        ], ['views', $this->moduleNameLower . '-module-views']);
 
-        $this->loadViewsFrom(array_merge(array_map(function ($path) {
-            return $path . '/modules/$LOWER_NAME$';
-        }, \Config::get('view.paths')), [$sourcePath]), '$LOWER_NAME$');
+        $this->loadViewsFrom(array_merge($this->getPublishableViewPaths(), [$sourcePath]), $this->moduleNameLower);
     }
 
     /**
@@ -74,12 +81,12 @@ class $CLASS$ extends ServiceProvider
      */
     public function registerTranslations()
     {
-        $langPath = resource_path('lang/modules/$LOWER_NAME$');
+        $langPath = resource_path('lang/modules/' . $this->moduleNameLower);
 
         if (is_dir($langPath)) {
-            $this->loadTranslationsFrom($langPath, '$LOWER_NAME$');
+            $this->loadTranslationsFrom($langPath, $this->moduleNameLower);
         } else {
-            $this->loadTranslationsFrom(module_path('$MODULE$', '$PATH_LANG$'), '$LOWER_NAME$');
+            $this->loadTranslationsFrom(module_path($this->moduleName, '$PATH_LANG$'), $this->moduleNameLower);
         }
     }
 
@@ -91,21 +98,9 @@ class $CLASS$ extends ServiceProvider
     public function registerFactories()
     {
         if (! app()->environment('production') && $this->app->runningInConsole()) {
-            app(Factory::class)->load(module_path('$MODULE$', '$FACTORIES_PATH$'));
+            app(Factory::class)->load(module_path($this->moduleName, '$FACTORIES_PATH$'));
         }
     }
-    /**
-     * Register relations to specific model
-     */
-//    public function registerModelRelations()
-//    {
-//        User::registerRelations([
-//            // NOTE: The key must unique!!!
-//            'name' => function($model) {
-//                return $model->hasOne(Model::class);
-//            }
-//        ]);
-//    }
 
     /**
      * Get the services provided by the provider.
@@ -115,5 +110,16 @@ class $CLASS$ extends ServiceProvider
     public function provides()
     {
         return [];
+    }
+
+    private function getPublishableViewPaths(): array
+    {
+        $paths = [];
+        foreach (\Config::get('view.paths') as $path) {
+            if (is_dir($path . '/modules/' . $this->moduleNameLower)) {
+                $paths[] = $path . '/modules/' . $this->moduleNameLower;
+            }
+        }
+        return $paths;
     }
 }

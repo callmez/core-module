@@ -26,16 +26,6 @@
         "symfony/psr-http-message-bridge": "^2.0",
         "torann/geoip": "^1.0"
     },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "Modules\\Core\\Providers\\CoreServiceProvider"
-            ],
-            "aliases": {
-
-            }
-        }
-    },
     "autoload": {
         "psr-4": {
             "Modules\\Core\\": "src/",
