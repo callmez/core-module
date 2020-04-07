@@ -2,10 +2,8 @@
 
 namespace Modules\Core\Http\Requests\Frontend\Auth;
 
-use App\Models\User;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use LangleyFoxall\LaravelNISTPasswordRules\PasswordRules;
+use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class RegisterRequest.
@@ -34,11 +32,16 @@ class RegisterRequest extends FormRequest
                 Rule::requiredIf(function() {
                     return empty($this->email) && empty($this->mobile);
                 }),
+                'nullable',
                 'string'
             ],
-            'password' => ['required', 'string'],
-            'email' => ['email'],
-            'mobile' => ['required', 'string']
+            'password' => ['string', 'min:8'],
+            'email' => ['nullable', 'email'],
+            'mobile' => [
+                'nullable',
+                Rule::phone()->country(config('core::register.mobile.countries', ['CN']))
+            ],
+            'code' => ['required_with:mobile']
         ];
     }
 

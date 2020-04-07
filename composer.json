@@ -25,7 +25,8 @@
         "simplesoftwareio/simple-qrcode": "^2.0",
         "spatie/laravel-permission": "^3.11",
         "symfony/psr-http-message-bridge": "^2.0",
-        "torann/geoip": "^1.0"
+        "torann/geoip": "^1.0",
+        "pascaldevink/shortuuid": "^3.0.3"
     },
     "autoload": {
         "psr-4": {
