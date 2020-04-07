@@ -4,6 +4,7 @@ namespace Modules\Core\Services\Frontend;
 
 use Cache;
 use App\Models\User;
+use Modules\Core\Events\Frontend\Auth\UserRegistered;
 use Modules\Core\Exceptions\Frontend\Auth\UserPayPasswordCheckException;
 use Modules\Core\src\Exceptions\Frontend\Auth\UserNotFoundException;
 
@@ -115,5 +116,30 @@ class UserService
         }
 
         return true;
+    }
+
+    /**
+     * 用户注册
+     *
+     * @param array $data
+     * @param array $options
+     *
+     * @return User
+     */
+    public function register(array $data, array $options = [])
+    {
+        /** @var User $user */
+        $user = User::create([
+            'username' => $data['username'],
+            'password' => $data['password'],
+            'mobile' => $data['mobile'] ?? '',
+            'email' => $data['email'] ?? ''
+        ]);
+
+        event(new UserRegistered($user));
+
+        $user->refresh();
+
+        return $user;
     }
 }

@@ -30,8 +30,15 @@ class RegisterRequest extends FormRequest
     public function rules()
     {
         return [
-            'username' => ['required', 'string', Rule::unique(User::table())],
+            'username' => [
+                Rule::requiredIf(function() {
+                    return empty($this->email) && empty($this->mobile);
+                }),
+                'string'
+            ],
             'password' => ['required', 'string'],
+            'email' => ['email'],
+            'mobile' => ['required', 'string']
         ];
     }
 

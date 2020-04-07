@@ -20,6 +20,8 @@ Route::group([
 
         Route::post('v1/login', [LoginController::class, 'login'])->name('login'); // 密码登录
         Route::post('v1/register', [RegisterController::class, 'register'])->name('register'); // 用户注册
+        Route::post('v1/mobile_register', [RegisterController::class, 'mobileRegister'])->name('mobile.register'); // 手机号注册
+        Route::post('v1/email_register', [RegisterController::class, 'emailRegister'])->name('email.register'); // 邮箱注册
 
 //
 //        // Socialite Routes
