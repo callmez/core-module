@@ -17,26 +17,13 @@ use Illuminate\Support\Facades\Auth;
 class RoleController extends Controller
 {
     /**
-     * @var RoleRepository
-     */
-    protected $roleRepository;
-
-    /**
-     * @param RoleRepository       $roleRepository
-     */
-    public function __construct(RoleRepository $roleRepository)
-    {
-        $this->roleRepository = $roleRepository;
-    }
-
-    /**
      * @param ManageRoleRequest $request
      *
      * @return mixed
      */
-    public function index(ManageRoleRequest $request)
+    public function index(ManageRoleRequest $request, RoleRepository $roleRepository)
     {
-        return $this->roleRepository
+        return $roleRepository
             ->where('guard_name', $request->get('guard', Auth::getDefaultDriver()))
             ->orderBy('sort')
             ->paginate();
@@ -60,9 +47,9 @@ class RoleController extends Controller
      * @throws \Modules\Core\Exceptions\GeneralException
      * @throws \Throwable
      */
-    public function store(StoreRoleRequest $request)
+    public function store(StoreRoleRequest $request, RoleRepository $roleRepository)
     {
-        return $this->roleRepository->create($request->only('name', 'title', 'permissions', 'sort'));
+        return $roleRepository->create($request->only('name', 'title', 'permissions', 'sort'));
     }
 
 
@@ -74,9 +61,9 @@ class RoleController extends Controller
      * @throws \Modules\Core\Exceptions\GeneralException
      * @throws \Throwable
      */
-    public function update(UpdateRoleRequest $request, Role $role)
+    public function update(UpdateRoleRequest $request, Role $role, RoleRepository $roleRepository)
     {
-        return $this->roleRepository->update($role, $request->only('name', 'title', 'permissions', 'sort'));
+        return $roleRepository->update($role, $request->only('name', 'title', 'permissions', 'sort'));
     }
 
     /**
@@ -86,10 +73,10 @@ class RoleController extends Controller
      * @throws \Exception
      * @return mixed
      */
-    public function destroy(ManageRoleRequest $request, Role $role)
+    public function destroy(ManageRoleRequest $request, Role $role, RoleRepository $roleRepository)
     {
 
-        $this->roleRepository->deleteById($role->id);
+        $roleRepository->deleteById($role->id);
 
         event(new RoleDeleted($role));
 

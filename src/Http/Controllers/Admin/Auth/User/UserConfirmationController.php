@@ -14,19 +14,6 @@ use Modules\Core\Repositories\Admin\Auth\UserRepository;
 class UserConfirmationController extends Controller
 {
     /**
-     * @var UserRepository
-     */
-    protected $userRepository;
-
-    /**
-     * @param UserRepository $userRepository
-     */
-    public function __construct(UserRepository $userRepository)
-    {
-        $this->userRepository = $userRepository;
-    }
-
-    /**
      * @param ManageUserRequest $request
      * @param BaseUser              $user
      *
@@ -55,9 +42,9 @@ class UserConfirmationController extends Controller
      * @throws \Modules\Core\Exceptions\GeneralException
      * @return mixed
      */
-    public function confirm(ManageUserRequest $request, BaseUser $user)
+    public function confirm(ManageUserRequest $request, BaseUser $user, UserRepository $userRepository)
     {
-        $this->userRepository->confirm($user);
+        $userRepository->confirm($user);
 
         return redirect()->route('admin.auth.user.index')->withFlashSuccess(__('alerts.admin.users.confirmed'));
     }
@@ -69,9 +56,9 @@ class UserConfirmationController extends Controller
      * @throws \Modules\Core\Exceptions\GeneralException
      * @return mixed
      */
-    public function unconfirm(ManageUserRequest $request, BaseUser $user)
+    public function unconfirm(ManageUserRequest $request, BaseUser $user, UserRepository $userRepository)
     {
-        $this->userRepository->unconfirm($user);
+        $userRepository->unconfirm($user);
 
         return redirect()->route('admin.auth.user.index')->withFlashSuccess(__('alerts.admin.users.unconfirmed'));
     }

@@ -17,30 +17,14 @@ use function GuzzleHttp\Promise\all;
  */
 class PermissionController extends Controller
 {
-
-
-    /**
-     * @var PermissionRepository
-     */
-    protected $permissionRepository;
-
-    /**
-
-     * @param PermissionRepository $permissionRepository
-     */
-    public function __construct(PermissionRepository $permissionRepository)
-    {
-        $this->permissionRepository = $permissionRepository;
-    }
-
     /**
      * @param ManagePermissionRequest $request
      *
      * @return mixed
      */
-    public function index(ManagePermissionRequest $request)
+    public function index(ManagePermissionRequest $request, PermissionRepository $permissionRepository)
     {
-        return $this->permissionRepository
+        return $permissionRepository
             ->where('guard_name', $request->get('guard', 'admin'))
             ->orderBy('sort')
             ->get();
@@ -51,10 +35,10 @@ class PermissionController extends Controller
      *
      * @return mixed
      */
-    public function create(ManageRoleRequest $request)
+    public function create(ManageRoleRequest $request, PermissionRepository $permissionRepository)
     {
         return view('core::admin.auth.role.create')
-            ->withPermissions($this->permissionRepository->get());
+            ->withPermissions($permissionRepository->get());
     }
 
     /**
@@ -77,7 +61,7 @@ class PermissionController extends Controller
      *
      * @return mixed
      */
-    public function edit(ManageRoleRequest $request, Role $role)
+    public function edit(ManageRoleRequest $request, Role $role, PermissionRepository $permissionRepository)
     {
         if ($role->isAdmin()) {
             return redirect()->route('admin.auth.roles')->withFlashDanger('You can not edit the administrator role.');
@@ -86,7 +70,7 @@ class PermissionController extends Controller
         return view('core::admin.auth.role.edit')
             ->withRole($role)
             ->withRolePermissions($role->permissions->pluck('name')->all())
-            ->withPermissions($this->permissionRepository->get());
+            ->withPermissions($permissionRepository->get());
     }
 
     /**
@@ -97,9 +81,9 @@ class PermissionController extends Controller
      * @throws \Modules\Core\Exceptions\GeneralException
      * @throws \Throwable
      */
-    public function update(UpdateRoleRequest $request, Role $role)
+    public function update(UpdateRoleRequest $request, Role $role, RoleRepository $roleRepository)
     {
-        $this->roleRepository->update($role, $request->only('name', 'permissions'));
+        $roleRepository->update($role, $request->only('name', 'permissions'));
 
         return redirect()->route('admin.auth.roles')->withFlashSuccess(__('alerts.admin.roles.updated'));
     }
@@ -111,13 +95,13 @@ class PermissionController extends Controller
      * @throws \Exception
      * @return mixed
      */
-    public function destroy(ManageRoleRequest $request, Role $role)
+    public function destroy(ManageRoleRequest $request, Role $role, RoleRepository $roleRepository)
     {
         if ($role->isAdmin()) {
             return redirect()->route('admin.auth.roles')->withFlashDanger(__('exceptions.admin.access.roles.cant_delete_admin'));
         }
 
-        $this->roleRepository->deleteById($role->id);
+        $roleRepository->deleteById($role->id);
 
         event(new RoleDeleted($role));
 

@@ -45,7 +45,7 @@ class UserPasswordController extends Controller
      * @throws \Modules\Core\Exceptions\GeneralException
      * @return mixed
      */
-    public function update(UpdateUserPasswordRequest $request, BaseUser $user)
+    public function update(UpdateUserPasswordRequest $request, User $user)
     {
         $this->userRepository->updatePassword($user, $request->only('password'));
 

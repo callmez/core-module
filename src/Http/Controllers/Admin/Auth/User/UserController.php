@@ -2,12 +2,12 @@
 
 namespace Modules\Core\Http\Controllers\Admin\Auth\User;
 
+use App\Models\User;
 use Modules\Core\Events\Admin\Auth\User\UserDeleted;
 use Modules\Core\Http\Controllers\Controller;
 use Modules\Core\Http\Requests\Admin\Auth\User\ManageUserRequest;
 use Modules\Core\Http\Requests\Admin\Auth\User\StoreUserRequest;
 use Modules\Core\Http\Requests\Admin\Auth\User\UpdateUserRequest;
-use Modules\Core\Models\Auth\BaseUser;
 use Modules\Core\Repositories\Admin\Auth\PermissionRepository;
 use Modules\Core\Repositories\Admin\Auth\RoleRepository;
 use Modules\Core\Repositories\Admin\Auth\UserRepository;
@@ -17,30 +17,16 @@ use Modules\Core\Repositories\Admin\Auth\UserRepository;
  */
 class UserController extends Controller
 {
-    /**
-     * @var UserRepository
-     */
-    protected $userRepository;
-
-    /**
-     * UserController constructor.
-     *
-     * @param UserRepository $userRepository
-     */
-    public function __construct(UserRepository $userRepository)
-    {
-        $this->userRepository = $userRepository;
-    }
 
     /**
      * @param ManageUserRequest $request
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index(ManageUserRequest $request)
+    public function index(ManageUserRequest $request, UserRepository $userRepository)
     {
         return view('core::admin.auth.user.index')
-            ->withUsers($this->userRepository->getActivePaginated(25, 'id', 'asc'));
+            ->withUsers($userRepository->getActivePaginated(25, 'id', 'asc'));
     }
 
     /**
@@ -63,9 +49,9 @@ class UserController extends Controller
      * @throws \Throwable
      * @return mixed
      */
-    public function store(StoreUserRequest $request)
+    public function store(StoreUserRequest $request, UserRepository $userRepository)
     {
-        $this->userRepository->create($request->only(
+        $userRepository->create($request->only(
             'first_name',
             'last_name',
             'email',
@@ -100,7 +86,7 @@ class UserController extends Controller
      *
      * @return mixed
      */
-    public function edit(ManageUserRequest $request, RoleRepository $roleRepository, PermissionRepository $permissionRepository, BaseUser $user)
+    public function edit(ManageUserRequest $request, RoleRepository $roleRepository, PermissionRepository $permissionRepository, User $user)
     {
         return view('core::admin.auth.user.edit')
             ->withUser($user)
@@ -138,9 +124,9 @@ class UserController extends Controller
      * @throws \Exception
      * @return mixed
      */
-    public function destroy(ManageUserRequest $request, BaseUser $user)
+    public function destroy(ManageUserRequest $request, BaseUser $user, UserRepository $userRepository)
     {
-        $this->userRepository->deleteById($user->id);
+        $userRepository->deleteById($user->id);
 
         event(new UserDeleted($user));
 
