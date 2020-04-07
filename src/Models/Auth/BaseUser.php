@@ -4,12 +4,12 @@ namespace Modules\Core\Models\Auth;
 
 use Modules\Core\Models\Traits\Uuid;
 use Modules\Core\Models\Traits\TableName;
+use Modules\Core\Models\Traits\DynamicRelationship;
 use Modules\Core\Models\Auth\Traits\Scope\UserScope;
 use Modules\Core\Models\Auth\Traits\Method\UserMethod;
 use Modules\Core\Models\Auth\Traits\Attribute\UserAttribute;
 use Modules\Core\Models\Auth\Traits\Relationship\UserRelationship;
 use Modules\Core\Models\Auth\Traits\Method\UserNotificationMethod;
-use Modules\Core\Models\Auth\Traits\Relationship\DynamicRelationship;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;

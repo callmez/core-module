@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Requests\Frontend\User;
+namespace Modules\Core\Http\Requests\Frontend\User;
 
-use App\Helpers\Auth\SocialiteHelper;
+use Modules\Core\Helpers\Auth\SocialiteHelper;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Requests\Frontend\Auth;
+namespace Modules\Core\Http\Requests\Frontend\Auth;
 
-use App\Models\Auth\User;
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use LangleyFoxall\LaravelNISTPasswordRules\PasswordRules;

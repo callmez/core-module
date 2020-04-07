@@ -3,32 +3,18 @@
 namespace Modules\Core\Exceptions\Frontend\Auth;
 
 use Exception;
-use Throwable;
+use App\Models\User;
 
 class UserMobileVerifyException extends Exception
 {
     /**
-     * @var
+     * @var User
      */
-    public $message;
+    public $model;
 
-    /**
-     * GeneralException constructor.
-     *
-     * @param string         $message
-     * @param int            $code
-     * @param Throwable|null $previous
-     */
-    public function __construct($message = '', $code = 0, Throwable $previous = null)
+    public static function withModel(User $model)
     {
-        parent::__construct($message, $code, $previous);
-    }
-
-    /**
-     * Report the exception.
-     */
-    public function report()
-    {
-        //
+        return new static('User mobile: ' . $model->mobile . ' must be verify');
     }
 }
+

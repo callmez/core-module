@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Requests\Admin\Auth\User;
+namespace Modules\Core\Http\Requests\Admin\Auth\User;
 
-use App\Rules\Auth\UnusedPassword;
+use Modules\Core\Rules\Auth\UnusedPassword;
 use Illuminate\Foundation\Http\FormRequest;
 use LangleyFoxall\LaravelNISTPasswordRules\PasswordRules;
 

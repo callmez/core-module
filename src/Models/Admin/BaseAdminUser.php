@@ -28,7 +28,7 @@ abstract class BaseAdminUser extends Authenticatable
         UserAttribute;
 
 
-        /**
+    /**
      * The attributes that should be hidden for arrays.
      *
      * @var array

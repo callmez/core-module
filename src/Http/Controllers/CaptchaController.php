@@ -4,7 +4,6 @@ namespace Modules\Core\Http\Controllers;
 
 use Exception;
 use Modules\Core\Captcha\Captcha;
-use Illuminate\Routing\Controller;
 
 class CaptchaController extends Controller
 {

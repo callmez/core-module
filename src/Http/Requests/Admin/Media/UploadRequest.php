@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Admin\Media;
+namespace Modules\Core\Http\Requests\Admin\Media;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;

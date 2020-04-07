@@ -2,9 +2,15 @@
 
 namespace Modules\Core\Http\Requests\Frontend\Auth;
 
+use App\Models\Auth\User;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use LangleyFoxall\LaravelNISTPasswordRules\PasswordRules;
 
-class ResetEmailRequest extends FormRequest
+/**
+ * Class LoginRequest.
+ */
+class LoginRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,16 +30,9 @@ class ResetEmailRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => ['email'],
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    public function messages()
-    {
-        return [
+            'username' => 'required|string',
+            'password' => 'required',
+            'device' => 'string'
         ];
     }
 }

@@ -3,31 +3,71 @@
 namespace Modules\Core\Services\Frontend;
 
 use Cache;
-use Modules\Core\Models\Auth\BaseUser;
+use App\Models\User;
 use Modules\Core\Exceptions\Frontend\Auth\UserPayPasswordCheckException;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Modules\Core\src\Exceptions\Frontend\Auth\UserNotFoundException;
 
 class UserService
 {
-
     /**
      * @param $id
      *
-     * @return BaseUser
+     * @return User
      */
     public function getUserById($id, array $options = [])
     {
         $key = 'user_' . $id;
-        return Cache::tags(['user_' . $id])
-            ->rememberForever($key, function() use ($id, $options) {
-                $user = BaseUser::first(['id' => $id]);
 
-                if (!$user && $options['exception'] ?? false) {
-                    throw new ModelNotFoundException();
+        return Cache::tags([$key])
+            ->rememberForever($key, function () use ($id, $options) {
+
+                $user = $this->getUser(['id' => $id], ['exception' => false]);
+
+                if ( ! $user && ($options['exception'] ?? true)) {
+                    throw UserNotFoundException::withId($id);
                 }
 
                 return $user;
             });
+    }
+
+    /**
+     * @param $where
+     * @param array $options
+     *
+     * @return mixed
+     */
+    public function getUser($where, array $options = [])
+    {
+        $user = User::where($where)->first();
+
+        if ( ! $user && ($options['exception'] ?? true)) {
+            throw new UserNotFoundException('User not found');
+        }
+
+        return $user;
+    }
+
+    public function getUserByGuessString($string, array $options = [])
+    {
+        $where = [];
+        $isEmail = $isMobile = false;
+
+        if (filter_var($string, FILTER_VALIDATE_EMAIL)) {
+            $isEmail = true;
+            $where['email'] = $string;
+        } elseif (preg_match('/^[1]([3-9])[0-9]{9}$/', $string)) {
+            $isMobile = true;
+            $where['mobile'] = $string;
+        } else {
+            $where['username'] = $string;
+        }
+
+        return [
+            'isEmail'  => $isEmail,
+            'isMobile' => $isMobile,
+            'user'     => $this->getUser($where),
+        ];
     }
 
 
@@ -43,7 +83,7 @@ class UserService
     {
         $user = with_user($userId);
 
-        if (!$user || !$user->checkPayPassword($payPassword)) {
+        if ( ! $user || ! $user->checkPassword($payPassword)) {
             if ($options['exception'] ?? true) {
                 throw new UserPayPasswordCheckException();
             }
@@ -66,7 +106,7 @@ class UserService
     {
         $user = with_user($userId);
 
-        if (!$user || !$user->checkPayPassword($payPassword)) {
+        if ( ! $user || ! $user->checkPayPassword($payPassword)) {
             if ($options['exception'] ?? true) {
                 throw new UserPayPasswordCheckException();
             }

@@ -2,23 +2,16 @@
 
 namespace Modules\Core\Http\Controllers\Frontend\Api\Auth;
 
-use Hash;
-use Modules\Core\Models\Auth\BaseUser;
+use App\Models\User;
 use Modules\Core\Http\Controllers\Controller;
+use Modules\Core\Http\Requests\Frontend\Auth\LoginRequest;
 use Modules\Core\Events\Frontend\Auth\UserLoggedIn;
 use Modules\Core\Exceptions\Frontend\Auth\UserEmailVerifyException;
 use Modules\Core\Exceptions\Frontend\Auth\UserMobileVerifyException;
-use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
+use Modules\Core\Services\Frontend\UserService;
 
-
-/**
- * @OA\Tag(
- *     name="Auth",
- *     description="登录",
- * )
- */
 class LoginController extends Controller
 {
     use ThrottlesLogins;
@@ -29,48 +22,6 @@ class LoginController extends Controller
     }
 
     /**
-     * @OA\Post(
-     *     path="/api/v1/login",
-     *     operationId="login",
-     *     tags={"Auth"},
-     *     summary="用户密码登录",
-     *     description="提交账号密码登录",
-     *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\MediaType(
-     *             mediaType="multipart/form-data",
-     *             @OA\Schema(
-     *                 @OA\Property(
-     *                     property="username",
-     *                     description="用户名",
-     *                     type="string",
-     *                 ),
-     *                 @OA\Property(
-     *                     property="password",
-     *                     description="密码",
-     *                     type="string",
-     *                 ),
-     *                 @OA\Property(
-     *                     property="captcha",
-     *                     description="图片验证码",
-     *                     type="string",
-     *                 ),
-     *                  @OA\Property(
-     *                     property="device_name",
-     *                     description="设备类型",
-     *                     type="string",
-     *                 ),
-     *             ),
-     *         ),
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="成功登录"
-     *     ),
-     * )
-     */
-
-    /**
      * Handle a login request to the application.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -78,16 +29,8 @@ class LoginController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function login(Request $request)
+    public function login(LoginRequest $request, UserService $userService)
     {
-        $key = $this->username();
-
-        $request->validate([
-            $key => 'required|string',
-            'password' => 'required',
-            'device' => 'string'
-        ]);
-
         if ($this->hasTooManyLoginAttempts($request)) {
 
             $this->fireLockoutEvent($request);
@@ -95,24 +38,12 @@ class LoginController extends Controller
             return $this->sendLockoutResponse();
         }
 
-        $username = $request->$key;
-
-        $isEmail = $isMobile = false;
-
-        if (filter_var($username, FILTER_VALIDATE_EMAIL )) {
-            $isEmail = true;
-
-            $query = BaseUser::where('email', $username);
-        } elseif (is_numeric($username) && mb_strlen($username) == 11) {
-            $isMobile = true;
-
-            $query = BaseUser::where('mobile', $username);
-        } else {
-            $query = BaseUser::where('username', $username);
-        }
-
-        /** @var BaseUser $user */
-        $user = $query->first();
+        /** @var User $user */
+        [
+            'isEmail' => $isEmail,
+            'isMobile' => $isMobile,
+            'user' => $user
+        ] = $userService->getUserByGuessString($request->username);
 
         if (! $user || ! $user->checkPassword($request->password)) {
 
@@ -125,11 +56,11 @@ class LoginController extends Controller
 
         if ($isEmail && !$user->isEmailVerified()) {
 
-            throw new UserEmailVerifyException();
+            throw UserEmailVerifyException::withModel($user);
 
         } elseif ($isMobile && !$user->isMobileverified()) {
 
-            throw new UserMobileVerifyException();
+            throw UserMobileVerifyException::withModel($user);
 
         }
 

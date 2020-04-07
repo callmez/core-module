@@ -32,7 +32,7 @@ if (! function_exists('with_user')) {
             return $userIdOrUser;
         }
 
-        return app(UserService::class)->getUserById($userIdOrUser);
+        return resolve(UserService::class)->getUserById($userIdOrUser);
     }
 }
 
