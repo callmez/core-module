@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Http\Requests\Frontend\Auth;
 
+use App\Models\User;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -33,13 +34,19 @@ class RegisterRequest extends FormRequest
                     return empty($this->email) && empty($this->mobile);
                 }),
                 'nullable',
-                'string'
+                'string',
+                Rule::unique(User::table())
             ],
-            'password' => ['string', 'min:8'],
-            'email' => ['nullable', 'email'],
+            'password' => ['string', 'min:8', 'max:30'],
+            'email' => [
+                'nullable',
+                'email',
+                Rule::unique(User::table())
+            ],
             'mobile' => [
                 'nullable',
-                Rule::phone()->country(config('core::register.mobile.countries', ['CN']))
+                Rule::phone()->country(config('core::register.mobile.countries', ['CN'])),
+                Rule::unique(User::table())
             ],
             'code' => ['required_with:mobile']
         ];
@@ -51,6 +58,7 @@ class RegisterRequest extends FormRequest
     public function messages()
     {
         return [
+            'mobile' => 'The :attribute field contains an invalid number.',
         ];
     }
 }

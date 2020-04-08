@@ -5,11 +5,30 @@ namespace Modules\Core\Services\Frontend;
 use Cache;
 use App\Models\User;
 use Modules\Core\Events\Frontend\Auth\UserRegistered;
-use Modules\Core\Exceptions\Frontend\Auth\UserPayPasswordCheckException;
 use Modules\Core\src\Exceptions\Frontend\Auth\UserNotFoundException;
+use Modules\Core\Exceptions\Frontend\Auth\UserPayPasswordCheckException;
+use Modules\Core\src\Services\Traits\HasQueryOptions;
 
 class UserService
 {
+    use HasQueryOptions;
+    /**
+     * @param $where
+     * @param array $options
+     *
+     * @return mixed
+     */
+    public function getUser($where, array $options = [])
+    {
+        $user = $this->withQueryOptions(User::where($where), $options)->first();
+
+        if ( ! $user && ($options['exception'] ?? true)) {
+            throw new UserNotFoundException('User not found');
+        }
+
+        return $user;
+    }
+
     /**
      * @param $id
      *
@@ -30,23 +49,6 @@ class UserService
 
                 return $user;
             });
-    }
-
-    /**
-     * @param $where
-     * @param array $options
-     *
-     * @return mixed
-     */
-    public function getUser($where, array $options = [])
-    {
-        $user = User::where($where)->first();
-
-        if ( ! $user && ($options['exception'] ?? true)) {
-            throw new UserNotFoundException('User not found');
-        }
-
-        return $user;
     }
 
     public function getUserByGuessString($string, array $options = [])

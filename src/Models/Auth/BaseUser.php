@@ -9,7 +9,7 @@ use Modules\Core\Models\Auth\Traits\Scope\UserScope;
 use Modules\Core\Models\Auth\Traits\Method\UserMethod;
 use Modules\Core\Models\Auth\Traits\Attribute\UserAttribute;
 use Modules\Core\Models\Auth\Traits\Relationship\UserRelationship;
-use Modules\Core\Models\Auth\Traits\Method\UserNotificationMethod;
+use Modules\Core\Models\Auth\Traits\Method\UserNotification;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -35,7 +35,7 @@ abstract class BaseUser extends Authenticatable
         UserMethod,
         UserAttribute,
         UserRelationship,
-        UserNotificationMethod;
+        UserNotification;
 
     /**
      * The attributes that are mass assignable.

@@ -7,9 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserVerify extends Model
 {
-    const TYPE_VERIFY_EMAIL = 'verify_email';
-    const TYPE_VERIFY_MOBILE = 'verify_mobile';
-
     const UPDATED_AT = null;
 
     public $fillable = [
@@ -43,13 +40,13 @@ class UserVerify extends Model
     /**
      *  make same type expired
      */
-    public function makeOtherExpired()
+    public function makeOtherExpired($delete = true)
     {
         $query = static::where('user_id', $this->user_id)
             ->where('type', $this->type)
             ->where('id', '<>', $this->id);
 
-        if (config('user.verify.remove_expired', true)) {
+        if ($delete) {
             return $query->delete();
         }
 

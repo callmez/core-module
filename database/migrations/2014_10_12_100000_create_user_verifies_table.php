@@ -19,7 +19,11 @@ class CreateUserVerifiesTable extends Migration
             $table->string('type', 40)->comment('验证类型 mail_password_reset|mobile_password_reset...');
             $table->dateTime('expired_at')->nullable();
             $table->dateTime('created_at')->nullable();
+
+            $table->unique(['key', 'token'], 'key_token');
         });
+
+
     }
 
     /**

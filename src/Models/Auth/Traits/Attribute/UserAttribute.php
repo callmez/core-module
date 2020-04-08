@@ -39,14 +39,6 @@ trait UserAttribute
     }
 
     /**
-     * @return mixed
-     */
-    public function getPictureAttribute()
-    {
-        return $this->getPicture();
-    }
-
-    /**
      * @return string
      */
     public function getRolesLabelAttribute()

@@ -4,6 +4,8 @@ namespace Modules\Core\Models\Auth\Traits\Method;
 
 use Hash;
 use Carbon\Carbon;
+use Illuminate\Auth\Passwords\CanResetPassword;
+//use Modules\Core\Models\Auth\UserVerify;
 
 /**
  * Trait UserMethod.
@@ -13,44 +15,25 @@ trait UserMethod
     /**
      * @return mixed
      */
-    public function canChangeEmail()
+    public function canResetEmail()
     {
-        return config('access.users.change_email');
+        return true;
     }
 
     /**
      * @return bool
      */
-    public function canChangePassword()
+    public function canResetPassword()
     {
-        return ! app('session')->has(config('access.socialite_session_name'));
+        return true;
     }
 
     /**
-     * @param bool $size
-     *
-     * @throws \Illuminate\Container\EntryNotFoundException
-     * @return bool|\Illuminate\Contracts\Routing\UrlGenerator|mixed|string
-     */
-    public function getPicture($size = false)
-    {
-        return false;
-    }
-
-    /**
-     * @param $provider
-     *
      * @return bool
      */
-    public function hasProvider($provider)
+    public function canResetPayPassword()
     {
-        foreach ($this->providers as $p) {
-            if ($p->provider == $provider) {
-                return true;
-            }
-        }
-
-        return false;
+        return true;
     }
 
     /**
@@ -64,9 +47,9 @@ trait UserMethod
     /**
      * @return mixed
      */
-    public function isAuth()
+    public function isAuthVerified()
     {
-        return $this->auth;
+        return $this->auth_verified_at != null;
     }
 
     /**

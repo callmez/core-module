@@ -6,7 +6,7 @@ use Modules\Core\Models\Auth\UserVerify;
 use Modules\Core\Notifications\Frontend\Auth\UserEmailVerify;
 use Modules\Core\Notifications\Frontend\Auth\UserMobileVerify;
 
-trait UserNotificationMethod
+trait UserNotification
 {
     /**
      * @var string|int
@@ -17,12 +17,12 @@ trait UserNotificationMethod
      */
     public $notificationMail;
 
-    public function sendEmailVerify(UserVerify $verify)
+    public function sendEmailVerifyNotification(UserVerify $verify)
     {
         $this->notify(new UserEmailVerify($verify));
     }
 
-    public function sendMobileVerify(UserVerify $verify)
+    public function sendMobileVerifyNotification(UserVerify $verify)
     {
         $this->notify(new UserMobileVerify($verify));
     }
