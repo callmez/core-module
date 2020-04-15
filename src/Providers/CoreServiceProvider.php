@@ -160,8 +160,6 @@ class CoreServiceProvider extends ServiceProvider
     {
         $this->registerConfig();
         $this->registerHelpers();
-
-        $this->app->register(RouteServiceProvider::class); // TODO 加载顺序调整
     }
 
     /**

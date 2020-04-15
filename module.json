@@ -5,7 +5,9 @@
     "keywords": [],
     "order": -1,
     "providers": [
-        "Modules\\Core\\Providers\\CoreServiceProvider"
+        "Modules\\Core\\Providers\\CoreServiceProvider",
+        "Modules\\Core\\Providers\\EventServiceProvider",
+        "Modules\\Core\\Providers\\RouteServiceProvider"
     ],
     "aliases": {},
     "files": [],

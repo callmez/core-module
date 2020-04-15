@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Core\Models\Auth\Traits\Method;
+namespace Modules\Core\Models\Auth\Traits\Notification;
 
 use Modules\Core\Models\Auth\UserVerify;
 use Modules\Core\Notifications\Frontend\Auth\UserEmailVerify;
@@ -17,16 +17,27 @@ trait UserNotification
      */
     public $notificationMail;
 
+    /**
+     * @param UserVerify $verify
+     */
     public function sendEmailVerifyNotification(UserVerify $verify)
     {
         $this->notify(new UserEmailVerify($verify));
     }
 
+    /**
+     * @param UserVerify $verify
+     */
     public function sendMobileVerifyNotification(UserVerify $verify)
     {
         $this->notify(new UserMobileVerify($verify));
     }
 
+    /**
+     * @param $mobile
+     *
+     * @return $this
+     */
     public function withNotificationMobile($mobile)
     {
         $this->notificationMobile = $mobile;
@@ -34,11 +45,19 @@ trait UserNotification
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
     public function routeNotificationForEasySms()
     {
         return $this->notificationMobile ?: $this->mobile;
     }
 
+    /**
+     * @param $mobile
+     *
+     * @return $this
+     */
     public function withNotificationEmail($mobile)
     {
         $this->notificationMobile = $mobile;
@@ -46,6 +65,9 @@ trait UserNotification
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
     public function routeNotificationForMail()
     {
         return $this->notificationMail ?: $this->email;

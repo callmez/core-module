@@ -3,7 +3,7 @@
 namespace Modules\Core\Models\Auth\Traits\Relationship;
 
 use Modules\Core\Models\Auth\UserVerify;
-use Modules\Core\Models\Auth\PasswordHistory;
+use Modules\Core\Models\Auth\UserPasswordHistory;
 
 /**
  * Class UserRelationship.
@@ -16,7 +16,7 @@ trait UserRelationship
      */
     public function passwordHistories()
     {
-        return $this->hasMany(PasswordHistory::class);
+        return $this->hasMany(UserPasswordHistory::class);
     }
 
     /**

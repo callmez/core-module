@@ -9,7 +9,7 @@ use Modules\Core\Models\Auth\Traits\Scope\UserScope;
 use Modules\Core\Models\Auth\Traits\Method\UserMethod;
 use Modules\Core\Models\Auth\Traits\Attribute\UserAttribute;
 use Modules\Core\Models\Auth\Traits\Relationship\UserRelationship;
-use Modules\Core\Models\Auth\Traits\Method\UserNotification;
+use Modules\Core\Models\Auth\Traits\Notification\UserNotification;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -74,7 +74,8 @@ abstract class BaseUser extends Authenticatable
         'email_verified_at',
         'auth_verified_at',
         'created_at',
-        'updated_at'
+        'updated_at',
+        'deleted_at'
     ];
 
     /**
@@ -84,6 +85,7 @@ abstract class BaseUser extends Authenticatable
      */
     protected $hidden = [
         'password',
+        'pay_password',
         'remember_token',
         'deleted_at'
     ];
