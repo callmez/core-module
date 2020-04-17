@@ -2,13 +2,8 @@
 
 namespace Modules\Core\Http\Controllers\Frontend\Api\Auth;
 
-use App\Models\User;
 use Modules\Core\Http\Controllers\Controller;
 use Modules\Core\Http\Requests\Frontend\Auth\LoginRequest;
-use Modules\Core\Events\Frontend\Auth\UserLoggedIn;
-use Modules\Core\Exceptions\Frontend\Auth\UserEmailVerifyException;
-use Modules\Core\Exceptions\Frontend\Auth\UserMobileVerifyException;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Modules\Core\Services\Frontend\UserService;
 
@@ -22,14 +17,13 @@ class LoginController extends Controller
     }
 
     /**
-     * Handle a login request to the application.
+     * @param LoginRequest $request
+     * @param UserService $userService
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\Http\JsonResponse
-     *
+     * @return array|void
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function login(LoginRequest $request, UserService $userService)
+    public function loginByGuessString(LoginRequest $request, UserService $userService)
     {
         if ($this->hasTooManyLoginAttempts($request)) {
 
@@ -38,38 +32,19 @@ class LoginController extends Controller
             return $this->sendLockoutResponse();
         }
 
-        /** @var User $user */
-        [
-            'isEmail' => $isEmail,
-            'isMobile' => $isMobile,
-            'user' => $user
-        ] = $userService->getUserByGuessString($request->username);
+        try {
+            $field = $this->username();
+            $user = $userService->loginByGuessString($request->$field, $request->password, ['field' => $field]);
 
-        if (! $user || ! $user->checkPassword($request->password)) {
+            $this->clearLoginAttempts($request);
 
+            return [
+                'access_token' => $user->createToken($request->device ?: 'frontend')->plainTextToken
+            ];
+        } catch(\Exception $e) {
             $this->incrementLoginAttempts($request);
 
-            throw ValidationException::withMessages([
-                'username' => [trans('auth.failed')],
-            ]);
+            throw $e;
         }
-
-        if ($isEmail && !$user->isEmailVerified()) {
-
-            throw UserEmailVerifyException::withModel($user);
-
-        } elseif ($isMobile && !$user->isMobileverified()) {
-
-            throw UserMobileVerifyException::withModel($user);
-
-        }
-
-        $this->clearLoginAttempts($request);
-
-        event(new UserLoggedIn($user));
-
-        return [
-            'access_token' => $user->createToken($request->device ?: 'frontend')->plainTextToken
-        ];
     }
 }

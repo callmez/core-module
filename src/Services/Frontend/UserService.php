@@ -4,10 +4,15 @@ namespace Modules\Core\Services\Frontend;
 
 use Cache;
 use App\Models\User;
+use Illuminate\Validation\ValidationException;
+use Modules\Core\Events\Frontend\Auth\UserLoggedIn;
 use Modules\Core\Events\Frontend\Auth\UserRegistered;
+use Modules\Core\src\Services\Traits\HasQueryOptions;
+use Modules\Core\Exceptions\Frontend\Auth\UserVerifyException;
 use Modules\Core\src\Exceptions\Frontend\Auth\UserNotFoundException;
 use Modules\Core\Exceptions\Frontend\Auth\UserPayPasswordCheckException;
-use Modules\Core\src\Services\Traits\HasQueryOptions;
+
+
 
 class UserService
 {
@@ -118,6 +123,32 @@ class UserService
         }
 
         return true;
+    }
+
+    public function loginByGuessString($string, $password, array $options = [])
+    {
+        /** @var User $user */
+        [
+            'isEmail' => $isEmail,
+            'isMobile' => $isMobile,
+            'user' => $user
+        ] = $this->getUserByGuessString($string);
+
+        if (! $user || ! $user->checkPassword($password)) {
+            throw ValidationException::withMessages([
+                $otpions['field'] ?? 'username' => [trans('用户不存在或密码错误.')],
+            ]);
+        }
+
+        if ($isEmail && !$user->isEmailVerified()) {
+            throw UserVerifyException::withModel($user, 'email');
+        } elseif ($isMobile && !$user->isMobileverified()) {
+            throw UserVerifyException::withModel($user, 'mobile');
+        }
+
+        event(new UserLoggedIn($user));
+
+        return $user;
     }
 
     /**

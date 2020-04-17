@@ -85,24 +85,24 @@ class UserEventListener
             'Modules\Core\Listeners\Frontend\Auth\UserEventListener@onLoggedIn'
         );
 
-        $events->listen(
-            UserLoggedOut::class,
-            'Modules\Core\Listeners\Frontend\Auth\UserEventListener@onLoggedOut'
-        );
-
-        $events->listen(
-            UserRegistered::class,
-            'Modules\Core\Listeners\Frontend\Auth\UserEventListener@onRegistered'
-        );
-
-        $events->listen(
-            UserProviderRegistered::class,
-            'Modules\Core\Listeners\Frontend\Auth\UserEventListener@onProviderRegistered'
-        );
-
-        $events->listen(
-            UserConfirmed::class,
-            'Modules\Core\Listeners\Frontend\Auth\UserEventListener@onConfirmed'
-        );
+//        $events->listen(
+//            UserLoggedOut::class,
+//            'Modules\Core\Listeners\Frontend\Auth\UserEventListener@onLoggedOut'
+//        );
+//
+//        $events->listen(
+//            UserRegistered::class,
+//            'Modules\Core\Listeners\Frontend\Auth\UserEventListener@onRegistered'
+//        );
+//
+//        $events->listen(
+//            UserProviderRegistered::class,
+//            'Modules\Core\Listeners\Frontend\Auth\UserEventListener@onProviderRegistered'
+//        );
+//
+//        $events->listen(
+//            UserConfirmed::class,
+//            'Modules\Core\Listeners\Frontend\Auth\UserEventListener@onConfirmed'
+//        );
     }
 }
