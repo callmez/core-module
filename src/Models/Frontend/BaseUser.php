@@ -1,15 +1,15 @@
 <?php
 
-namespace Modules\Core\Models\Auth;
+namespace Modules\Core\Models\Frontend;
 
 use Modules\Core\Models\Traits\Uuid;
-use Modules\Core\Models\Traits\TableName;
+use Modules\Core\Models\Traits\HasTableName;
 use Modules\Core\Models\Traits\DynamicRelationship;
-use Modules\Core\Models\Auth\Traits\Scope\UserScope;
-use Modules\Core\Models\Auth\Traits\Method\UserMethod;
-use Modules\Core\Models\Auth\Traits\Attribute\UserAttribute;
-use Modules\Core\Models\Auth\Traits\Relationship\UserRelationship;
-use Modules\Core\Models\Auth\Traits\Notification\UserNotification;
+use Modules\Core\Models\Frontend\Traits\Scope\UserScope;
+use Modules\Core\Models\Frontend\Traits\Method\UserMethod;
+use Modules\Core\Models\Frontend\Traits\Attribute\UserAttribute;
+use Modules\Core\Models\Frontend\Traits\Relationship\UserRelationship;
+use Modules\Core\Models\Frontend\Traits\Notification\UserNotification;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -23,7 +23,7 @@ use Spatie\Permission\Traits\HasRoles;
 abstract class BaseUser extends Authenticatable
 {
     use Uuid,
-        TableName,
+        HasTableName,
         Mediable,
         HasRoles,
         Notifiable,

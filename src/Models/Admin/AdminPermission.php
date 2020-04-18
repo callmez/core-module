@@ -1,15 +1,15 @@
 <?php
 
-namespace Modules\Core\Models\Auth;
+namespace Modules\Core\Models\Frontend;
 
 use Spatie\Permission\Models\Permission;
-use Modules\Core\Models\Traits\TableName;
+use Modules\Core\Models\Traits\HasTableName;
 use Modules\Core\Models\Admin\Traits\Method\PermissionMethod;
 use Modules\Core\Models\Admin\Traits\Method\RolePermission;
 
 class AdminPermission extends Permission
 {
-    use TableName,
+    use HasTableName,
         RolePermission,
         PermissionMethod;
 

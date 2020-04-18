@@ -2,7 +2,7 @@
 
 namespace Modules\Core\Notifications\Frontend\Auth;
 
-use Modules\Core\Models\Auth\UserVerify;
+use Modules\Core\Models\Frontend\UserVerify;
 use Modules\Core\Messages\Frontend\UserVerifyMobileMessage;
 use Modules\Core\Notifications\Middleware\BeforeSend;
 use Illuminate\Bus\Queueable;

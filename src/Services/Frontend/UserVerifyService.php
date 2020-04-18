@@ -3,15 +3,16 @@
 namespace Modules\Core\Services\Frontend;
 
 use Closure;
+
 use UnexpectedValueException;
 use Carbon\Carbon;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Modules\Core\Exceptions\ModelSaveException;
-use Modules\Core\Models\Auth\UserVerify;
+use Modules\Core\Models\Frontend\UserVerify;
 use Modules\Core\src\Services\Traits\HasQueryOptions;
-use Modules\Core\src\Exceptions\Frontend\Auth\UserVerifyNotFoundException;
 
 class UserVerifyService
 {
@@ -22,14 +23,14 @@ class UserVerifyService
      * @param array $options
      *
      * @return UserVerify
-     * @throws UserVerifyNotFoundException
+     * @throws ModelNotFoundException
      */
     public function getUserVerify($where, array $options = [])
     {
         $verify = $this->withQueryOptions(UserVerify::where($where), $options)->first();
 
         if ( ! $verify && ($options['exception'] ?? true)) {
-            throw new UserVerifyNotFoundException('Verify token not found');
+            throw new ModelNotFoundException('Verify token not found');
         }
 
         return $verify;
@@ -38,14 +39,14 @@ class UserVerifyService
     /**
      * @param $key
      * @param Closure|null $tokenCallback
+     * @param array $options
      *
      * @return mixed|string
-     * @throws UserVerifyNotFoundException
      */
-    public function generateUniqueToken($key, Closure $tokenCallback = null, array $otpions = [])
+    public function generateUniqueToken($key, Closure $tokenCallback = null, array $options = [])
     {
         $i = 1;
-        $max = $otpions['max'] ?? 10;
+        $max = $options['max'] ?? 10;
         while (true) {
             $token = is_callable($tokenCallback) ? $tokenCallback() : Str::random(6);
             $verify = $this->getUserVerify([
@@ -138,7 +139,6 @@ class UserVerifyService
      * @param array $options
      *
      * @return bool
-     * @throws UserVerifyNotFoundException
      */
     public function resetEmail($token, $email, array $options = [])
     {
@@ -161,12 +161,11 @@ class UserVerifyService
     }
 
     /**
-     * @param User|int $user
+     * @param $user
      * @param null $mobile
      * @param array $options
      *
      * @return bool
-     * @throws UserVerifyNotFoundException
      */
     public function resetMobileNotification($user, $mobile = null, array $options = [])
     {

@@ -2,7 +2,7 @@
 
 namespace Modules\Core\Http\Controllers\Frontend\Auth;
 
-use Modules\Core\Models\Auth\UserVerify;
+use Modules\Core\Models\Frontend\UserVerify;
 use Modules\Core\Http\Controllers\Controller;
 use Modules\Core\Events\Frontend\Auth\UserEmailVerified;
 use Illuminate\Http\Request;

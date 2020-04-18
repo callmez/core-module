@@ -2,8 +2,11 @@
 
 namespace Modules\Core\Models\Traits;
 
-trait TableName
+trait HasTableName
 {
+    /**
+     * @return mixed
+     */
     public static function table()
     {
         static $model = null;

@@ -2,7 +2,7 @@
 
 namespace Modules\Core\Rules\Auth;
 
-use Modules\Core\Models\Auth\BaseUser;
+use Modules\Core\Models\Frontend\BaseUser;
 use Modules\Core\Repositories\Admin\Auth\UserRepository as AdminUserRepository;
 use Modules\Core\Repositories\Frontend\Auth\UserRepository as FrontendUserRepository;
 use Illuminate\Contracts\Validation\Rule;

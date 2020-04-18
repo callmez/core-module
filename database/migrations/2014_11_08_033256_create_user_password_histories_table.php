@@ -12,7 +12,7 @@ class CreateUserPasswordHistoriesTable extends Migration
     public function up()
     {
         Schema::create('user_password_histories', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id')->default(0)->comment('关联用户');
             $table->string('password')->default('')->comment('密码值');
             $table->string('type', '30')->default('')->comment('密码类型');

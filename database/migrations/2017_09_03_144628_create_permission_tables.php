@@ -13,7 +13,7 @@ class CreatePermissionTables extends Migration
         $tableNames = config('permission.table_names');
 
         Schema::create($tableNames['permissions'], function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->unsignedInteger('parent_id')->default('0');
             $table->string('name');
             $table->string('guard_name');
@@ -25,7 +25,7 @@ class CreatePermissionTables extends Migration
         });
 
         Schema::create($tableNames['roles'], function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->string('name')->index();
             $table->string('guard_name');
             $table->string('title');
@@ -36,7 +36,7 @@ class CreatePermissionTables extends Migration
         });
 
         Schema::create($tableNames['model_has_permissions'], function (Blueprint $table) use ($tableNames) {
-            $table->unsignedInteger('permission_id');
+            $table->unsignedBigInteger('permission_id');
             $table->morphs('model', 'model_index');
 
             $table->foreign('permission_id', 'permission_foreign')
@@ -48,7 +48,7 @@ class CreatePermissionTables extends Migration
         });
 
         Schema::create($tableNames['model_has_roles'], function (Blueprint $table) use ($tableNames) {
-            $table->unsignedInteger('role_id');
+            $table->unsignedBigInteger('role_id');
             $table->morphs('model', 'model_index');
 
             $table->foreign('role_id', 'role_foreign')
@@ -60,8 +60,8 @@ class CreatePermissionTables extends Migration
         });
 
         Schema::create($tableNames['role_has_permissions'], function (Blueprint $table) use ($tableNames) {
-            $table->unsignedInteger('permission_id');
-            $table->unsignedInteger('role_id');
+            $table->unsignedBigInteger('permission_id');
+            $table->unsignedBigInteger('role_id');
 
             $table->foreign('permission_id')
                 ->references('id')

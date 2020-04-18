@@ -3,9 +3,9 @@
 namespace Modules\Core\Http\Controllers\Frontend\Api\Auth;
 
 use Modules\Core\Http\Controllers\Controller;
+use Modules\Core\Services\Frontend\UserLoginService;
 use Modules\Core\Http\Requests\Frontend\Auth\LoginRequest;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
-use Modules\Core\Services\Frontend\UserService;
 
 class LoginController extends Controller
 {
@@ -18,12 +18,12 @@ class LoginController extends Controller
 
     /**
      * @param LoginRequest $request
-     * @param UserService $userService
+     * @param UserLoginService $userLoginService
      *
      * @return array|void
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function loginByGuessString(LoginRequest $request, UserService $userService)
+    public function loginByGuessString(LoginRequest $request, UserLoginService $userLoginService)
     {
         if ($this->hasTooManyLoginAttempts($request)) {
 
@@ -34,7 +34,8 @@ class LoginController extends Controller
 
         try {
             $field = $this->username();
-            $user = $userService->loginByGuessString($request->$field, $request->password, ['field' => $field]);
+
+            $user = $userLoginService->loginByGuessString($request->$field, $request->password, ['field' => $field]);
 
             $this->clearLoginAttempts($request);
 

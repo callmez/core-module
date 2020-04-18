@@ -12,18 +12,16 @@ class CreateUserVerifiesTable extends Migration
     public function up()
     {
         Schema::create('user_verifies', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('key')->comment('验证关键字 email地址|手机号');
-            $table->bigInteger('user_id')->comment('关联用户ID');
-            $table->string('token', 100)->index()->comment('验证token');
-            $table->string('type', 40)->comment('验证类型 mail_password_reset|mobile_password_reset...');
+            $table->bigIncrements('id');
+            $table->bigInteger('user_id')->default('')->comment('关联用户ID');
+            $table->string('key')->nullable()->default('')->comment('验证关键字 email地址|手机号');
+            $table->string('token', 100)->index()->nullable()->default('')->comment('验证token');
+            $table->string('type', 40)->nullable()->default('')->comment('验证类型 mail_password_reset|mobile_password_reset...');
             $table->dateTime('expired_at')->nullable();
             $table->dateTime('created_at')->nullable();
 
             $table->unique(['key', 'token'], 'key_token');
         });
-
-
     }
 
     /**

@@ -2,12 +2,12 @@
 
 namespace Modules\Core\Models\Admin;
 
-use Modules\Core\Models\Traits\TableName;
+use Modules\Core\Models\Traits\HasTableName;
 use Illuminate\Database\Eloquent\Model;
 
 class AdminMenu extends Model
 {
-    use TableName;
+    use HasTableName;
 
     public static function menu()
     {

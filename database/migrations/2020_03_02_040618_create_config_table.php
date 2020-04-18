@@ -14,7 +14,7 @@ class CreateConfigTable extends Migration
     public function up()
     {
         Schema::create('config', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->string('key', 100)->default('')->unique()->comment('设置名称');
             $table->json('value')->comment('设置内容');
             $table->string('module', 100)->default('')->comment('专属模块名,默认空表示全局');

@@ -20,8 +20,6 @@ Route::group([
 
         Route::post('v1/login', [LoginController::class, 'loginByGuessString'])->name('login'); // 密码登录
         Route::post('v1/register', [RegisterController::class, 'register'])->name('register'); // 用户注册
-        Route::post('v1/mobile_register', [RegisterController::class, 'mobileRegister'])->name('mobile.register'); // 手机号注册
-        Route::post('v1/email_register', [RegisterController::class, 'emailRegister'])->name('email.register'); // 邮箱注册
 
 //
 //        // Socialite Routes
@@ -49,12 +47,13 @@ Route::group([
 
     Route::group([
         'prefix' => 'v1/auth',
-        'middleware' => ['auth:airlock']
+        'middleware' => ['auth:airlock'],
     ], function () {
-        Route::get('user/info', [UserController::class, 'info'])->name('user.info'); // 登录会员信息
+        Route::get('info', [UserController::class, 'info'])->name('info'); // 登录会员信息
 
-        Route::get('reset/email', [ResetController::class, 'requestResetEmail'])->name('reset.email'); // 验证邮箱请求
-        Route::get('reset/mobile', [ResetController::class, 'requestResetMobile'])->name('reset.mobile'); // 修改手机号请求
+        Route::post('reset/email', [ResetController::class, 'requestResetEmail'])->name('reset.email'); // 验证邮箱请求
+        Route::post('reset/mobile', [ResetController::class, 'requestResetMobile'])->name('reset.mobile'); // 修改手机号请求
+        Route::post('verify/email', [VerifyController::class, 'verifyEmail'])->name('verify.email'); // 修改邮箱
         Route::post('verify/mobile', [VerifyController::class, 'verifyMobile'])->name('verify.mobile'); // 修改手机号
         Route::post('reset/password', [ResetController::class, 'resetPassword'])->name('reset.password.post'); //
         Route::post('reset/pay_password', [ResetController::class, 'resetPayPassword'])->name('reset.pay_password.post'); // 修改手机号

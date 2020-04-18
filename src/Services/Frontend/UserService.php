@@ -4,19 +4,15 @@ namespace Modules\Core\Services\Frontend;
 
 use Cache;
 use App\Models\User;
-use Illuminate\Validation\ValidationException;
-use Modules\Core\Events\Frontend\Auth\UserLoggedIn;
-use Modules\Core\Events\Frontend\Auth\UserRegistered;
 use Modules\Core\src\Services\Traits\HasQueryOptions;
-use Modules\Core\Exceptions\Frontend\Auth\UserVerifyException;
 use Modules\Core\src\Exceptions\Frontend\Auth\UserNotFoundException;
+use Modules\Core\Exceptions\Frontend\Auth\UserPasswordCheckException;
 use Modules\Core\Exceptions\Frontend\Auth\UserPayPasswordCheckException;
-
-
 
 class UserService
 {
     use HasQueryOptions;
+
     /**
      * @param $where
      * @param array $options
@@ -56,6 +52,12 @@ class UserService
             });
     }
 
+    /**
+     * @param $string
+     * @param array $options
+     *
+     * @return array
+     */
     public function getUserByGuessString($string, array $options = [])
     {
         $where = [];
@@ -74,7 +76,7 @@ class UserService
         return [
             'isEmail'  => $isEmail,
             'isMobile' => $isMobile,
-            'user'     => $this->getUser($where),
+            'user'     => $this->getUser($where, $options),
         ];
     }
 
@@ -85,7 +87,7 @@ class UserService
      * @param array $options
      *
      * @return bool
-     * @throws UserPayPasswordCheckException
+     * @throws UserPasswordCheckException
      */
     public function checkPassword($userId, $payPassword, array $options = [])
     {
@@ -93,7 +95,7 @@ class UserService
 
         if ( ! $user || ! $user->checkPassword($payPassword)) {
             if ($options['exception'] ?? true) {
-                throw new UserPayPasswordCheckException();
+                throw new UserPasswordCheckException('User auth failed.');
             }
 
             return false;
@@ -123,56 +125,5 @@ class UserService
         }
 
         return true;
-    }
-
-    public function loginByGuessString($string, $password, array $options = [])
-    {
-        /** @var User $user */
-        [
-            'isEmail' => $isEmail,
-            'isMobile' => $isMobile,
-            'user' => $user
-        ] = $this->getUserByGuessString($string);
-
-        if (! $user || ! $user->checkPassword($password)) {
-            throw ValidationException::withMessages([
-                $otpions['field'] ?? 'username' => [trans('用户不存在或密码错误.')],
-            ]);
-        }
-
-        if ($isEmail && !$user->isEmailVerified()) {
-            throw UserVerifyException::withModel($user, 'email');
-        } elseif ($isMobile && !$user->isMobileverified()) {
-            throw UserVerifyException::withModel($user, 'mobile');
-        }
-
-        event(new UserLoggedIn($user));
-
-        return $user;
-    }
-
-    /**
-     * 用户注册
-     *
-     * @param array $data
-     * @param array $options
-     *
-     * @return User
-     */
-    public function register(array $data, array $options = [])
-    {
-        /** @var User $user */
-        $user = User::create([
-            'username' => $data['username'],
-            'password' => $data['password'],
-            'mobile' => $data['mobile'] ?? '',
-            'email' => $data['email'] ?? ''
-        ]);
-
-        event(new UserRegistered($user));
-
-        $user->refresh();
-
-        return $user;
     }
 }

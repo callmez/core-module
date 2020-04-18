@@ -7,7 +7,7 @@ use Modules\Core\Http\Controllers\Controller;
 use Modules\Core\Http\Requests\Admin\Auth\Role\ManageRoleRequest;
 use Modules\Core\Http\Requests\Admin\Auth\Role\StoreRoleRequest;
 use Modules\Core\Http\Requests\Admin\Auth\Role\UpdateRoleRequest;
-use Modules\Core\Models\Auth\Role;
+use Modules\Core\Models\Frontend\Role;
 use Modules\Core\Repositories\Admin\Auth\RoleRepository;
 use Illuminate\Support\Facades\Auth;
 

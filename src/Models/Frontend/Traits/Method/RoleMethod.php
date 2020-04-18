@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Core\Models\Auth\Traits\Method;
+namespace Modules\Core\Models\Frontend\Traits\Method;
 
 /**
  * Trait RoleMethod.

@@ -2,7 +2,7 @@
 
 namespace Modules\Core\Messages\Frontend;
 
-use Modules\Core\Models\Auth\UserVerify;
+use Modules\Core\Models\Frontend\UserVerify;
 use Overtrue\EasySms\Message;
 use Overtrue\EasySms\Contracts\GatewayInterface;
 

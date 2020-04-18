@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Http\Controllers\Frontend\Api\Auth;
 
+use App\Models\User;
 use Modules\Core\Events\Frontend\Auth\UserLoggedOut;
 use Modules\Core\Http\Controllers\Controller;
 use Illuminate\Http\Request;

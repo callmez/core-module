@@ -1,7 +1,8 @@
 <?php
 
-namespace Modules\Core\Models\Auth;
+namespace Modules\Core\Models\Frontend;
 
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -26,7 +27,11 @@ class UserVerify extends Model
         'expired_at',
     ];
 
-
+    /**
+     * @param $query
+     *
+     * @return mixed
+     */
     public function scopeNotExpired($query)
     {
         return $query->where('expired_at', '>=', Carbon::now());
@@ -34,7 +39,7 @@ class UserVerify extends Model
 
     public function user()
     {
-        return $this->belongsTo(BaseUser::class, 'user_id', 'id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     /**

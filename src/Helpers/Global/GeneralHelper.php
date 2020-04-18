@@ -1,7 +1,7 @@
 <?php
 use App\Models\User;
 use App\Models\AdminUser;
-use Modules\Core\Models\Auth\BaseUser;
+use Modules\Core\Models\Frontend\BaseUser;
 use Modules\Core\Services\Frontend\UserService;
 
 if (! function_exists('with_admin_user')) {

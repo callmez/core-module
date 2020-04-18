@@ -14,7 +14,7 @@ class CreateMediableTables extends Migration
     public function up()
     {
         Schema::create('media', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->string('disk', 32);
             $table->string('directory');
             $table->string('filename');
@@ -32,9 +32,9 @@ class CreateMediableTables extends Migration
         });
 
         Schema::create('mediables', function (Blueprint $table) {
-            $table->integer('media_id')->unsigned();
+            $table->bigInteger('media_id')->unsigned();
             $table->string('mediable_type');
-            $table->integer('mediable_id')->unsigned();
+            $table->bigInteger('mediable_id')->unsigned();
             $table->string('tag');
             $table->integer('order')->unsigned();
 

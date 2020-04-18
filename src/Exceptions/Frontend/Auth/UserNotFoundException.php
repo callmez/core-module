@@ -2,9 +2,9 @@
 
 namespace Modules\Core\src\Exceptions\Frontend\Auth;
 
-use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class UserNotFoundException extends Exception
+class UserNotFoundException extends ModelNotFoundException
 {
     /**
      * @param $id

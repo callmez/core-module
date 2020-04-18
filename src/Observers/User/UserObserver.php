@@ -2,7 +2,7 @@
 
 namespace Modules\Core\Observers\User;
 
-use Modules\Core\Models\Auth\BaseUser;
+use Modules\Core\Models\Frontend\BaseUser;
 
 /**
  * Class UserObserver.
@@ -12,7 +12,7 @@ class UserObserver
     /**
      * Listen to the User created event.
      *
-     * @param  \Modules\Core\Models\Auth\BaseUser  $user
+     * @param  \Modules\Core\Models\Frontend\BaseUser  $user
      */
     public function created(BaseUser $user): void
     {
@@ -22,7 +22,7 @@ class UserObserver
     /**
      * Listen to the User updated event.
      *
-     * @param  \Modules\Core\Models\Auth\BaseUser  $user
+     * @param  \Modules\Core\Models\Frontend\BaseUser  $user
      */
     public function updated(BaseUser $user): void
     {

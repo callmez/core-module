@@ -1,9 +1,10 @@
 <?php
 
-namespace Modules\Core\Models\Auth\Traits\Relationship;
+namespace Modules\Core\Models\Frontend\Traits\Relationship;
 
-use Modules\Core\Models\Auth\UserVerify;
-use Modules\Core\Models\Auth\UserPasswordHistory;
+use Modules\Core\Models\Frontend\UserVerify;
+use Modules\Core\src\Models\Auth\UserInvitation;
+use Modules\Core\Models\Frontend\UserPasswordHistory;
 
 /**
  * Class UserRelationship.
@@ -25,5 +26,13 @@ trait UserRelationship
     public function verifies()
     {
         return $this->hasMany(UserVerify::class);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function invitations()
+    {
+        return $this->hasMany(UserInvitation::class);
     }
 }

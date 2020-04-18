@@ -1,8 +1,8 @@
 <?php
 
-namespace Modules\Core\Models\Auth;
+namespace Modules\Core\Models\Frontend;
 
-use Modules\Core\Models\Traits\TableName;
+use Modules\Core\Models\Traits\HasTableName;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class UserPasswordHistory extends Model
 {
-    use TableName;
+    use HasTableName;
 
     /**
      * 密码类型

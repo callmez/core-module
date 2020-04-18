@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Core\Models\Auth\Traits\Scope;
+namespace Modules\Core\Models\Frontend\Traits\Scope;
 
 /**
  * Class UserScope.

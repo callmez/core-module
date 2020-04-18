@@ -14,7 +14,7 @@ class CreateAdminUsersTable extends Migration
     public function up()
     {
         Schema::create('admin_users', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->uuid('uuid');
             $table->string('username')->comment('用户名');
             $table->string('avatar')->nullable()->comment('用户头像');

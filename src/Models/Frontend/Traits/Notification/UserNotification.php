@@ -1,8 +1,8 @@
 <?php
 
-namespace Modules\Core\Models\Auth\Traits\Notification;
+namespace Modules\Core\Models\Frontend\Traits\Notification;
 
-use Modules\Core\Models\Auth\UserVerify;
+use Modules\Core\Models\Frontend\UserVerify;
 use Modules\Core\Notifications\Frontend\Auth\UserEmailVerify;
 use Modules\Core\Notifications\Frontend\Auth\UserMobileVerify;
 

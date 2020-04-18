@@ -2,7 +2,7 @@
 
 namespace Modules\Core\Events\Frontend\Auth;
 
-use Modules\Core\Models\Auth\BaseUser;
+use Modules\Core\Models\Frontend\BaseUser;
 use Illuminate\Queue\SerializesModels;
 
 /**

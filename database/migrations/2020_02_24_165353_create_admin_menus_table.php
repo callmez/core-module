@@ -14,7 +14,7 @@ class CreateAdminMenusTable extends Migration
     public function up()
     {
         Schema::create('admin_menus', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->unsignedInteger('parent_id')->default(0)->comment('父菜单ID');
             $table->string('title')->comment('标题');
             $table->string('icon')->nullable()->comment('图标');

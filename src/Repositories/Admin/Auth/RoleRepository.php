@@ -5,7 +5,7 @@ namespace Modules\Core\Repositories\Admin\Auth;
 use Modules\Core\Events\Admin\Auth\Role\RoleCreated;
 use Modules\Core\Events\Admin\Auth\Role\RoleUpdated;
 use Modules\Core\Exceptions\GeneralException;
-use Modules\Core\Models\Auth\Role;
+use Modules\Core\Models\Frontend\Role;
 use Modules\Core\Repositories\BaseRepository;
 use Illuminate\Support\Facades\DB;
 

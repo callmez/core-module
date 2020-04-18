@@ -2,19 +2,23 @@
 
 namespace Modules\Core\Http\Controllers\Frontend\Api\Auth;
 
-use Modules\Core\Models\Auth\BaseUser;
-use Modules\Core\Models\Auth\UserVerify;
+use Modules\Core\Models\Frontend\BaseUser;
+use Modules\Core\Models\Frontend\UserVerify;
 use Modules\Core\Http\Controllers\Controller;
 use Modules\Core\Events\Frontend\Auth\UserMobileVerified;
 use Modules\Core\Http\Requests\Frontend\Auth\ResetMobileRequest;
+use Modules\Core\Services\Frontend\UserVerifyService;
 
 class VerifyController extends Controller
 {
 
-    public function verifyMobile(ResetMobileRequest $request)
+    public function verifyMobile(ResetMobileRequest $request, UserVerifyService $userVerifyService)
     {
         /** @var BaseUser $user */
         $user = $request->user();
+
+        $userVerifyService->
+
 
         /** @var UserVerify $verify */
         $verify = UserVerify::where('user_id', $user->id)

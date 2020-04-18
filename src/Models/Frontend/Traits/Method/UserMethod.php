@@ -1,11 +1,11 @@
 <?php
 
-namespace Modules\Core\Models\Auth\Traits\Method;
+namespace Modules\Core\Models\Frontend\Traits\Method;
 
 use Hash;
 use Carbon\Carbon;
 use Illuminate\Auth\Passwords\CanResetPassword;
-//use Modules\Core\Models\Auth\UserVerify;
+//use Modules\Core\Models\Frontend\UserVerify;
 
 /**
  * Trait UserMethod.

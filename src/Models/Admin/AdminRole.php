@@ -3,13 +3,13 @@
 namespace Modules\Core\Models\Admin;
 
 use Spatie\Permission\Models\Role;
-use Modules\Core\Models\Traits\TableName;
+use Modules\Core\Models\Traits\HasTableName;
 use Modules\Core\Models\Admin\Traits\Method\RoleMethod;
 use Modules\Core\Models\Admin\Traits\Method\RolePermission;
 
 class AdminRole extends Role
 {
-    use TableName,
+    use HasTableName,
         RolePermission,
         RoleMethod;
 
