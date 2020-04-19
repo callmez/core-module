@@ -3,20 +3,22 @@
 namespace Modules\Core\Services\Frontend;
 
 use Closure;
-
 use UnexpectedValueException;
 use Carbon\Carbon;
 use App\Models\User;
 use Illuminate\Support\Str;
+use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Modules\Core\Exceptions\ModelSaveException;
 use Modules\Core\Models\Frontend\UserVerify;
+use Modules\Core\src\Services\Traits\HasThrottles;
 use Modules\Core\src\Services\Traits\HasQueryOptions;
 
 class UserVerifyService
 {
-    use HasQueryOptions;
+    use HasQueryOptions,
+        HasThrottles;
 
     /**
      * @param $where
@@ -96,6 +98,22 @@ class UserVerifyService
     }
 
     /**
+     * @param User $user
+     */
+    protected function checkResetEmailAttempts(User $user)
+    {
+        $key = $user->id . '|reset_email';
+        $maxAttempts = config('core::system.reset.email.maxAttempts', 3);
+        $decaySeconds = config('core::system.reset.email.decaySeconds', 600);
+        if ($this->hasTooManyAttempts($key, $maxAttempts)) {
+            throw ValidationException::withMessages([
+                'email' => [trans('请求次数太多')],
+            ])->status(Response::HTTP_TOO_MANY_REQUESTS);
+        }
+        $this->incrementAttempts($key, $decaySeconds);
+    }
+
+    /**
      * @param $user
      * @param null $email
      * @param array $options
@@ -120,6 +138,8 @@ class UserVerifyService
                 'mobile' => 'Current email is already verified.'
             ]);
         }
+
+        $this->checkResetAttempts($user);
 
         /** @var UserVerifyService $userVerifyService */
         $userVerifyService = resolve(UserVerifyService::class);
@@ -161,6 +181,22 @@ class UserVerifyService
     }
 
     /**
+     * @param User $user
+     */
+    protected function checkResetMobileAttempts(User $user)
+    {
+        $key = $user->id . '|reset_mobile';
+        $maxAttempts = config('core::system.reset.mobile.maxAttempts', 3);
+        $decaySeconds = config('core::system.reset.mobile.decaySeconds', 600);
+        if ($this->hasTooManyAttempts($key, $maxAttempts)) {
+            throw ValidationException::withMessages([
+                'mobile' => [trans('请求次数太多')],
+            ])->status(Response::HTTP_TOO_MANY_REQUESTS);
+        }
+        $this->incrementAttempts($key, $decaySeconds);
+    }
+
+    /**
      * @param $user
      * @param null $mobile
      * @param array $options
@@ -185,6 +221,8 @@ class UserVerifyService
                 'mobile' => 'Current mobile is already verified.'
             ]);
         }
+
+        $this->checkResetMobileAttempts($user);
 
         $token = $this->generateUniqueToken($mobile, function() {
             return random_int(100000, 999999);

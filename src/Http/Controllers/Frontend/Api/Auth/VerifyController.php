@@ -17,9 +17,6 @@ class VerifyController extends Controller
         /** @var BaseUser $user */
         $user = $request->user();
 
-        $userVerifyService->
-
-
         /** @var UserVerify $verify */
         $verify = UserVerify::where('user_id', $user->id)
             ->where('token', $request->code)

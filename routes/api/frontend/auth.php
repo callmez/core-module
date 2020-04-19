@@ -41,13 +41,13 @@ Route::group([
 //        Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset.form');
 //        Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.reset');
     });
-    Route::group(['middleware' => ['auth:airlock']], function () {
+    Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('logout', [LogoutController::class, 'logout'])->name('logout'); // 退出登录
     });
 
     Route::group([
         'prefix' => 'v1/auth',
-        'middleware' => ['auth:airlock'],
+        'middleware' => ['auth:sanctum'],
     ], function () {
         Route::get('info', [UserController::class, 'info'])->name('info'); // 登录会员信息
 
