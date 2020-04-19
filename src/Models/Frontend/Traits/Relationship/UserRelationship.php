@@ -4,7 +4,7 @@ namespace Modules\Core\Models\Frontend\Traits\Relationship;
 
 use Modules\Core\Models\Frontend\UserVerify;
 use Modules\Core\src\Models\Auth\UserInvitation;
-use Modules\Core\Models\Frontend\UserPasswordHistory;
+use Modules\Core\Models\Frontend\UserDataHistory;
 
 /**
  * Class UserRelationship.
@@ -15,9 +15,41 @@ trait UserRelationship
     /**
      * @return mixed
      */
+    public function dataHistories()
+    {
+        return $this->hasMany(UserDataHistory::class);
+    }
+    
+    /**
+     * @return mixed
+     */
     public function passwordHistories()
     {
-        return $this->hasMany(UserPasswordHistory::class);
+        return $this->dataHistories()->where('type', '=', UserDataHistory::TYPE_PASSWORD);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function payPasswordHistories()
+    {
+        return $this->dataHistories()->where('type', '=', UserDataHistory::TYPE_PAY_PASSWORD);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function emailHistories()
+    {
+        return $this->dataHistories()->where('type', '=', UserDataHistory::TYPE_EMAIL);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function mobileHistories()
+    {
+        return $this->dataHistories()->where('type', '=', UserDataHistory::TYPE_MOBILE);
     }
 
     /**

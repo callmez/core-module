@@ -4,18 +4,18 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUserPasswordHistoriesTable extends Migration
+class CreateUserDataHistoriesTable extends Migration
 {
     /**
      * Run the migrations.
      */
     public function up()
     {
-        Schema::create('user_password_histories', function (Blueprint $table) {
+        Schema::create('user_data_histories', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id')->default(0)->comment('关联用户');
-            $table->string('password')->default('')->comment('密码值');
-            $table->string('type', '30')->default('')->comment('密码类型');
+            $table->string('data')->default('')->comment('历史记录值');
+            $table->string('type', '30')->default('')->comment('数据类型');
             $table->dateTime('created_at')->nullable();
             $table->dateTime('updated_at')->nullable();
 
@@ -28,6 +28,6 @@ class CreateUserPasswordHistoriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_password_histories');
+        Schema::dropIfExists('user_data_histories');
     }
 }

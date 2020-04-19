@@ -13,7 +13,7 @@ class CreateUserVerifiesTable extends Migration
     {
         Schema::create('user_verifies', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('user_id')->default('')->comment('关联用户ID');
+            $table->bigInteger('user_id')->default(0)->comment('关联用户ID');
             $table->string('key')->nullable()->default('')->comment('验证关键字 email地址|手机号');
             $table->string('token', 100)->index()->nullable()->default('')->comment('验证token');
             $table->string('type', 40)->nullable()->default('')->comment('验证类型 mail_password_reset|mobile_password_reset...');

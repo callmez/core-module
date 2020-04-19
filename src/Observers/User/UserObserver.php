@@ -2,7 +2,8 @@
 
 namespace Modules\Core\Observers\User;
 
-use Modules\Core\Models\Frontend\BaseUser;
+use App\Models\User;
+use Modules\Core\Models\Frontend\UserDataHistory;
 
 /**
  * Class UserObserver.
@@ -12,34 +13,76 @@ class UserObserver
     /**
      * Listen to the User created event.
      *
-     * @param  \Modules\Core\Models\Frontend\BaseUser  $user
+     * @param User $user
      */
-    public function created(BaseUser $user): void
+    public function created(User $user): void
     {
         $this->logPasswordHistory($user);
+        $this->logPayPasswordHistory($user);
     }
 
     /**
      * Listen to the User updated event.
      *
-     * @param  \Modules\Core\Models\Frontend\BaseUser  $user
+     * @param User $user
      */
-    public function updated(BaseUser $user): void
+    public function updated(User $user): void
     {
-        // Only log password history on update if the password actually changed
         if ($user->isDirty('password')) {
             $this->logPasswordHistory($user);
         }
+
+        if ($user->isDirty('pay_password')) {
+            $this->logPayPasswordHistory($user);
+        }
+
+        if ($user->isDirty('email') && $user->isEmailVerified()) {
+            $this->logEmailHistory($user);
+        }
+
+        if ($user->isDirty('mobile') && $user->isMobileVerified()) {
+            $this->logMobileHistory($user);
+        }
+
     }
 
     /**
-     * @param BaseUser $user
+     * @param User $user
      */
-    private function logPasswordHistory(BaseUser $user): void
+    protected function logPasswordHistory(User $user): void
     {
-        if (config('access.users.password_history')) {
-            $user->passwordHistories()->create([
-                'password' => $user->password, // Password already hashed & saved so just take from model
+        $user->passwordHistories()->create([
+            'data' => $user->password,
+            'type' => UserDataHistory::TYPE_PASSWORD
+        ]);
+    }
+
+    protected function logPayPasswordHistory(User $user): void
+    {
+        if (!empty($user->pay_password)) {
+            $user->payPasswordHistories()->create([
+                'data' => $user->pay_password,
+                'type' => UserDataHistory::TYPE_PAY_PASSWORD
+            ]);
+        }
+    }
+
+    protected function logEmailHistory(User $user): void
+    {
+        if (!empty($user->email)) {
+            $user->emailHistories()->create([
+                'data' => $user->pay_password,
+                'type' => UserDataHistory::TYPE_EMAIL
+            ]);
+        }
+    }
+
+    protected function logMobileHistory(User $user): void
+    {
+        if (!empty($user->mobile)) {
+            $user->mobileHistories()->create([
+                'data' => $user->pay_password,
+                'type' => UserDataHistory::TYPE_MOBILE
             ]);
         }
     }

@@ -15,8 +15,8 @@ class CreateUserInvitationsTable extends Migration
     {
         Schema::create('user_invitations', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('user_id')->default('')->comment('关联用户ID');
-            $table->bigInteger('used_user_id')->default('')->comment('使用的用户ID');
+            $table->bigInteger('user_id')->default(0)->comment('关联用户ID');
+            $table->bigInteger('used_user_id')->nullable()->default(0)->comment('使用的用户ID');
             $table->string('token', 40)->unique()->nullable()->default('')->comment('邀请码');
             $table->dateTime('used_at')->nullable()->comment('使用时间');
             $table->dateTime('expired_at')->nullable()->comment('过期时间');

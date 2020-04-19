@@ -68,8 +68,6 @@ abstract class BaseUser extends Authenticatable
      */
     protected $dates = [
         'last_login_at',
-        'password_changed_at',
-        'pay_password_changed_at',
         'mobile_verified_at',
         'email_verified_at',
         'auth_verified_at',

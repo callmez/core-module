@@ -2,12 +2,12 @@
 
 namespace Modules\Core\Providers;
 
+
+use Modules\Core\Observers\User\UserObserver;
 use View;
-use Illuminate\Contracts\Http\Kernel;
-use Illuminate\Database\Eloquent\Factory;
-use Illuminate\Foundation\AliasLoader;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Factory as ValidationFactory;
+use RecursiveIteratorIterator;
+use RecursiveDirectoryIterator;
+use App\Models\User;
 use Modules\Core\Module\ModuleServiceProvider as ServiceProvider;
 use Modules\Core\Auth\Guards\AdminGuard;
 use Modules\Core\Captcha\Captcha;
@@ -15,8 +15,11 @@ use Modules\Core\Captcha\Facades\Captcha as CaptchaFacade;
 use Modules\Core\Config\Repository as ConfigRepository;
 use Modules\Core\Http\Composers\GlobalComposer;
 use Modules\Core\Http\Middleware\UseGuard;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
+use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Foundation\AliasLoader;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Factory as ValidationFactory;
 
 class CoreServiceProvider extends ServiceProvider
 {
@@ -42,6 +45,7 @@ class CoreServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $this->registerObservers();
         $this->registerCaptcha();
         $this->registerValidators();
 //        $this->registerTranslations();
@@ -49,6 +53,11 @@ class CoreServiceProvider extends ServiceProvider
 //        $this->registerFactories();
         $this->loadMigrationsFrom($this->modulePath . '/database/migrations');
         $this->loadSeedsFrom($this->modulePath . '/database/seeds');
+    }
+
+    protected function registerObservers()
+    {
+        User::observe(UserObserver::class);
     }
 
     protected function registerCaptcha()
