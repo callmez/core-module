@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Core\Notifications\Frontend\Auth;
+namespace Modules\Core\Notifications\Frontend;
 
 use Modules\Core\Models\Frontend\UserVerify;
 use Modules\Core\Messages\Frontend\UserVerifyMobileMessage;
@@ -39,9 +39,11 @@ class UserMobileVerify extends Notification implements ShouldQueue
         ];
     }
 
-    public function beforeSend($notifiable)
+    public function beforeSend($job)
     {
-        $notifiable->withNotificationMobile($this->userVerify->key);
+        foreach ($job->notifiables as $notifiable) {
+            $notifiable->withNotificationMobile($this->userVerify->key);
+        }
     }
 
     /**
@@ -53,6 +55,8 @@ class UserMobileVerify extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
+        $notifiable->withNotificationMobile($this->userVerify->key);
+
         return [EasySmsChannel::class];
     }
 

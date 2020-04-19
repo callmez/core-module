@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Core\Notifications\Frontend\Auth;
+namespace Modules\Core\Notifications\Frontend;
 
 use Modules\Core\Models\Frontend\UserVerify;
 use Modules\Core\Messages\Frontend\UserVerifyEmailMessage;
@@ -29,18 +29,6 @@ class UserEmailVerify extends Notification implements ShouldQueue
         $this->userVerify = $userVerify;
     }
 
-    public function middleware()
-    {
-        return [
-            BeforeSend::class
-        ];
-    }
-
-    public function beforeSend($notifiable)
-    {
-        $notifiable->withNotificationEmail($this->userVerify->key);
-    }
-
     /**
      * Get the notification's delivery channels.
      *
@@ -62,6 +50,7 @@ class UserEmailVerify extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
+        $notifiable->withNotificationEmail($this->userVerify->key);
         return new UserVerifyEmailMessage($this->userVerify);
     }
 }

@@ -31,7 +31,7 @@ class ResetController extends Controller
      */
     public function requestResetMobile(ResetMobileRequest $request, UserVerifyService $userVerifyService)
     {
-        $userVerifyService->resetEmailNotification($request->user(), $request->mobile);
+        $userVerifyService->resetMobileNotification($request->user(), $request->mobile);
 
         return [];
     }

@@ -5,7 +5,7 @@ namespace Modules\Core\Http\Controllers\Admin\Auth\User;
 use Modules\Core\Http\Controllers\Controller;
 use Modules\Core\Http\Requests\Admin\Auth\User\ManageUserRequest;
 use Modules\Core\Models\Frontend\BaseUser;
-use Modules\Core\Notifications\Frontend\Auth\UserNeedsConfirmation;
+use Modules\Core\Notifications\Frontend\UserNeedsConfirmation;
 use Modules\Core\Repositories\Admin\Auth\UserRepository;
 
 /**

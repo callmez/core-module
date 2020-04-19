@@ -139,7 +139,7 @@ class UserVerifyService
             ]);
         }
 
-        $this->checkResetAttempts($user);
+        $this->checkResetEmailAttempts($user);
 
         /** @var UserVerifyService $userVerifyService */
         $userVerifyService = resolve(UserVerifyService::class);
@@ -230,7 +230,7 @@ class UserVerifyService
         $verify = $this->create($user, $mobile, 'reset_mobile', $token, $options);
         $verify->makeOtherExpired();
 
-        $user->sendEmailVerifyNotification($verify);
+        $user->sendMobileVerifyNotification($verify);
 
         return true;
     }

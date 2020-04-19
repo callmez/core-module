@@ -3,8 +3,8 @@
 namespace Modules\Core\Models\Frontend\Traits\Notification;
 
 use Modules\Core\Models\Frontend\UserVerify;
-use Modules\Core\Notifications\Frontend\Auth\UserEmailVerify;
-use Modules\Core\Notifications\Frontend\Auth\UserMobileVerify;
+use Modules\Core\Notifications\Frontend\UserEmailVerify;
+use Modules\Core\Notifications\Frontend\UserMobileVerify;
 
 trait UserNotification
 {
