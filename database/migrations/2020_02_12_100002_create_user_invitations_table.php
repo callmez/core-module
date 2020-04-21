@@ -17,11 +17,14 @@ class CreateUserInvitationsTable extends Migration
             $table->bigIncrements('id');
             $table->bigInteger('user_id')->default(0)->comment('关联用户ID');
             $table->bigInteger('used_user_id')->nullable()->default(0)->comment('使用的用户ID');
-            $table->string('token', 40)->unique()->nullable()->default('')->comment('邀请码');
+            $table->string('token', 40)->nullable()->default('')->comment('邀请码');
             $table->dateTime('used_at')->nullable()->comment('使用时间');
             $table->dateTime('expired_at')->nullable()->comment('过期时间');
             $table->dateTime('created_at')->nullable();
             $table->dateTime('updated_at')->nullable();
+
+            $table->index(['token'], 'token');
+            $table->index(['user_id'], 'user');
         });
     }
 

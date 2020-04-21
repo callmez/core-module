@@ -2,12 +2,14 @@
 
 namespace Modules\Core\Services\Frontend;
 
+use App\Models\User;
 use Closure;
+use Dotenv\Exception\ValidationException;
+use Modules\Core\Exceptions\ModelSaveException;
 use UnexpectedValueException;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Modules\Core\Models\Frontend\UserVerify;
 use Modules\Core\src\Models\Auth\UserInvitation;
 use Modules\Core\src\Services\Traits\HasQueryOptions;
 
@@ -28,7 +30,7 @@ class UserInvitationService
         $invitation = $this->withQueryOptions(UserInvitation::where($where), $options)->first();
 
         if ( ! $invitation && ($options['exception'] ?? true)) {
-            throw new ModelNotFoundException('User invitation not found');
+            throw new ModelNotFoundException(trans('邀请码未找到'));
         }
 
         return $invitation;
@@ -91,6 +93,56 @@ class UserInvitationService
         ]);
 
         return $invitation;
+    }
+
+    /**
+     * @param $token
+     * @param User $user
+     *
+     * @return UserInvitation
+     */
+    public function toOneUser($token, User $usedUser)
+    {
+        $invitation = $this->getUserInvitationByToken($token);
+
+        if ($invitation->isExpired()) {
+            throw ValidationException::withMessages([
+                'mobile' => [trans('邀请码已过期')],
+            ]);
+        } elseif ($invitation->isUsed()) {
+            throw ValidationException::withMessages([
+                'mobile' => [trans('邀请码已经被使用')],
+            ]);
+        }
+
+        $invitation->setUsed($usedUser);
+
+        if (!$invitation->save()) {
+            throw ModelSaveException::withModel($invitation);
+        }
+
+        return $invitation;
+    }
+
+    /**
+     * 一码多人模式
+     *
+     * @param $token
+     * @param Closure $userResolver
+     */
+    public function toAnyUser($token, User $usedUser)
+    {
+        $invitation = $this->getUserInvitationByToken($token);
+
+        if ($invitation->isExpired()) {
+            throw ValidationException::withMessages([
+                'mobile' => [trans('邀请码已过期')],
+            ]);
+        } elseif ($invitation->isUsed()) {
+            throw ValidationException::withMessages([
+                'mobile' => [trans('邀请码已经被使用')],
+            ]);
+        }
     }
 
 }

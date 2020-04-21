@@ -2,13 +2,21 @@
 
 namespace Modules\Core\src\Models\Auth;
 
-use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Core\Models\Traits\HasTableName;
+use Modules\Core\Models\Traits\DynamicRelationship;
+use Modules\Core\src\Models\Frontend\Traits\Method\UserInvitationMethod;
+use Modules\Core\src\Models\Frontend\Traits\Scope\UserInvitationScope;
+use Modules\Core\src\Models\Frontend\Traits\Relationship\UseInvitationRelationship;
 
 class UserInvitation extends Model
 {
-    use HasTableName;
+    use HasTableName,
+        DynamicRelationship;
+
+    use UserInvitationScope,
+        UserInvitationMethod,
+        UseInvitationRelationship;
 
     public $fillable = [
         'user_id',
@@ -28,21 +36,4 @@ class UserInvitation extends Model
         'expired_at',
     ];
 
-    /**
-     * @param $query
-     *
-     * @return mixed
-     */
-    public function scopeNotExpired($query)
-    {
-        return $query->where('expired_at', '>=', Carbon::now());
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id', 'id');
-    }
 }

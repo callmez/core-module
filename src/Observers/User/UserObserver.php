@@ -57,6 +57,9 @@ class UserObserver
         ]);
     }
 
+    /**
+     * @param User $user
+     */
     protected function logPayPasswordHistory(User $user): void
     {
         if (!empty($user->pay_password)) {
@@ -67,6 +70,9 @@ class UserObserver
         }
     }
 
+    /**
+     * @param User $user
+     */
     protected function logEmailHistory(User $user): void
     {
         if (!empty($user->email)) {
@@ -77,6 +83,9 @@ class UserObserver
         }
     }
 
+    /**
+     * @param User $user
+     */
     protected function logMobileHistory(User $user): void
     {
         if (!empty($user->mobile)) {

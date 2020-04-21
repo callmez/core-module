@@ -2,15 +2,17 @@
 
 namespace Modules\Core\Models\Frontend;
 
-use Modules\Core\Models\Traits\HasTableName;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Core\Models\Traits\HasTableName;
+use Modules\Core\Models\Traits\DynamicRelationship;
 
 /**
  * Class PasswordHistory.
  */
 class UserDataHistory extends Model
 {
-    use HasTableName;
+    use HasTableName,
+        DynamicRelationship;
 
     /**
      * 密码类型

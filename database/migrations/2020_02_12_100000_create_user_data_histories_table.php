@@ -19,7 +19,7 @@ class CreateUserDataHistoriesTable extends Migration
             $table->dateTime('created_at')->nullable();
             $table->dateTime('updated_at')->nullable();
 
-            $table->index(['user_id'], 'user');
+            $table->index(['user_id', 'type'], 'user_data_type');
         });
     }
 

@@ -2,12 +2,23 @@
 
 namespace Modules\Core\Models\Frontend;
 
-use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Core\Models\Traits\HasTableName;
+use Modules\Core\Models\Traits\DynamicRelationship;
+use Modules\Core\src\Models\Frontend\Traits\Method\UserVerifyMethod;
+use Modules\Core\src\Models\Frontend\Traits\Scope\UserVerifyScope;
+use Modules\Core\src\Models\Frontend\Traits\Relationship\UserVerifyRelationship;
 
 class UserVerify extends Model
 {
+    use HasTableName,
+        DynamicRelationship;
+
+    use UserVerifyScope,
+        UserVerifyMethod,
+        UserVerifyRelationship;
+
     const UPDATED_AT = null;
 
     public $fillable = [
@@ -27,48 +38,4 @@ class UserVerify extends Model
         'expired_at',
     ];
 
-    /**
-     * @param $query
-     *
-     * @return mixed
-     */
-    public function scopeNotExpired($query)
-    {
-        return $query->where('expired_at', '>=', Carbon::now());
-    }
-
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id', 'id');
-    }
-
-    /**
-     *  make same type expired
-     */
-    public function makeOtherExpired($delete = true)
-    {
-        $query = static::where('user_id', $this->user_id)
-            ->where('type', $this->type)
-            ->where('id', '<>', $this->id);
-
-        if ($delete) {
-            return $query->delete();
-        }
-
-        return $query
-            ->notExpired()
-            ->update([
-                'expired_at' => Carbon::now(),
-            ]);
-    }
-
-    /**
-     *  make same type expired
-     */
-    public function setExpired()
-    {
-        $this->expired_at = Carbon::now();
-
-        return $this;
-    }
 }
