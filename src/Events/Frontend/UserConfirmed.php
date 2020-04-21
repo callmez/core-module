@@ -1,26 +1,26 @@
 <?php
 
-namespace Modules\Core\Events\Frontend\Auth;
+namespace Modules\Core\Events\Frontend;
 
-use Modules\Core\Models\Frontend\BaseUser;
+use App\Models\User;
 use Illuminate\Queue\SerializesModels;
 
 /**
- * Class UserLoggedOut.
+ * Class UserConfirmed.
  */
-class UserLoggedOut
+class UserConfirmed
 {
     use SerializesModels;
 
     /**
-     * @var
+     * @var User
      */
     public $user;
 
     /**
      * @param $user
      */
-    public function __construct(BaseUser $user)
+    public function __construct(User $user)
     {
         $this->user = $user;
     }

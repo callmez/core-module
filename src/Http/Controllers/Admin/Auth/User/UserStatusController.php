@@ -4,7 +4,7 @@ namespace Modules\Core\Http\Controllers\Admin\Auth\User;
 
 use Modules\Core\Http\Controllers\Controller;
 use Modules\Core\Http\Requests\Admin\Auth\User\ManageUserRequest;
-use Modules\Core\Models\Frontend\BaseUser;
+use App\Models\User;
 use Modules\Core\Repositories\Admin\Auth\UserRepository;
 
 /**
@@ -49,13 +49,13 @@ class UserStatusController extends Controller
 
     /**
      * @param ManageUserRequest $request
-     * @param BaseUser              $user
+     * @param User              $user
      * @param                   $status
      *
      * @throws \Modules\Core\Exceptions\GeneralException
      * @return mixed
      */
-    public function mark(ManageUserRequest $request, BaseUser $user, $status)
+    public function mark(ManageUserRequest $request, User $user, $status)
     {
         $this->userRepository->mark($user, (int) $status);
 
@@ -68,13 +68,13 @@ class UserStatusController extends Controller
 
     /**
      * @param ManageUserRequest $request
-     * @param BaseUser              $deletedUser
+     * @param User              $deletedUser
      *
      * @throws \Modules\Core\Exceptions\GeneralException
      * @throws \Throwable
      * @return mixed
      */
-    public function delete(ManageUserRequest $request, BaseUser $deletedUser)
+    public function delete(ManageUserRequest $request, User $deletedUser)
     {
         $this->userRepository->forceDelete($deletedUser);
 
@@ -83,12 +83,12 @@ class UserStatusController extends Controller
 
     /**
      * @param ManageUserRequest $request
-     * @param BaseUser              $deletedUser
+     * @param User              $deletedUser
      *
      * @throws \Modules\Core\Exceptions\GeneralException
      * @return mixed
      */
-    public function restore(ManageUserRequest $request, BaseUser $deletedUser)
+    public function restore(ManageUserRequest $request, User $deletedUser)
     {
         $this->userRepository->restore($deletedUser);
 

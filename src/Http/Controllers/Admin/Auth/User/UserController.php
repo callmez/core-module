@@ -68,11 +68,11 @@ class UserController extends Controller
 
     /**
      * @param ManageUserRequest $request
-     * @param BaseUser              $user
+     * @param User              $user
      *
      * @return mixed
      */
-    public function show(ManageUserRequest $request, BaseUser $user)
+    public function show(ManageUserRequest $request, User $user)
     {
         return view('core::admin.auth.user.show')
             ->withUser($user);
@@ -82,7 +82,7 @@ class UserController extends Controller
      * @param ManageUserRequest    $request
      * @param RoleRepository       $roleRepository
      * @param PermissionRepository $permissionRepository
-     * @param BaseUser                 $user
+     * @param User                 $user
      *
      * @return mixed
      */
@@ -98,13 +98,13 @@ class UserController extends Controller
 
     /**
      * @param UpdateUserRequest $request
-     * @param BaseUser              $user
+     * @param User              $user
      *
      * @throws \Modules\Core\Exceptions\GeneralException
      * @throws \Throwable
      * @return mixed
      */
-    public function update(UpdateUserRequest $request, BaseUser $user)
+    public function update(UpdateUserRequest $request, User $user)
     {
         $this->userRepository->update($user, $request->only(
             'first_name',
@@ -119,12 +119,12 @@ class UserController extends Controller
 
     /**
      * @param ManageUserRequest $request
-     * @param BaseUser              $user
+     * @param User              $user
      *
      * @throws \Exception
      * @return mixed
      */
-    public function destroy(ManageUserRequest $request, BaseUser $user, UserRepository $userRepository)
+    public function destroy(ManageUserRequest $request, User $user, UserRepository $userRepository)
     {
         $userRepository->deleteById($user->id);
 

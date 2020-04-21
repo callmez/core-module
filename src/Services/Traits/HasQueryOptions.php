@@ -16,7 +16,11 @@ trait HasQueryOptions
             $query->with($with);
         }
 
-        if ($callback = $options['query_callback'] ?? false) {
+        if ($orderBy = $options['orderBy'] ?? false) {
+            call_user_func_array([$query, 'orderBy'], !is_array($orderBy) ? [$orderBy] : $orderBy);
+        }
+
+        if ($callback = $options['queryCallback'] ?? false) {
             $callback($query);
         }
 

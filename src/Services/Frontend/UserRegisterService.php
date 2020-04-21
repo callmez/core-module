@@ -7,8 +7,8 @@ use Closure;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
-use Modules\Core\Events\Frontend\Auth\UserLoggedIn;
-use Modules\Core\Events\Frontend\Auth\UserRegistered;
+use Modules\Core\Events\Frontend\UserLoggedIn;
+use Modules\Core\Events\Frontend\UserRegistered;
 use Modules\Core\src\Services\Traits\HasQueryOptions;
 use Modules\Core\Exceptions\Frontend\Auth\UserVerifyException;
 use Modules\Core\src\Exceptions\Frontend\Auth\UserNotFoundException;
@@ -51,8 +51,8 @@ class UserRegisterService
 
     protected function processInvitation(array $data, User $usedUser)
     {
-        $invitation = config('core::system.register.invitation', 0);
-        if ($invitation == 0) {
+        $invitationState = config('core::system.register.invitation', 0);
+        if ($invitationState == 0) { // 不开启邀请码
             return ;
         }
 
@@ -60,12 +60,12 @@ class UserRegisterService
         /** @var UserInvitationService $invitationService */
         $invitationService = resolve(UserInvitationService::class);
 
-        if ($invitation == 1) { // 一码一人模式
-            $invitationService->toOneUser($token, $usedUser);
+        if ($invitationState == 1) { // 一码一人模式
+            $invitation = $invitationService->inviteOneUser($token, $usedUser);
         } else { // 一码多人模式
-            $invitationService->toAnyUser($token, $usedUser);
+            $invitation = $invitationService->inviteAnyUser($token, $usedUser);
         }
 
-
+        return $invitation;
     }
 }

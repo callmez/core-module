@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\Core\Listeners\Frontend\Auth;
+namespace Modules\Core\Listeners\Frontend;
 
-use Modules\Core\Events\Frontend\Auth\UserConfirmed;
-use Modules\Core\Events\Frontend\Auth\UserLoggedIn;
-use Modules\Core\Events\Frontend\Auth\UserLoggedOut;
-use Modules\Core\Events\Frontend\Auth\UserProviderRegistered;
-use Modules\Core\Events\Frontend\Auth\UserRegistered;
+use Modules\Core\Events\Frontend\UserConfirmed;
+use Modules\Core\Events\Frontend\UserLoggedIn;
+use Modules\Core\Events\Frontend\UserLoggedOut;
+use Modules\Core\Events\Frontend\UserProviderRegistered;
+use Modules\Core\Events\Frontend\UserRegistered;
 
 /**
  * Class UserEventListener.
@@ -82,27 +82,27 @@ class UserEventListener
     {
         $events->listen(
             UserLoggedIn::class,
-            'Modules\Core\Listeners\Frontend\Auth\UserEventListener@onLoggedIn'
+            'Modules\Core\Listeners\Frontend\UserEventListener@onLoggedIn'
         );
 
 //        $events->listen(
 //            UserLoggedOut::class,
-//            'Modules\Core\Listeners\Frontend\Auth\UserEventListener@onLoggedOut'
+//            'Modules\Core\Listeners\Frontend\UserEventListener@onLoggedOut'
 //        );
 //
 //        $events->listen(
 //            UserRegistered::class,
-//            'Modules\Core\Listeners\Frontend\Auth\UserEventListener@onRegistered'
+//            'Modules\Core\Listeners\Frontend\UserEventListener@onRegistered'
 //        );
 //
 //        $events->listen(
 //            UserProviderRegistered::class,
-//            'Modules\Core\Listeners\Frontend\Auth\UserEventListener@onProviderRegistered'
+//            'Modules\Core\Listeners\Frontend\UserEventListener@onProviderRegistered'
 //        );
 //
 //        $events->listen(
 //            UserConfirmed::class,
-//            'Modules\Core\Listeners\Frontend\Auth\UserEventListener@onConfirmed'
+//            'Modules\Core\Listeners\Frontend\UserEventListener@onConfirmed'
 //        );
     }
 }

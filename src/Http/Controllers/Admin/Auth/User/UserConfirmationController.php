@@ -4,7 +4,7 @@ namespace Modules\Core\Http\Controllers\Admin\Auth\User;
 
 use Modules\Core\Http\Controllers\Controller;
 use Modules\Core\Http\Requests\Admin\Auth\User\ManageUserRequest;
-use Modules\Core\Models\Frontend\BaseUser;
+use App\Models\User;
 use Modules\Core\Notifications\Frontend\UserNeedsConfirmation;
 use Modules\Core\Repositories\Admin\Auth\UserRepository;
 
@@ -15,11 +15,11 @@ class UserConfirmationController extends Controller
 {
     /**
      * @param ManageUserRequest $request
-     * @param BaseUser              $user
+     * @param User              $user
      *
      * @return mixed
      */
-    public function sendConfirmationEmail(ManageUserRequest $request, BaseUser $user)
+    public function sendConfirmationEmail(ManageUserRequest $request, User $user)
     {
         // Shouldn't allow users to confirm their own accounts when the application is set to manual confirmation
         if (config('access.users.requires_approval')) {
@@ -37,12 +37,12 @@ class UserConfirmationController extends Controller
 
     /**
      * @param ManageUserRequest $request
-     * @param BaseUser              $user
+     * @param User              $user
      *
      * @throws \Modules\Core\Exceptions\GeneralException
      * @return mixed
      */
-    public function confirm(ManageUserRequest $request, BaseUser $user, UserRepository $userRepository)
+    public function confirm(ManageUserRequest $request, User $user, UserRepository $userRepository)
     {
         $userRepository->confirm($user);
 
@@ -51,12 +51,12 @@ class UserConfirmationController extends Controller
 
     /**
      * @param ManageUserRequest $request
-     * @param BaseUser              $user
+     * @param User              $user
      *
      * @throws \Modules\Core\Exceptions\GeneralException
      * @return mixed
      */
-    public function unconfirm(ManageUserRequest $request, BaseUser $user, UserRepository $userRepository)
+    public function unconfirm(ManageUserRequest $request, User $user, UserRepository $userRepository)
     {
         $userRepository->unconfirm($user);
 

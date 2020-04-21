@@ -3,15 +3,16 @@
 namespace Modules\Core\Services\Frontend;
 
 use App\Models\User;
+use Carbon\Carbon;
 use Closure;
 use Dotenv\Exception\ValidationException;
-use Modules\Core\Exceptions\ModelSaveException;
-use UnexpectedValueException;
-use Carbon\Carbon;
-use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Str;
+use Modules\Core\Exceptions\ModelSaveException;
+use Modules\Core\src\Events\Frontend\UserInvited;
 use Modules\Core\src\Models\Auth\UserInvitation;
 use Modules\Core\src\Services\Traits\HasQueryOptions;
+use UnexpectedValueException;
 
 
 class UserInvitationService
@@ -41,11 +42,28 @@ class UserInvitationService
      * @param array $options
      *
      * @return UserInvitation
-     * @throws ModelNotFoundException
      */
     public function getUserInvitationByToken($token, array $options = [])
     {
-        return $this->getUserInvitation(['token' => $token], $options);
+        $available = $options['available'] ?? true;
+
+        $invitation = $this->getUserInvitation(['token' => $token], array_merge([
+            'orderBy' => 'created_at',
+        ], $options));
+
+        if ($available) {
+            if ($invitation->isExpired()) {
+                throw ValidationException::withMessages([
+                    'mobile' => [trans('邀请码已过期')],
+                ]);
+            } elseif ($invitation->isUsed()) {
+                throw ValidationException::withMessages([
+                    'mobile' => [trans('邀请码已经被使用')],
+                ]);
+            }
+        }
+
+        return $invitation;
     }
 
     /**
@@ -83,14 +101,26 @@ class UserInvitationService
      */
     public function create($user, $token = null, $expiredAt = null, array $options = [])
     {
-        $user = with_user($user);
+        return $this->createByData([
+            'user_id' => with_user_id($user),
+            'token' => $token,
+            'expired_at' => $expiredAt
+        ], $options);
+    }
 
+    /**
+     * @param array $data
+     * @param $options
+     *
+     * @return UserInvitation
+     */
+    public function createByData(array $data, array $options = [])
+    {
         /** @var UserInvitation $invitation */
-        $invitation = $user->invitations()->create([
-            'user_id'    => $user->id,
-            'token'       => $token ?: $this->generateUniqueToken(),
-            'expired_at' => $expiredAt ?: Carbon::now()->addSeconds(config('core::user.invitation.expires', 600)),
-        ]);
+        $invitation = UserInvitation::create(array_merge($data, [
+            'token'      => $data['token'] ?: $this->generateUniqueToken(),
+            'expired_at' => $data['expired_at'] ?: Carbon::now()->addSeconds(config('core::user.invitation.expires', 600)),
+        ]));
 
         return $invitation;
     }
@@ -101,25 +131,17 @@ class UserInvitationService
      *
      * @return UserInvitation
      */
-    public function toOneUser($token, User $usedUser)
+    public function inviteOneUser($token, User $usedUser)
     {
         $invitation = $this->getUserInvitationByToken($token);
-
-        if ($invitation->isExpired()) {
-            throw ValidationException::withMessages([
-                'mobile' => [trans('邀请码已过期')],
-            ]);
-        } elseif ($invitation->isUsed()) {
-            throw ValidationException::withMessages([
-                'mobile' => [trans('邀请码已经被使用')],
-            ]);
-        }
 
         $invitation->setUsed($usedUser);
 
         if (!$invitation->save()) {
             throw ModelSaveException::withModel($invitation);
         }
+
+        event(new UserInvited($invitation));
 
         return $invitation;
     }
@@ -130,19 +152,20 @@ class UserInvitationService
      * @param $token
      * @param Closure $userResolver
      */
-    public function toAnyUser($token, User $usedUser)
+    public function inviteAnyUser($token, User $usedUser)
     {
         $invitation = $this->getUserInvitationByToken($token);
 
-        if ($invitation->isExpired()) {
-            throw ValidationException::withMessages([
-                'mobile' => [trans('邀请码已过期')],
-            ]);
-        } elseif ($invitation->isUsed()) {
-            throw ValidationException::withMessages([
-                'mobile' => [trans('邀请码已经被使用')],
-            ]);
+        $usedInvitation = $invitation->replicate();
+        $usedInvitation->setUsed($usedUser);
+
+        if (!$usedInvitation->save()) {
+            throw ModelSaveException::withModel($usedInvitation);
         }
+
+        event(new UserInvited($usedInvitation));
+
+        return $usedInvitation;
     }
 
 }

@@ -4,7 +4,7 @@ namespace Modules\Core\Http\Controllers\Frontend\Auth;
 
 use Modules\Core\Models\Frontend\UserVerify;
 use Modules\Core\Http\Controllers\Controller;
-use Modules\Core\Events\Frontend\Auth\UserEmailVerified;
+use Modules\Core\Events\Frontend\UserEmailVerified;
 use Illuminate\Http\Request;
 
 class EmailVerifyController extends Controller

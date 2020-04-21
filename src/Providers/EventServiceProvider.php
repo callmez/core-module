@@ -3,7 +3,7 @@
 namespace Modules\Core\Providers;
 
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Modules\Core\Listeners\Frontend\Auth\UserEventListener;
+use Modules\Core\Listeners\Frontend\UserEventListener;
 
 class EventServiceProvider extends ServiceProvider
 {

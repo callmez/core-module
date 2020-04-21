@@ -3,7 +3,7 @@
 namespace Modules\Core\Services\Frontend;
 
 use App\Models\User;
-use Modules\Core\Events\Frontend\Auth\UserLoggedIn;
+use Modules\Core\Events\Frontend\UserLoggedIn;
 use Modules\Core\Exceptions\Frontend\Auth\UserVerifyException;
 
 class UserLoginService

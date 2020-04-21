@@ -5,7 +5,7 @@ namespace Modules\Core\Http\Controllers\Admin\Auth\User;
 use Modules\Core\Http\Controllers\Controller;
 use Modules\Core\Http\Requests\Admin\Auth\User\ManageUserRequest;
 use Modules\Core\Http\Requests\Admin\Auth\User\UpdateUserPasswordRequest;
-use Modules\Core\Models\Frontend\BaseUser;
+use App\Models\User;
 use Modules\Core\Repositories\Admin\Auth\UserRepository;
 
 /**
@@ -28,11 +28,11 @@ class UserPasswordController extends Controller
 
     /**
      * @param ManageUserRequest $request
-     * @param BaseUser              $user
+     * @param User              $user
      *
      * @return mixed
      */
-    public function edit(ManageUserRequest $request, BaseUser $user)
+    public function edit(ManageUserRequest $request, User $user)
     {
         return view('core::admin.auth.user.change-password')
             ->withUser($user);
@@ -40,7 +40,7 @@ class UserPasswordController extends Controller
 
     /**
      * @param UpdateUserPasswordRequest $request
-     * @param BaseUser                      $user
+     * @param User                      $user
      *
      * @throws \Modules\Core\Exceptions\GeneralException
      * @return mixed
