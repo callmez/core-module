@@ -37,9 +37,10 @@ class UserInvitationObserver
     {
         /** @var UserInvitationTree $invitationTree */
         $invitationTree = $invitation->tree()->firstOrNew([], ['data' => []]);
-
         $invitationTree->recordInviterTree($invitation->user_id);
-
         $invitationTree->save();
+
+        $invitation->invitee->inviter_id = $invitation->user_id;
+        $invitation->invitee->save();
     }
 }

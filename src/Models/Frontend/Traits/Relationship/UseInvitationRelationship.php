@@ -10,9 +10,17 @@ trait UseInvitationRelationship
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function user()
+    public function inviter()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function invitee()
+    {
+        return $this->belongsTo(User::class, 'used_user_id', 'id');
     }
 
     /**

@@ -2,17 +2,10 @@
 
 namespace Modules\Core\Services\Frontend;
 
-use Cache;
-use Closure;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\ValidationException;
-use Modules\Core\Events\Frontend\UserLoggedIn;
 use Modules\Core\Events\Frontend\UserRegistered;
-use Modules\Core\src\Services\Traits\HasQueryOptions;
-use Modules\Core\Exceptions\Frontend\Auth\UserVerifyException;
-use Modules\Core\src\Exceptions\Frontend\Auth\UserNotFoundException;
-use Modules\Core\Exceptions\Frontend\Auth\UserPayPasswordCheckException;
+use Modules\Core\src\Models\Frontend\UserInvitation;
 
 class UserRegisterService
 {
@@ -49,9 +42,15 @@ class UserRegisterService
         return $user;
     }
 
+    /**
+     * @param array $data
+     * @param User $usedUser
+     *
+     * @return UserInvitation
+     */
     protected function processInvitation(array $data, User $usedUser)
     {
-        $invitationState = config('core::system.register.invitation', 2);
+        $invitationState = config('core::system.register.invitation', 0);
         if ($invitationState == 0) { // 不开启邀请码
             return ;
         }

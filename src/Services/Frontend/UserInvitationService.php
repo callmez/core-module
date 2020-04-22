@@ -2,7 +2,6 @@
 
 namespace Modules\Core\Services\Frontend;
 
-use App\Models\User;
 use Carbon\Carbon;
 use Closure;
 use Dotenv\Exception\ValidationException;
@@ -127,12 +126,14 @@ class UserInvitationService
 
     /**
      * @param $token
-     * @param User $user
+     * @param $user
      *
      * @return UserInvitation
      */
-    public function inviteOneUser($token, User $usedUser)
+    public function inviteOneUser($token, $usedUser)
     {
+        $usedUser = with_user($usedUser);
+
         $invitation = $this->getUserInvitationByToken($token);
 
         $invitation->setUsed($usedUser);
@@ -152,8 +153,10 @@ class UserInvitationService
      * @param $token
      * @param Closure $userResolver
      */
-    public function inviteAnyUser($token, User $usedUser)
+    public function inviteAnyUser($token, $usedUser)
     {
+        $usedUser = with_user($usedUser);
+
         $invitation = $this->getUserInvitationByToken($token);
 
         $usedInvitation = $invitation->replicate();

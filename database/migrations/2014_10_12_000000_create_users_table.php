@@ -17,6 +17,7 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->uuid('uuid');
+            $table->unsignedBigInteger('inviter_id')->default(0)->comment('邀请人ID');
             $table->string('username', 50)->unique()->default('')->comment('用户名');
             $table->string('email')->nullable()->default('')->comment('登录邮箱');
             $table->dateTime('email_verified_at')->nullable()->comment('邮箱验证时间');
