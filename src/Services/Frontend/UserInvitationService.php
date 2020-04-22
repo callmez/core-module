@@ -2,17 +2,17 @@
 
 namespace Modules\Core\Services\Frontend;
 
-use Carbon\Carbon;
 use Closure;
-use Dotenv\Exception\ValidationException;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use UnexpectedValueException;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Modules\Core\Exceptions\ModelSaveException;
 use Modules\Core\src\Events\Frontend\UserInvited;
 use Modules\Core\src\Models\Frontend\UserInvitation;
 use Modules\Core\src\Services\Traits\HasQueryOptions;
-use UnexpectedValueException;
-
 
 class UserInvitationService
 {
@@ -125,6 +125,36 @@ class UserInvitationService
     }
 
     /**
+     *
+     * 获取用户邀请人的上级邀请树用户
+     *
+     * @param User|int $user
+     * @param array $options 上级邀请代数, 比如: 2=只返回2代邀请用户数据
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getInvitersByUser($user, array $options = [])
+    {
+        $user = with_user($user);
+
+        $data = $user->invitationTree ? $user->invitationTree->data : [];
+
+        $level = $options['level'] ?? false;
+
+        if ($level > 0) { // 取出指定代数数据
+            $data = array_slice($data, 0, $level);
+        }
+
+        /** @var UserService $userService */
+        $userService = resolve(UserService::class);
+
+        return $userService->getUsers([['id', 'in', $data]])
+            ->keyBy('id');
+    }
+
+    /**
+     * 一码多人模式
+     *
      * @param $token
      * @param $user
      *

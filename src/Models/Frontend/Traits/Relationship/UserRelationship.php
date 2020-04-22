@@ -5,6 +5,7 @@ namespace Modules\Core\Models\Frontend\Traits\Relationship;
 use Modules\Core\Models\Frontend\UserVerify;
 use Modules\Core\src\Models\Frontend\UserInvitation;
 use Modules\Core\Models\Frontend\UserDataHistory;
+use Modules\Core\src\Models\Frontend\UserInvitationTree;
 
 /**
  * Class UserRelationship.
@@ -66,5 +67,13 @@ trait UserRelationship
     public function invitations()
     {
         return $this->hasMany(UserInvitation::class);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function invitationTree()
+    {
+        return $this->hasOne(UserInvitationTree::class);
     }
 }

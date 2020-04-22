@@ -17,6 +17,19 @@ class UserService
      * @param $where
      * @param array $options
      *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getUsers($where, array $options = [])
+    {
+        $query = $this->withQueryOptions(User::where($where), $options);
+
+        return $query->get();
+    }
+
+    /**
+     * @param $where
+     * @param array $options
+     *
      * @return mixed
      */
     public function getUser($where, array $options = [])
