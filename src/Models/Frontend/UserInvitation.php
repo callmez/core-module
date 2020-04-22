@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Core\src\Models\Auth;
+namespace Modules\Core\src\Models\Frontend;
 
 use Illuminate\Database\Eloquent\Model;
 use Modules\Core\Models\Traits\HasTableName;
@@ -18,6 +18,9 @@ class UserInvitation extends Model
         UserInvitationMethod,
         UseInvitationRelationship;
 
+    /**
+     * @var array
+     */
     public $fillable = [
         'user_id',
         'used_user_id',
@@ -35,5 +38,4 @@ class UserInvitation extends Model
         'used_at',
         'expired_at',
     ];
-
 }

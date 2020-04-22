@@ -51,7 +51,7 @@ class UserRegisterService
 
     protected function processInvitation(array $data, User $usedUser)
     {
-        $invitationState = config('core::system.register.invitation', 0);
+        $invitationState = config('core::system.register.invitation', 2);
         if ($invitationState == 0) { // 不开启邀请码
             return ;
         }

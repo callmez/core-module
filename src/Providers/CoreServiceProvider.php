@@ -2,23 +2,24 @@
 
 namespace Modules\Core\Providers;
 
-
-use Modules\Core\Observers\User\UserObserver;
 use View;
 use RecursiveIteratorIterator;
 use RecursiveDirectoryIterator;
 use App\Models\User;
-use Modules\Core\Module\ModuleServiceProvider as ServiceProvider;
-use Modules\Core\Auth\Guards\AdminGuard;
 use Modules\Core\Captcha\Captcha;
-use Modules\Core\Captcha\Facades\Captcha as CaptchaFacade;
-use Modules\Core\Config\Repository as ConfigRepository;
-use Modules\Core\Http\Composers\GlobalComposer;
+use Modules\Core\Auth\Guards\AdminGuard;
 use Modules\Core\Http\Middleware\UseGuard;
+use Modules\Core\Http\Composers\GlobalComposer;
+use Modules\Core\Observers\Frontend\UserObserver;
+use Modules\Core\src\Models\Frontend\UserInvitation;
+use Modules\Core\Observers\Frontend\UserInvitationObserver;
+use Modules\Core\Config\Repository as ConfigRepository;
+use Modules\Core\Captcha\Facades\Captcha as CaptchaFacade;
+use Modules\Core\Module\ModuleServiceProvider as ServiceProvider;
 use Illuminate\Contracts\Http\Kernel;
-use Illuminate\Database\Eloquent\Factory;
-use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\AliasLoader;
+use Illuminate\Database\Eloquent\Factory;
 use Illuminate\Validation\Factory as ValidationFactory;
 
 class CoreServiceProvider extends ServiceProvider
@@ -58,6 +59,7 @@ class CoreServiceProvider extends ServiceProvider
     protected function registerObservers()
     {
         User::observe(UserObserver::class);
+        UserInvitation::observe(UserInvitationObserver::class);
     }
 
     protected function registerCaptcha()

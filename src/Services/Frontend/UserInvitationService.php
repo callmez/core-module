@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Str;
 use Modules\Core\Exceptions\ModelSaveException;
 use Modules\Core\src\Events\Frontend\UserInvited;
-use Modules\Core\src\Models\Auth\UserInvitation;
+use Modules\Core\src\Models\Frontend\UserInvitation;
 use Modules\Core\src\Services\Traits\HasQueryOptions;
 use UnexpectedValueException;
 

@@ -31,13 +31,6 @@ class UserDataHistory extends Model
      */
     const TYPE_MOBILE = 'mobile';
     /**
-     * The database table used by the model.
-     *
-     * @var string
-     */
-    protected $table = 'user_data_histories';
-
-    /**
      * The attributes that are mass assignable.
      *
      * @var array

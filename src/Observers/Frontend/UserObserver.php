@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Core\Observers\User;
+namespace Modules\Core\Observers\Frontend;
 
 use App\Models\User;
 use Modules\Core\Models\Frontend\UserDataHistory;

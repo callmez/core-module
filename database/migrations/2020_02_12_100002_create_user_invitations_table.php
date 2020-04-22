@@ -26,6 +26,14 @@ class CreateUserInvitationsTable extends Migration
             $table->index(['token'], 'token');
             $table->index(['user_id'], 'user');
         });
+
+        Schema::create('user_invitation_tree', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->bigInteger('user_id')->unique()->comment('关联用户ID');
+            $table->json('data')->nullable()->comment('用户上级邀请关系, 按数组顺序记录上级邀请关系');
+            $table->dateTime('created_at')->nullable();
+            $table->dateTime('updated_at')->nullable();
+        });
     }
 
     /**
@@ -36,5 +44,6 @@ class CreateUserInvitationsTable extends Migration
     public function down()
     {
         Schema::dropIfExists('user_invitations');
+        Schema::dropIfExists('user_invitation_tree');
     }
 }

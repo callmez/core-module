@@ -3,7 +3,7 @@
 namespace Modules\Core\src\Events\Frontend;
 
 use Illuminate\Queue\SerializesModels;
-use Modules\Core\src\Models\Auth\UserInvitation;
+use Modules\Core\src\Models\Frontend\UserInvitation;
 
 class UserInvited
 {

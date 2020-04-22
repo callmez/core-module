@@ -21,6 +21,9 @@ class UserVerify extends Model
 
     const UPDATED_AT = null;
 
+    /**
+     * @var array
+     */
     public $fillable = [
         'user_id',
         'key',
@@ -28,7 +31,6 @@ class UserVerify extends Model
         'type',
         'expired_at',
     ];
-
     /**
      * 应该转换为日期格式的属性.
      *

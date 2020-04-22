@@ -2,6 +2,7 @@
 
 namespace Modules\Core\src\Models\Frontend\Traits\Method;
 
+use Carbon\Carbon;
 use App\Models\User;
 
 trait UserInvitationMethod
@@ -11,7 +12,7 @@ trait UserInvitationMethod
      */
     public function isExpired()
     {
-        return $this->expired_at;
+        return $this->expired_at->isPast();
     }
 
     /**
@@ -24,6 +25,9 @@ trait UserInvitationMethod
 
     public function setUsed(User $user)
     {
+        $this->used_user_id = $user->id;
+        $this->used_at = Carbon::now();
 
+        return $this;
     }
 }
