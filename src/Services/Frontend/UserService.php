@@ -4,14 +4,24 @@ namespace Modules\Core\Services\Frontend;
 
 use Cache;
 use App\Models\User;
-use Modules\Core\src\Services\Traits\HasQueryOptions;
+use Modules\Core\src\Services\Traits\HasQuery;
 use Modules\Core\src\Exceptions\Frontend\Auth\UserNotFoundException;
 use Modules\Core\Exceptions\Frontend\Auth\UserPasswordCheckException;
 use Modules\Core\Exceptions\Frontend\Auth\UserPayPasswordCheckException;
 
 class UserService
 {
-    use HasQueryOptions;
+    use HasQuery;
+
+    /**
+     * @var User
+     */
+    protected $model;
+
+    public function __construct(User $model)
+    {
+        $this->model = $model;
+    }
 
     /**
      * @param $where

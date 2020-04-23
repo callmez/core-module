@@ -12,12 +12,12 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Modules\Core\Exceptions\ModelSaveException;
 use Modules\Core\Models\Frontend\UserVerify;
+use Modules\Core\src\Services\Traits\HasQuery;
 use Modules\Core\src\Services\Traits\HasThrottles;
-use Modules\Core\src\Services\Traits\HasQueryOptions;
 
 class UserVerifyService
 {
-    use HasQueryOptions,
+    use HasQuery,
         HasThrottles;
 
     /**

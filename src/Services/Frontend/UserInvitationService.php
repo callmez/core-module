@@ -10,13 +10,23 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Modules\Core\Exceptions\ModelSaveException;
+use Modules\Core\src\Services\Traits\HasQuery;
 use Modules\Core\src\Events\Frontend\UserInvited;
 use Modules\Core\src\Models\Frontend\UserInvitation;
-use Modules\Core\src\Services\Traits\HasQueryOptions;
 
 class UserInvitationService
 {
-    use HasQueryOptions;
+    use HasQuery;
+
+    /**
+     * @var User
+     */
+    protected $model;
+
+    public function __construct(UserInvitation $model)
+    {
+        $this->model = $model;
+    }
 
     /**
      * @param $where
@@ -125,7 +135,6 @@ class UserInvitationService
     }
 
     /**
-     *
      * 获取用户邀请人的上级邀请树用户
      *
      * @param User|int $user

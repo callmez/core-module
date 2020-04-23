@@ -12,6 +12,9 @@ class HomeController extends Controller
 
     public function index()
     {
+        $invitationService = resolve(\Modules\Core\Services\Frontend\UserInvitationService::class);
+        return $invitationService->getInvitersByUser(2);
+
         return 'hello world!';
     }
 }
