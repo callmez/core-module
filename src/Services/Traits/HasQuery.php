@@ -57,7 +57,7 @@ trait HasQuery
     }
 
     /**
-     * @param array|null $where
+     * @param \Closure|array|null $where
      * @param array $options
      *
      * @return \Illuminate\Database\Eloquent\Model
@@ -79,18 +79,18 @@ trait HasQuery
     }
 
     /**
-     * @param array|null $where
+     * @param \Closure|array|null $where
      * @param array $options
      *
      * @return mixed
      */
     public function all($where = null, array $options = [])
     {
-        return $this->withQueryOptions($this->query(), array_merge($options, ['where' => $where]))->all();
+        return $this->withQueryOptions($this->query(), array_merge($options, ['where' => $where]))->get();
     }
 
     /**
-     * @param array|null $where
+     * @param \Closure|array|null $where
      * @param array $options
      *
      * @return int

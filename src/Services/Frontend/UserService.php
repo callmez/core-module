@@ -27,7 +27,7 @@ class UserService
     }
 
     /**
-     * @param null|array $where
+     * @param \Closure|array|null $where
      * @param array $options
      *
      * @return mixed

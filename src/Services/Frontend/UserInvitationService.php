@@ -32,7 +32,7 @@ class UserInvitationService
     }
 
     /**
-     * @param null|array $where
+     * @param \Closure|array|null $where
      * @param array $options
      *
      * @return mixed
@@ -154,8 +154,9 @@ class UserInvitationService
         /** @var UserService $userService */
         $userService = resolve(UserService::class);
 
-        return $userService->all([['id', 'in', $data]])
-            ->keyBy('id');
+        return $userService->all(function($query) use ($data) {
+            $query->whereIn('id', $data);
+        })->keyBy('id');
     }
 
     /**
