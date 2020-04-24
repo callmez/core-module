@@ -9,7 +9,6 @@ use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Modules\Core\Exceptions\ModelSaveException;
 use Modules\Core\Models\Frontend\UserVerify;
 use Modules\Core\src\Services\Traits\HasQuery;
@@ -21,21 +20,13 @@ class UserVerifyService
         HasThrottles;
 
     /**
-     * @param $where
-     * @param array $options
-     *
-     * @return UserVerify
-     * @throws ModelNotFoundException
+     * @var UserVerify
      */
-    public function getUserVerify($where, array $options = [])
+    protected $model;
+
+    public function __construct(UserVerify $model)
     {
-        $verify = $this->withQueryOptions(UserVerify::where($where), $options)->first();
-
-        if ( ! $verify && ($options['exception'] ?? true)) {
-            throw new ModelNotFoundException('Verify token not found');
-        }
-
-        return $verify;
+        $this->model = $model;
     }
 
     /**
@@ -51,7 +42,7 @@ class UserVerifyService
         $max = $options['max'] ?? 10;
         while (true) {
             $token = is_callable($tokenCallback) ? $tokenCallback() : Str::random(6);
-            $verify = $this->getUserVerify([
+            $verify = $this->one([
                 'key' => $key,
                 'token' => $token
             ], ['exception' => false]);
@@ -76,18 +67,18 @@ class UserVerifyService
      *
      * @return UserVerify
      */
-    public function create($user, $key, $type, $token = null, $expiredAt = null, array $options = [])
+    public function createByUser($user, $key, $type, $token = null, $expiredAt = null, array $options = [])
     {
         $user = with_user($user);
 
         /** @var UserVerify $verify */
-        $verify = $user->verifies()->create([
+        $verify = $this->create([
             'user_id'    => $user->id,
             'key'        => $key,
             'type'       => $type,
             'token'      => $token ?: $this->generateUniqueToken($key),
             'expired_at' => $expiredAt ?: Carbon::now()->addSeconds(config('core::user.verify.expires', 600)),
-        ]);
+        ], $options);
 
         $deleteOther = $options['delete_other'] ?? true;
         if ($deleteOther || ($options['expire_other'] ?? true)) {
@@ -145,7 +136,7 @@ class UserVerifyService
         $userVerifyService = resolve(UserVerifyService::class);
 
         /** @var UserVerify $verify */
-        $verify = $userVerifyService->create($user, $email, 'reset_mobile', null, $options);
+        $verify = $userVerifyService->createByUser($user, $email, 'reset_mobile', null, $options);
         $verify->makeOtherExpired();
 
         $user->sendEmailVerifyNotification($verify);
@@ -162,7 +153,7 @@ class UserVerifyService
      */
     public function resetEmail($token, $email, array $options = [])
     {
-        $userVerify = $this->getUserVerify([
+        $userVerify = $this->one([
             'key' => $email,
             'token' => $token,
             'type' => 'reset_email'
@@ -227,7 +218,7 @@ class UserVerifyService
         $token = $this->generateUniqueToken($mobile, function() {
             return random_int(100000, 999999);
         });
-        $verify = $this->create($user, $mobile, 'reset_mobile', $token, $options);
+        $verify = $this->createByUser($user, $mobile, 'reset_mobile', $token, $options);
         $verify->makeOtherExpired();
 
         $user->sendMobileVerifyNotification($verify);
@@ -245,7 +236,7 @@ class UserVerifyService
      */
     public function resetMobile($token, $mobile, array $options = [])
     {
-        $userVerify = $this->getUserVerify([
+        $userVerify = $this->one([
             'key' => $mobile,
             'token' => $token,
             'type' => 'reset_mobile'

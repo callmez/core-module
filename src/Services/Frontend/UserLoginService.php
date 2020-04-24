@@ -25,7 +25,7 @@ class UserLoginService
             'isEmail' => $isEmail,
             'isMobile' => $isMobile,
             'user' => $user
-        ] = $userService->getUserByGuessString($string);
+        ] = $userService->getByGuessString($string);
 
         $userService->checkPassword($user, $password);
 

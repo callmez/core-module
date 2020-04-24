@@ -11,7 +11,10 @@ use Modules\Core\Exceptions\Frontend\Auth\UserPayPasswordCheckException;
 
 class UserService
 {
-    use HasQuery;
+    use HasQuery {
+        one as queryOne;
+        getById as queryGetById;
+    }
 
     /**
      * @var User
@@ -24,33 +27,18 @@ class UserService
     }
 
     /**
-     * @param $where
-     * @param array $options
-     *
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function getUsers($where, array $options = [])
-    {
-        $query = $this->withQueryOptions(User::where($where), $options);
-
-        return $query->get();
-    }
-
-    /**
-     * @param $where
+     * @param null|array $where
      * @param array $options
      *
      * @return mixed
      */
-    public function getUser($where, array $options = [])
+    public function one($where = null, array $options = [])
     {
-        $user = $this->withQueryOptions(User::where($where), $options)->first();
-
-        if ( ! $user && ($options['exception'] ?? true)) {
-            throw new UserNotFoundException('User not found');
-        }
-
-        return $user;
+        return $this->queryOne($where, array_merge([
+            'exception' => function() {
+                return new UserNotFoundException(trans('用户数据未找到'));
+            }
+        ], $options));
     }
 
     /**
@@ -58,20 +46,13 @@ class UserService
      *
      * @return User
      */
-    public function getUserById($id, array $options = [])
+    public function getById($id, array $options = [])
     {
-        $key = 'user_' . $id;
+        $key = 'user:' . $id;
 
         return Cache::tags([$key])
             ->rememberForever($key, function () use ($id, $options) {
-
-                $user = $this->getUser(['id' => $id], ['exception' => false]);
-
-                if ( ! $user && ($options['exception'] ?? true)) {
-                    throw UserNotFoundException::withId($id);
-                }
-
-                return $user;
+                return $this->queryGetById($id, $options);
             });
     }
 
@@ -81,7 +62,7 @@ class UserService
      *
      * @return array
      */
-    public function getUserByGuessString($string, array $options = [])
+    public function getByGuessString($string, array $options = [])
     {
         $where = [];
         $isEmail = $isMobile = false;
@@ -99,7 +80,7 @@ class UserService
         return [
             'isEmail'  => $isEmail,
             'isMobile' => $isMobile,
-            'user'     => $this->getUser($where, $options),
+            'user'     => $this->one($where, $options),
         ];
     }
 
