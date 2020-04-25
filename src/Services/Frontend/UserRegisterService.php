@@ -30,13 +30,13 @@ class UserRegisterService
                 'password' => $data['password'],
                 'mobile' => $data['mobile'] ?? '',
                 'email' => $data['email'] ?? ''
-            ]);
+            ], $options['createOptions'] ?? []);
 
             /** @var UserInvitationService $invitationService */
             $invitationService = resolve(UserInvitationService::class);
-            $invitationService->inviteUser($data['invite_code'] ?? null, $user, [
+            $invitationService->inviteUser($data['invite_code'] ?? null, $user, array_merge([
                 'invitation' => config('core::system.register.invitation', 0)
-            ]);
+            ], $options['inviteOptions'] ?? []));
 
             return $user;
         });

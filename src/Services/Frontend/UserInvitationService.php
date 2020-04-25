@@ -156,7 +156,7 @@ class UserInvitationService
 
         return $userService->all(function($query) use ($data) {
             $query->whereIn('id', $data);
-        })->keyBy('id');
+        }, $options['allOptions'] ?? [])->keyBy('id');
     }
 
     /**

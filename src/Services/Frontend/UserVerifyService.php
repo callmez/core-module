@@ -136,7 +136,7 @@ class UserVerifyService
         $userVerifyService = resolve(UserVerifyService::class);
 
         /** @var UserVerify $verify */
-        $verify = $userVerifyService->createByUser($user, $email, 'reset_mobile', null, $options);
+        $verify = $userVerifyService->createByUser($user, $email, 'reset_mobile', null, $options['createOptions'] ?? []);
         $verify->makeOtherExpired();
 
         $user->sendEmailVerifyNotification($verify);
@@ -218,7 +218,7 @@ class UserVerifyService
         $token = $this->generateUniqueToken($mobile, function() {
             return random_int(100000, 999999);
         });
-        $verify = $this->createByUser($user, $mobile, 'reset_mobile', $token, $options);
+        $verify = $this->createByUser($user, $mobile, 'reset_mobile', $token, $options['createOptions'] ?? []);
         $verify->makeOtherExpired();
 
         $user->sendMobileVerifyNotification($verify);
