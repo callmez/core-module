@@ -60,7 +60,7 @@ trait HasQuery
      * @param \Closure|array|null $where
      * @param array $options
      *
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return Model
      */
     public function one($where = null, array $options = [])
     {
@@ -98,6 +98,65 @@ trait HasQuery
     public function count($where = null, array $options = [])
     {
         return $this->withQueryOptions($this->query(), array_merge($options, ['where' => $where]))->count();
+    }
+
+    /**
+     * @param \Closure|array|null $where
+     * @param array $options
+     *
+     * @return int
+     */
+    public function has($where = null, array $options = [])
+    {
+        return $this->withQueryOptions($this->query(), array_merge($options, ['where' => $where]))->exists();
+    }
+
+    /**
+     * @param $column
+     * @param \Closure|array|null $where
+     * @param array $options
+     *
+     * @return mixed
+     */
+    public function min($column, $where = null, array $options = [])
+    {
+        return $this->withQueryOptions($this->query(), array_merge($options, ['where' => $where]))->min($column);
+    }
+
+    /**
+     * @param $column
+     * @param \Closure|array|null $where
+     * @param array $options
+     *
+     * @return mixed
+     */
+    public function max($column, $where = null, array $options = [])
+    {
+        return $this->withQueryOptions($this->query(), array_merge($options, ['where' => $where]))->max($column);
+    }
+
+    /**
+     * @param $column
+     * @param \Closure|array|null $where
+     * @param array $options
+     *
+     * @return mixed
+     */
+    public function sum($column, $where = null, array $options = [])
+    {
+        return $this->withQueryOptions($this->query(), array_merge($options, ['where' => $where]))->sum($column);
+    }
+
+    /**
+     * @param $column
+     * @param \Closure|array|null $where
+     * @param array $options
+     *
+     * @return mixed
+     */
+    public function avg($column, $where = null, array $options = [])
+    {
+        return $this->withQueryOptions($this->query(), array_merge($options, ['where' => $where]))->avg($column);
     }
 
     /**
@@ -141,7 +200,7 @@ trait HasQuery
      * @param int $id
      * @param array $options
      *
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return Model
      */
     public function getById($id, array $options = [])
     {

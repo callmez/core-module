@@ -52,8 +52,20 @@ class CoreServiceProvider extends ServiceProvider
 //        $this->registerTranslations();
         $this->registerViews();
 //        $this->registerFactories();
+//        $this->registerModelRelations();
         $this->loadMigrationsFrom($this->modulePath . '/database/migrations');
         $this->loadSeedsFrom($this->modulePath . '/database/seeds');
+    }
+
+    /**
+     * Register the service provider.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        $this->registerConfig();
+        $this->registerHelpers();
     }
 
     protected function registerObservers()
@@ -160,17 +172,6 @@ class CoreServiceProvider extends ServiceProvider
         if ( ! app()->environment('production') && $this->app->runningInConsole()) {
             app(Factory::class)->load(module_path($this->moduleName, 'database/factories'));
         }
-    }
-
-    /**
-     * Register the service provider.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        $this->registerConfig();
-        $this->registerHelpers();
     }
 
     /**
