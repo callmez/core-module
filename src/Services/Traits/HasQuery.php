@@ -60,7 +60,7 @@ trait HasQuery
      * @param \Closure|array|null $where
      * @param array $options
      *
-     * @return Model
+     * @return Model|mixed
      */
     public function one($where = null, array $options = [])
     {
@@ -82,10 +82,14 @@ trait HasQuery
      * @param \Closure|array|null $where
      * @param array $options
      *
-     * @return mixed
+     * @return mixed|\Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
     public function all($where = null, array $options = [])
     {
+        if ($options['paginate'] ?? false) {
+            return $this->paginate($where, $options);
+        }
+
         return $this->withQueryOptions($this->query(), array_merge($options, ['where' => $where]))->get();
     }
 
