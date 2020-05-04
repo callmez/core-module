@@ -82,7 +82,7 @@ trait HasQuery
      * @param \Closure|array|null $where
      * @param array $options
      *
-     * @return mixed|\Illuminate\Contracts\Pagination\LengthAwarePaginator
+     * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
     public function all($where = null, array $options = [])
     {
