@@ -22,11 +22,11 @@ class UserInvitationService
         create as queryCreate;
     }
     /**
-     * @var User
+     * @var UserInvitation
      */
     protected $model;
 
-    public function __construct(User $model)
+    public function __construct(UserInvitation $model)
     {
         $this->model = $model;
     }
