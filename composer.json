@@ -30,12 +30,10 @@
     },
     "autoload": {
         "psr-4": {
-            "Modules\\Core\\": "src/"
+            "Modules\\Core\\": "src/",
+            "Modules\\Core\\Seeds\\": "database/seeds/",
+            "Modules\\Core\\Factories\\": "database/factories/"
         },
-        "classmap": [
-            "Modules\\Core\\Seeds\\",
-            "Modules\\Core\\Factories\\"
-        ],
         "files": [
             "src/helpers.php"
         ]
