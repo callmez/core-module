@@ -6,7 +6,7 @@
         "watch": "cross-var $npm_execpath run development -- --watch",
         "watch-poll": "cross-var $npm_execpath run watch -- --watch-poll",
         "hot": "cross-env NODE_ENV=development webpack-dev-server --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
-        "prod": "cross-var $npm_execpath run production",
+        "build": "cross-var $npm_execpath run production",
         "production": "cross-env NODE_ENV=production webpack --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
     },
     "devDependencies": {
