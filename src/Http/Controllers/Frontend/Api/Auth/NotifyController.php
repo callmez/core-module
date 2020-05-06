@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Core\Http\Controllers\Frontend\Api\User;
+namespace Modules\Core\Http\Controllers\Frontend\Api\Auth;
 
 use Modules\Core\Http\Controllers\Controller;
 
