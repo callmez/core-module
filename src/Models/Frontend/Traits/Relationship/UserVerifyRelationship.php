@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Core\src\Models\Frontend\Traits\Relationship;
+namespace Modules\Core\Models\Frontend\Traits\Relationship;
 
 use App\Models\User;
 

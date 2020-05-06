@@ -1,9 +1,9 @@
 <?php
 
-namespace Modules\Core\src\Events\Frontend;
+namespace Modules\Core\Events\Frontend;
 
 use Illuminate\Queue\SerializesModels;
-use Modules\Core\src\Models\Frontend\UserInvitation;
+use Modules\Core\Models\Frontend\UserInvitation;
 
 class UserInvited
 {

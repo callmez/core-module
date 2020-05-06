@@ -6,9 +6,9 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Core\Models\Traits\HasTableName;
 use Modules\Core\Models\Traits\DynamicRelationship;
-use Modules\Core\src\Models\Frontend\Traits\Method\UserVerifyMethod;
-use Modules\Core\src\Models\Frontend\Traits\Scope\UserVerifyScope;
-use Modules\Core\src\Models\Frontend\Traits\Relationship\UserVerifyRelationship;
+use Modules\Core\Models\Frontend\Traits\Method\UserVerifyMethod;
+use Modules\Core\Models\Frontend\Traits\Scope\UserVerifyScope;
+use Modules\Core\Models\Frontend\Traits\Relationship\UserVerifyRelationship;
 
 class UserVerify extends Model
 {

@@ -10,9 +10,9 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Modules\Core\Exceptions\ModelSaveException;
-use Modules\Core\src\Services\Traits\HasQuery;
-use Modules\Core\src\Events\Frontend\UserInvited;
-use Modules\Core\src\Models\Frontend\UserInvitation;
+use Modules\Core\Services\Traits\HasQuery;
+use Modules\Core\Events\Frontend\UserInvited;
+use Modules\Core\Models\Frontend\UserInvitation;
 
 class UserInvitationService
 {

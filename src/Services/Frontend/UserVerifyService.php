@@ -11,8 +11,8 @@ use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
 use Modules\Core\Exceptions\ModelSaveException;
 use Modules\Core\Models\Frontend\UserVerify;
-use Modules\Core\src\Services\Traits\HasQuery;
-use Modules\Core\src\Services\Traits\HasThrottles;
+use Modules\Core\Services\Traits\HasQuery;
+use Modules\Core\Services\Traits\HasThrottles;
 
 class UserVerifyService
 {

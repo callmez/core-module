@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Core\src\Models\Frontend\Traits\Scope;
+namespace Modules\Core\Models\Frontend\Traits\Scope;
 
 trait UserInvitationScope
 {
