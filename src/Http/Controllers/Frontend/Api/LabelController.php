@@ -6,12 +6,12 @@
  * Time: 11:53
  */
 
-namespace Modules\Core\src\Http\Controllers\Frontend\Api;
+namespace Modules\Core\Http\Controllers\Frontend\Api;
 
 use Illuminate\Http\Request;
 
 use Modules\Core\Http\Controllers\Controller;
-use Modules\Core\src\Services\Frontend\LabelService;
+use Modules\Core\Services\Frontend\LabelService;
 
 class LabelController extends Controller
 {

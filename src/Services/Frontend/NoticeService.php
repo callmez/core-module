@@ -6,7 +6,7 @@
  * Time: 14:34
  */
 
-namespace Modules\Core\src\Services\Frontend;
+namespace Modules\Core\Services\Frontend;
 
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;

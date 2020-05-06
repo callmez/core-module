@@ -6,7 +6,7 @@
  * Time: 11:58
  */
 
-namespace Modules\Core\src\Services\Frontend;
+namespace Modules\Core\Services\Frontend;
 
 
 use Closure;
