@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Core\Models\Frontend;
+namespace Modules\Core\Models\Admin;
 
 use Spatie\Permission\Models\Permission;
 use Modules\Core\Models\Traits\HasTableName;
