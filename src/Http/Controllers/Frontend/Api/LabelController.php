@@ -1,15 +1,8 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: aoxiang
- * Date: 2020-05-06
- * Time: 11:53
- */
 
 namespace Modules\Core\Http\Controllers\Frontend\Api;
 
 use Illuminate\Http\Request;
-
 use Modules\Core\Http\Controllers\Controller;
 use Modules\Core\Services\Frontend\LabelService;
 

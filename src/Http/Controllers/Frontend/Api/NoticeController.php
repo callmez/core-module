@@ -1,17 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: aoxiang
- * Date: 2020-05-06
- * Time: 14:34
- */
 
-namespace Modules\Core\src\Http\Controllers\Frontend\Api;
-
+namespace Modules\Core\Http\Controllers\Frontend\Api;
 
 use Illuminate\Http\Request;
 use Modules\Core\Http\Controllers\Controller;
-use Modules\Core\src\Services\Frontend\NoticeService;
+use Modules\Core\Services\Frontend\NoticeService;
 
 class NoticeController extends Controller
 {

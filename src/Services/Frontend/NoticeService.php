@@ -1,15 +1,7 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: aoxiang
- * Date: 2020-05-06
- * Time: 14:34
- */
 
 namespace Modules\Core\Services\Frontend;
 
-
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Modules\Core\Services\Traits\HasQuery;
 use Modules\Core\Models\Frontend\Notice;
 
@@ -29,7 +21,4 @@ class NoticeService
     {
         $this->model = $model;
     }
-
-
-
 }

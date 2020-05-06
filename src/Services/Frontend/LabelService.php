@@ -1,17 +1,8 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: aoxiang
- * Date: 2020-05-06
- * Time: 11:58
- */
 
 namespace Modules\Core\Services\Frontend;
 
-
-use Closure;
 use Modules\Core\Models\Frontend\Label;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Modules\Core\Services\Traits\HasQuery;
 
 class LabelService
