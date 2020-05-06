@@ -11,7 +11,7 @@ use Modules\Core\Auth\Guards\AdminGuard;
 use Modules\Core\Http\Middleware\UseGuard;
 use Modules\Core\Http\Composers\GlobalComposer;
 use Modules\Core\Observers\Frontend\UserObserver;
-use Modules\Core\src\Models\Frontend\UserInvitation;
+use Modules\Core\Models\Frontend\UserInvitation;
 use Modules\Core\Observers\Frontend\UserInvitationObserver;
 use Modules\Core\Config\Repository as ConfigRepository;
 use Modules\Core\Captcha\Facades\Captcha as CaptchaFacade;

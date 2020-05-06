@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Core\src\Models\Frontend\Traits\Method;
+namespace Modules\Core\Models\Frontend\Traits\Method;
 
 use Carbon\Carbon;
 use App\Models\User;

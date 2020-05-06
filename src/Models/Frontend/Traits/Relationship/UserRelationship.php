@@ -3,9 +3,9 @@
 namespace Modules\Core\Models\Frontend\Traits\Relationship;
 
 use Modules\Core\Models\Frontend\UserVerify;
-use Modules\Core\src\Models\Frontend\UserInvitation;
+use Modules\Core\Models\Frontend\UserInvitation;
 use Modules\Core\Models\Frontend\UserDataHistory;
-use Modules\Core\src\Models\Frontend\UserInvitationTree;
+use Modules\Core\Models\Frontend\UserInvitationTree;
 
 /**
  * Class UserRelationship.

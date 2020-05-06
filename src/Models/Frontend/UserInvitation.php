@@ -1,13 +1,13 @@
 <?php
 
-namespace Modules\Core\src\Models\Frontend;
+namespace Modules\Core\Models\Frontend;
 
 use Illuminate\Database\Eloquent\Model;
 use Modules\Core\Models\Traits\HasTableName;
 use Modules\Core\Models\Traits\DynamicRelationship;
-use Modules\Core\src\Models\Frontend\Traits\Method\UserInvitationMethod;
-use Modules\Core\src\Models\Frontend\Traits\Scope\UserInvitationScope;
-use Modules\Core\src\Models\Frontend\Traits\Relationship\UseInvitationRelationship;
+use Modules\Core\Models\Frontend\Traits\Method\UserInvitationMethod;
+use Modules\Core\Models\Frontend\Traits\Scope\UserInvitationScope;
+use Modules\Core\Models\Frontend\Traits\Relationship\UseInvitationRelationship;
 
 class UserInvitation extends Model
 {

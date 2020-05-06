@@ -4,8 +4,8 @@ namespace Modules\Core\Services\Frontend;
 
 use Cache;
 use App\Models\User;
-use Modules\Core\src\Services\Traits\HasQuery;
-use Modules\Core\src\Exceptions\Frontend\Auth\UserNotFoundException;
+use Modules\Core\Services\Traits\HasQuery;
+use Modules\Core\Exceptions\Frontend\Auth\UserNotFoundException;
 use Modules\Core\Exceptions\Frontend\Auth\UserPasswordCheckException;
 use Modules\Core\Exceptions\Frontend\Auth\UserPayPasswordCheckException;
 

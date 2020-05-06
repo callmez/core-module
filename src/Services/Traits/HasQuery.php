@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Core\src\Services\Traits;
+namespace Modules\Core\Services\Traits;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
@@ -19,7 +19,7 @@ use Modules\Core\Exceptions\ModelSaveException;
  *     $this->model = $model;
  * }
  *
- * @package Modules\Core\src\Services\Traits
+ * @package Modules\Core\Services\Traits
  */
 trait HasQuery
 {

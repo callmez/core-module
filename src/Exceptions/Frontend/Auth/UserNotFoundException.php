@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Core\src\Exceptions\Frontend\Auth;
+namespace Modules\Core\Exceptions\Frontend\Auth;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 

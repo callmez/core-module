@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Core\src\Module\Traits;
+namespace Modules\Core\Module\Traits;
 
 use Nwidart\Modules\Exceptions\ModuleNotFoundException;
 use UnexpectedValueException;

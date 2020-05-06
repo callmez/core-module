@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Core\src\Services\Traits;
+namespace Modules\Core\Services\Traits;
 
 use Illuminate\Cache\RateLimiter;
 

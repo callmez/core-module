@@ -2,8 +2,8 @@
 
 namespace Modules\Core\Observers\Frontend;
 
-use Modules\Core\src\Models\Frontend\UserInvitation;
-use Modules\Core\src\Models\Frontend\UserInvitationTree;
+use Modules\Core\Models\Frontend\UserInvitation;
+use Modules\Core\Models\Frontend\UserInvitationTree;
 
 /**
  * Class UserInvitationObserver
