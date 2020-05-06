@@ -7,7 +7,7 @@ use Modules\Core\Http\Controllers\Controller;
 use Modules\Core\Http\Requests\Admin\Auth\Permission\ManagePermissionRequest;
 use Modules\Core\Http\Requests\Admin\Auth\Role\StoreRoleRequest;
 use Modules\Core\Http\Requests\Admin\Auth\Role\UpdateRoleRequest;
-use Modules\Core\Models\Frontend\AdminPermission;
+use Modules\Core\Models\Admin\AdminPermission;
 use Modules\Core\Repositories\Admin\Auth\PermissionRepository;
 use Modules\Core\Repositories\Admin\Auth\RoleRepository;
 use function GuzzleHttp\Promise\all;
