@@ -6,21 +6,26 @@
  * Time: 14:11
  */
 
-namespace Modules\Core\src\Models\Frontend;
+namespace Modules\Core\Models\Frontend;
 
 use Illuminate\Database\Eloquent\Model;
-use Modules\Core\Models\Frontend\Traits\Attribute\LabelAttribute;
-use Modules\Core\Models\Frontend\Traits\Attribute\NoticeAttribute;
 use Modules\Core\Models\Traits\HasTableName;
 use Modules\Core\Models\Traits\DynamicRelationship;
 
 class Notice extends Model
 {
-    protected $table = 'system_notice';
     use HasTableName,
         DynamicRelationship;
+    /**
+     * 显示文章
+     */
+    const STATUS_ENABLE = 1;
 
-    use NoticeAttribute;
+    /**
+     * 隐藏文章
+     */
+    const STATUS_DISABLE = 0;
+
     /**
      * @var array
      */
@@ -28,22 +33,9 @@ class Notice extends Model
         'title',
         'content',
         'status',
-        'title_tw',
-        'title_en',
-        'title_ko',
-        'content_tw',
-        'content_en',
-        'content_ko',
     ];
 
-    /**
-     * 显示文章
-     */
-    const STATUS_SHOW = 'show';
+    protected $table = 'system_notice';
 
-    /**
-     * 隐藏文章
-     */
-    const STATUS_HIDE = 'hide';
 
 }
