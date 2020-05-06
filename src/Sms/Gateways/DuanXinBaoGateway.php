@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Sms\Gateways;
+namespace Modules\Core\Sms\Gateways;
 
 use Overtrue\EasySms\Exceptions\GatewayErrorException;
 use Overtrue\EasySms\Support\Config;
