@@ -167,7 +167,7 @@ class UserInvitationService
      */
     public function inviteUser($token, User $usedUser, array $options = [])
     {
-        $invitationState = $options['state'] ?? 1;
+        $invitationState = $options['invitation'] ?? 1;
 
         if ($invitationState == 0) { // 不开启邀请码
             return ;
