@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class Config extends Model
 {
     /**
+     * @var string
+     */
+    protected $table = 'config';
+    /**
      * @var array
      */
     protected $casts = [
