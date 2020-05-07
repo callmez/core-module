@@ -1,7 +1,7 @@
 const mix = require('laravel-mix')
 require('laravel-mix-merge-manifest')
 
-mix.setPublicPath('../../public').mergeManifest()
+mix.setPublicPath('../../../public').mergeManifest()
 
 mix
     .js(__dirname + '/resources/assets/js/admin/app.js', 'js/admin.js')
