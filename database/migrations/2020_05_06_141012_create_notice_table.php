@@ -15,7 +15,7 @@ class CreateNoticeTable extends Migration
     {
         Schema::create('system_notice', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('status')->default(\Modules\Core\src\Models\Frontend\Notice::STATUS_ENABLE)->comment('状态，1-显示，0-隐藏');
+            $table->string('status')->default(\Modules\Core\Models\Frontend\Notice::STATUS_ENABLE)->comment('状态，1-显示，0-隐藏');
             $table->string('title', 255)->nullable()->comment('标题');
             $table->text('content')->nullable()->comment('内容');
             $table->timestamps();
