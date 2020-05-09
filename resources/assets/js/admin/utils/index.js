@@ -1,4 +1,4 @@
-export const paginationDataStruct = {
+export const defaultPaginationData = {
   data: [],
   total: 0,
   from: 0,
@@ -11,5 +11,5 @@ export const paginationDataStruct = {
   last_page_url: null,
   next_page_url: null,
   prev_page_url: null,
-  has_next_page: true
+  has_next_page: true,
 };

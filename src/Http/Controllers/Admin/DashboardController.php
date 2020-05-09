@@ -16,7 +16,6 @@ class DashboardController extends Controller
     public function index()
     {
         return view('core::admin.dashboard', [
-            'menu' => AdminMenu::menu(),
             'defaultPage' => url('/admin/welcome')
         ]);
     }

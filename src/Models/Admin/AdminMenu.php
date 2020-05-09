@@ -2,32 +2,19 @@
 
 namespace Modules\Core\Models\Admin;
 
-use Modules\Core\Models\Traits\HasTableName;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Core\Models\Traits\HasTableName;
+use Modules\Core\Models\Traits\DynamicRelationship;
+use Modules\Core\Models\Admin\Traits\Scope\AdminMenuScope;
 
 class AdminMenu extends Model
 {
-    use HasTableName;
+    const STATUS_ENABLED = 1;
+    const STATUS_DISABLED = 0;
 
-    public static function menu()
-    {
-        $data = static::where('is_show', 1)
-            ->orderBy('sort', 'desc')
-            ->get();
-        return static::normalizeMenu($data);
-    }
+    use HasTableName,
+        DynamicRelationship;
 
-    protected static function normalizeMenu($data, $parentId = 0)
-    {
-        $menu = [];
-        foreach ($data as $item) {
-            if ($item->parent_id == $parentId) {
-                $children = static::normalizeMenu($data, $item->id);
+    use AdminMenuScope;
 
-                $menu[] = array_merge($item->toArray(), empty($children) ? [] : ['children' => $children]);
-            }
-        }
-
-        return $menu;
-    }
 }

@@ -5,31 +5,29 @@
     <title>@yield('title', app_name())</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    {{ style('js/layuiadmin/layui/css/layui.css') }}
-    {{ style('js/layuiadmin/style/admin.css') }}
-    {{ style('js/layuiadmin/style/login.css') }}
+    {{ style('vendor/layui/css/layui.css') }}
     {{ style(mix('css/admin.css')) }}
 </head>
 <body>
 
-<div id="LAY_app" class="layadmin-user-login layadmin-user-display-show" style="display: none;">
+<div id="LAY_app" class="user-login">
 
-    <div class="layadmin-user-login-main">
-        <div class="layadmin-user-login-box layadmin-user-login-header">
-            <h2>{{ app_name() }}</h2>
+    <div class="user-login-main">
+        <div class="user-login-box user-login-header">
+            <h4>{{ app_name() }}</h4>
             <p>后台管理系统</p>
         </div>
-        <div class="layadmin-user-login-box layadmin-user-login-body layui-form">
+        <div class="user-login-box user-login-body layui-form">
             @csrf
             <div class="layui-form-item">
-                <label class="layadmin-user-login-icon layui-icon layui-icon-username"
+                <label class="user-login-icon layui-icon layui-icon-username"
                        for="LAY-user-login-username"></label>
                 <input class="layui-input" id="LAY-user-login-username" lay-verify="required" name="username"
                        placeholder="用户名"
                        type="text">
             </div>
             <div class="layui-form-item">
-                <label class="layadmin-user-login-icon layui-icon layui-icon-password"
+                <label class="user-login-icon layui-icon layui-icon-password"
                        for="LAY-user-login-password"></label>
                 <input class="layui-input" id="LAY-user-login-password" lay-verify="required" name="password"
                        placeholder="密码" type="password">
@@ -37,14 +35,14 @@
             <div class="layui-form-item">
                 <div class="layui-row">
                     <div class="layui-col-xs7">
-                        <label class="layadmin-user-login-icon layui-icon layui-icon-vercode"
+                        <label class="user-login-icon layui-icon layui-icon-vercode"
                                for="LAY-user-login-vercode"></label>
                         <input class="layui-input" id="LAY-user-login-vercode" lay-verify="required" name="captcha"
                                placeholder="图形验证码" type="text">
                     </div>
                     <div class="layui-col-xs5">
                         <div style="margin-left: 10px;">
-                            <img class="layadmin-user-login-codeimg" id="LAY-user-get-vercode"
+                            <img class="user-login-codeimg" id="LAY-user-get-vercode"
                                  src="{{ Captcha::src() }}">
                         </div>
                     </div>
@@ -58,17 +56,16 @@
 
 </div>
 
-{!! script('js/layuiadmin/layui/layui.js') !!}
+{!! script('vendor/layui/layui.js') !!}
 {!! script(mix('js/manifest.js')) !!}
 {!! script(mix('js/vendor.js')) !!}
 {!! script(mix('js/admin.js')) !!}
 <script>
-    layui.use(['index', 'user'], function () {
+    layui.use(['form'], function () {
         // 强制父窗口跳转登录界面
         if (window != top) {
             top.location.href = location.href;
         }
-
 
         var $ = layui.$
             , $body = $('body')

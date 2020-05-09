@@ -36,12 +36,12 @@ export default merge(
         "web",
         "xls",
         "xmind",
-        "archive"
-      ]
+        "archive",
+      ],
     },
     mutations: {},
     getters: {},
-    actions: {}
+    actions: {},
   },
   mapStore("files", { url: "/api/admin/v1/media", loadingKey: "media.files" })
 );

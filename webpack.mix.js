@@ -1,20 +1,21 @@
-const mix = require('laravel-mix')
-require('laravel-mix-merge-manifest')
+const mix = require("laravel-mix");
+require("laravel-mix-merge-manifest");
 
-const publicPath = '../../../public';
+let publicPath = "../public";
 
-mix.setPublicPath(publicPath).mergeManifest()
+if (__dirname.indexOf("/composer/tokeniocn/") >= 0) {
+  publicPath = "../../../public";
+} else if (__dirname.indexOf("/modules/") >= 0) {
+  publicPath = "../../public";
+}
+
+mix.setPublicPath(publicPath).mergeManifest();
 
 mix
-    .js(__dirname + '/resources/assets/js/admin/app.js', 'js/admin.js')
-    .sass(__dirname + '/resources/assets/sass/admin/app.scss', 'css/admin.css')
-    .copy('resources/assets/vendor/layuiadmin', publicPath + '/js/layuiadmin')
+  .js(__dirname + "/resources/assets/js/admin/app.js", "js/admin.js")
+  .sass(__dirname + "/resources/assets/sass/admin/app.scss", "css/admin.css")
+  .copy("resources/assets/vendor/layuiadmin", publicPath + "/js/layuiadmin")
 
-    .extract([
-        'vue',
-        'axios',
-        'lodash',
-        'moment',
-    ])
-    .version()
-    .sourceMaps()
+  .extract(["vue", "vuex", "axios", "lodash-es", "moment", "quasar"])
+  .version()
+  .sourceMaps();

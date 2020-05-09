@@ -1,0 +1,33 @@
+.user-login-main {
+  max-width: 375px;
+  margin: 0 auto;
+}
+.user-login-header {
+  margin-top: 30%;
+  text-align: center;
+}
+.user-login-header p {
+  padding-top: 20px;
+}
+.user-login-box {
+  padding: 20px;
+}
+.user-login-box .layui-form-item,
+.user-login-box .layui-form-item .layui-row > div {
+  position: relative;
+}
+.user-login-box .user-login-icon {
+  position: absolute;
+  left: 1px;
+  top: 1px;
+  width: 40px;
+  line-height: 36px;
+  text-align: center;
+  color: #d2d2d2;
+}
+.user-login-box .layui-input {
+  padding-left: 38px;
+}
+.user-login-box .user-login-codeimg {
+  width: 100%;
+}
