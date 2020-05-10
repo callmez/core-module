@@ -167,7 +167,7 @@
     {!! script(mix('js/vendor.js')) !!}
     {!! script(mix('js/admin.js')) !!}
     <script>
-        layui.use(['index', 'util'], function() {
+        layui.use(['util'], function() {
             var $ = layui.$;
             var util = layui.util;
             var events = {
