@@ -1,9 +1,7 @@
 import Vue from "vue";
 
-const errorHandler = function(e, vm) {
+const handler = function(e, vm) {};
 
-};
+Vue.config.errorHandler = handler;
 
-Vue.config.errorHandler = errorHandler;
-
-export default errorHandler;
+export default handler;

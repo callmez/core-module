@@ -6,8 +6,15 @@
         :key="tab.id"
         :name="tab.id"
         :label="tab.title"
-        @click.prevent="switchTab(tab)"
-        ><q-btn icon="close" size="xs" flat round dense
+        @click.stop="switchTab(tab)"
+        ><q-btn
+          class="close"
+          icon="close"
+          size="xs"
+          flat
+          round
+          dense
+          @click.stop="removeTab(tab)"
       /></q-tab>
     </q-tabs>
   </div>
@@ -29,8 +36,17 @@ export default {
     switchTab(tab) {
       this.$emit("switch", tab);
     },
+    removeTab(tab) {
+      this.$emit("remove", tab);
+    },
   },
 };
 </script>
 
-<style lang="sass" scoped></style>
+<style lang="scss" scoped>
+.close {
+  position: absolute;
+  right: 5px;
+  top: 9px;
+}
+</style>

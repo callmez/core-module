@@ -1,35 +1,37 @@
 <template>
   <q-layout view="lHh lpR lFf">
-    <q-header bordered class="bg-grey-8 text-white" height-hint="98">
+    <q-header class="bg-white text-grey-9" bordered height-hint="98">
       <q-toolbar>
         <q-btn dense flat round icon="menu" @click="left = !left" />
-
-        <q-toolbar-title>
-          <q-avatar>
-            <img
-              src="https://cdn.quasar.dev/logo/svg/quasar-logo.svg"
-            /> </q-avatar
-          >Title
-        </q-toolbar-title>
+        <q-btn
+          v-if="tabs.length"
+          @click.stop="refreshPage"
+          dense
+          flat
+          round
+          icon="refresh"
+        />
       </q-toolbar>
 
       <page-tab
         :tabs="tabs"
         :activeTab="activeTab"
         @switch="toggleTab"
+        @remove="removeTab"
       ></page-tab>
     </q-header>
 
     <q-drawer
-      content-class="bg-grey-8 text-white"
+      content-class="bg-grey-10 text-white"
       show-if-above
       v-model="left"
       side="left"
       behavior="desktop"
+      :width="260"
       bordered
     >
       <q-toolbar class="text-center">
-        <q-toolbar-title>Laravel</q-toolbar-title>
+        <q-toolbar-title>{{ $G.name }}</q-toolbar-title>
       </q-toolbar>
 
       <left-menu
@@ -47,7 +49,12 @@
         class="content"
         :class="{ show: activeTab && activeTab.id == tab.id }"
       >
-        <iframe frameborder="0" :src="tab.url" class="iframe"></iframe>
+        <iframe
+          :ref="`page_${tab.id}`"
+          frameborder="0"
+          :src="tab.url"
+          class="iframe"
+        ></iframe>
       </div>
     </q-page-container>
   </q-layout>
@@ -79,7 +86,14 @@ export default {
     },
   },
   methods: {
-    ...mapActions("menu", ["loadTree", "toggleTab"]),
+    ...mapActions("menu", ["loadTree", "toggleTab", "removeTab"]),
+    refreshPage() {
+      const key = `page_${this.activeTab.id}`;
+      if (this.$refs[key]) {
+        const $el = this.$refs[key][0];
+        $el.contentWindow.location.reload(!0);
+      }
+    },
   },
 };
 </script>

@@ -20,11 +20,16 @@ Vue.use(Vuex);
 export default function(/* { ssrContext } */) {
   const Store = new Vuex.Store({
     state: {
-      loading: {},
+      loading: null,
     },
     mutations: {
       setLoading(state, loading) {
         state.loading = loading;
+      },
+    },
+    getters: {
+      loading(state) {
+        return state.loading || {};
       },
     },
     actions: {

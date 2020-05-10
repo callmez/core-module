@@ -1,5 +1,5 @@
 <template>
-  <q-list dark>
+  <q-list class="left-menu-list" dark>
     <template v-for="menu in tree">
       <q-expansion-item
         :key="menu.id"
@@ -7,8 +7,6 @@
         :icon="menu.icon"
         :label="menu.title"
         expand-separator
-        default-opened
-        :content-inset-level="0.5"
       >
         <template v-for="subMenu in menu.children">
           <q-expansion-item
@@ -17,18 +15,21 @@
             :icon="subMenu.icon"
             :label="subMenu.title"
             default-opened
-            :content-inset-level="1"
+            :header-inset-level="0.5"
           >
             <q-item
               v-for="grandSubMenu in subMenu.children"
               :key="grandSubMenu.id"
               clickable
               v-ripple
+              active-class="bg-secondary text-white"
               :active="isActive(grandSubMenu)"
               @click="handleNav(grandSubMenu)"
             >
               <q-item-section>
-                <q-item-label>{{ grandSubMenu.title }}</q-item-label>
+                <q-item-label style="padding-left: 84px">
+                  {{ grandSubMenu.title }}
+                </q-item-label>
               </q-item-section>
             </q-item>
           </q-expansion-item>
@@ -38,7 +39,9 @@
             clickable
             v-ripple
             :active="isActive(subMenu)"
+            active-class="bg-secondary text-white"
             @click="handleNav(subMenu)"
+            style="padding-left: 44px"
           >
             <q-item-section avatar>
               <q-icon :name="subMenu.icon" />
@@ -55,6 +58,7 @@
         clickable
         v-ripple
         :active="isActive(menu)"
+        active-class="bg-secondary text-white"
         @click="handleNav(menu)"
       >
         <q-item-section avatar>
@@ -91,3 +95,9 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.left-menu-list .q-expansion-item__content {
+  background: rgba(0, 0, 0, 0.3);
+}
+</style>

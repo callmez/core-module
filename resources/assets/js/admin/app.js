@@ -2,6 +2,7 @@ import Vue from "vue";
 import "./boot/global";
 import "./boot/http";
 import "./boot/plugins";
+import "./boot/mixin";
 import "./boot/component";
 import store from "./store";
 import "./boot/quasar";

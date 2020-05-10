@@ -1,24 +1,25 @@
-import { merge } from "lodash";
+import { merge, cloneDeep } from "lodash";
 import { mapStore } from "../utils/store";
 
 export default merge(
   {
     namespaced: true,
-    state: { tree: null, tabs: null, activeTab: null },
+    state: { tree: null, tabs: null, activeTabId: null },
     mutations: {
       setTabs(state, tabs) {
         state.tabs = tabs;
       },
       setActiveTab(state, tab) {
-        state.activeTab = tab;
+        state.activeTabId = tab.id;
       },
     },
     getters: {
       tabs(state) {
         return state.tabs || [];
       },
-      activeTab(state) {
-        return state.activeTab || {};
+      activeTab(state, getters) {
+        const tab = getters.tabs.find((tab) => tab.id == state.activeTabId);
+        return tab || getters.tabs[0] || {};
       },
     },
     actions: {
@@ -27,6 +28,13 @@ export default merge(
           commit("setTabs", [...getters.tabs, tab]);
         }
         commit("setActiveTab", tab);
+      },
+      async removeTab({ getters, commit }, tab) {
+        const tabs = cloneDeep(getters.tabs);
+        const index = tabs.length == 1 ? -1 : tabs.indexOf(tab);
+        tabs.splice(index, 1);
+
+        commit("setTabs", tabs);
       },
     },
   },
