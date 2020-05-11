@@ -14,7 +14,17 @@
 </head>
 <body class="layui-layout-body">
 <div id="LAY_app">
-    <layout-main></layout-main>
+    <layout-main>
+        <template v-slot:toolbar-right>
+            <q-btn-dropdown stretch flat label="{{ $logged_in_user->username }}">
+                <q-list>
+                    <q-item clickable v-ripple>
+                        <q-item-section lay-event="logout">退出</q-item-section>
+                    </q-item>
+                </q-list>
+            </q-btn-dropdown>
+        </template>
+    </layout-main>
 </div>
     {{--<div id="LAY_app">--}}
         {{--<div class="layui-layout layui-layout-admin">--}}
@@ -167,7 +177,7 @@
     {!! script(mix('js/vendor.js')) !!}
     {!! script(mix('js/admin.js')) !!}
     <script>
-        layui.use(['util'], function() {
+        layui.use(['layer', 'util'], function() {
             var $ = layui.$;
             var util = layui.util;
             var events = {

@@ -8,6 +8,12 @@ const G = merge(
       media: {
         upload: "/api/admin/v1/media/upload",
       },
+      auth: {
+        logout: "/admin/auth/logout",
+      },
+      menu: {
+        tree: "/api/admin/v1/menu/tree",
+      },
     },
   },
   window.G || {}

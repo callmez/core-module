@@ -1,5 +1,6 @@
 import { merge, cloneDeep } from "lodash";
 import { mapStore } from "../utils/store";
+import G from "../boot/global";
 
 export default merge(
   {
@@ -39,7 +40,7 @@ export default merge(
     },
   },
   mapStore("tree", {
-    url: "/api/admin/v1/menu/tree",
+    url: G.url.menu.tree,
 
     getter: false,
     loadingKey: "menu.tree",
