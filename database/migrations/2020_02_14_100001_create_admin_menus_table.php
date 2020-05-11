@@ -19,7 +19,7 @@ class CreateAdminMenusTable extends Migration
             $table->string('title')->comment('标题');
             $table->string('icon')->nullable()->comment('图标');
             $table->string('url')->comment('URL地址');
-            $table->unsignedTinyInteger('is_show')->nullable()->default(0)->comment('是否显示');
+            $table->boolean('status')->default(0)->comment('状态 0=未启用 1=已启用');
             $table->unsignedSmallInteger('sort')->nullable()->default(0)->comment('排序');
 
             $table->dateTime('created_at')->nullable();

@@ -5,9 +5,6 @@ import Vue from "vue";
 import axios from "axios";
 import moment from "moment";
 
-import app from "./app";
-import MediaMangerDialog from "./components/Media/ManagerDialog";
-
 window.G = G;
 window._ = _;
 window.Vue = Vue;
@@ -17,11 +14,11 @@ window.moment = moment;
 window.$http = $http;
 
 const headers = {
-  "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
+  "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
 };
 $http.defaults.headers.common = {
   ...headers,
-  ...$http.defaults.headers.common
+  ...$http.defaults.headers.common,
 };
 
 /**
@@ -48,26 +45,16 @@ $http.defaults.headers.common = {
 // 初始化设置
 layui
   .config({
-    base: "/js/layuiadmin/" // 静态资源所在路径
+    base: "/vendor/layui/", // 静态资源所在路径
   })
-  .extend({
-    // layui-admin 组件
-    index: "lib/index"
-  })
+  .extend({})
   .use(["jquery"], function() {
     const $ = layui.$;
-    const $q = (window.$q = Vue.prototype.$q);
 
     // iframe 下隐藏
     if (top == window) {
       $("[lay-iframe-hide]").show();
     }
-
-    // $q.dialog({
-    //   component: MediaMangerDialog,
-
-    //   parent: app // 成为该Vue节点的子元素
-    // });
 
     // ajax 基础设定
     $.ajaxSetup({
@@ -93,9 +80,9 @@ layui
 
           layer.msg(msg, {
             offset: "15px",
-            time: 2000
+            time: 2000,
           });
         }
-      }
+      },
     });
   });
