@@ -77,7 +77,7 @@ class UserInvitationService
         $i = 1;
         $max = $options['max'] ?? 10;
         while (true) {
-            $token = is_callable($tokenCallback) ? $tokenCallback() : ShortUuid::uuid1();
+            $token = is_callable($tokenCallback) ? $tokenCallback() : Str::random(6);
             $invitation = $this->getByToken($token, ['exception' => false]);
 
             if ( ! $invitation) {
