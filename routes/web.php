@@ -2,7 +2,7 @@
 
 use Modules\Core\Http\Controllers\LanguageController;
 
-Route::get('captcha/{config?}', 'CaptchaController@captcha')->name('captcha');
+Route::get('captcha/{config?}', 'CaptchaController@captcha')->name('frontend.captcha');
 /*
  * Global Routes
  * Routes that are used between both frontend and admin.

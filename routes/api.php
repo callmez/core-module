@@ -11,7 +11,7 @@
 |
 */
 
-Route::get('captcha/{config?}', 'CaptchaController@captchaApi')->name('captcha');
+Route::get('captcha/{config?}', 'CaptchaController@captchaApi')->name('frontend.api.captcha');
 
 /*
  * Frontend Routes
