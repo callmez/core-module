@@ -11,7 +11,9 @@ use Illuminate\Validation\ValidationException;
 use Modules\Core\Events\Frontend\UserInvited;
 use Modules\Core\Exceptions\ModelSaveException;
 use Modules\Core\Models\Frontend\UserInvitation;
+use Modules\Core\Models\Frontend\UserInvitationTree;
 use Modules\Core\Services\Traits\HasQuery;
+use PascalDeVink\ShortUuid\ShortUuid;
 use UnexpectedValueException;
 
 class UserInvitationService
@@ -75,7 +77,7 @@ class UserInvitationService
         $i = 1;
         $max = $options['max'] ?? 10;
         while (true) {
-            $token = is_callable($tokenCallback) ? $tokenCallback() : Str::random(6);
+            $token = is_callable($tokenCallback) ? $tokenCallback() : ShortUuid::uuid1();
             $invitation = $this->getByToken($token, ['exception' => false]);
 
             if ( ! $invitation) {
@@ -157,7 +159,46 @@ class UserInvitationService
 
         return $userService->all(function ($query) use ($data) {
             $query->whereIn('id', $data);
-        }, $options['allOptions'] ?? [])->keyBy('id');
+        }, $options['allOptions'] ?? []);
+    }
+
+    /**
+     * 获取用户下级邀请用户
+     * 因为下级用户获取有性能压力 所以只能通过level来获取指定邀请代数数据
+     * 建议: 如果数据太多 可以通过$options['allOptions']['paginate'] = 1 来分页获取
+     *
+     * @param $user
+     * @param array $options
+     *
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator|\Illuminate\Database\Eloquent\Collection
+     */
+    public function getInviteesByUser($user, array $options = [])
+    {
+        $user = with_user($user);
+
+        $level = intval($options['level'] ?? 1); // 默认获取下一代
+
+        if ($level <= 0) { // 0 也代表获取1代
+            $level = 1;
+        }
+        // TODO 全部查询性能问题?  增加代数缓存?
+        $invitationTrees = UserInvitationTree::whereJsonContains('data', $user->id)->get();
+
+        $data = [];
+        foreach($invitationTrees as $tree) {
+            $treeData = $tree->data;
+            $index = array_search($user->id, $treeData) + $level;
+            if (array_key_exists($index, $treeData)) {
+                $data[] = $treeData[$index];
+            }
+        }
+
+        /** @var UserService $userService */
+        $userService = resolve(UserService::class);
+
+        return $userService->all(function ($query) use ($data) {
+            $query->whereIn('id', $data);
+        }, $options['allOptions'] ?? []);
     }
 
 
