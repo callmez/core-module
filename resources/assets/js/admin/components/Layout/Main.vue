@@ -11,6 +11,11 @@
           round
           icon="refresh"
         />
+        <slot name="toolbar-left"></slot>
+
+        <q-space />
+
+        <slot name="toolbar-right"></slot>
       </q-toolbar>
 
       <page-tab
