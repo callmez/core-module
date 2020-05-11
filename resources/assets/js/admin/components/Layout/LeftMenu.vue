@@ -15,7 +15,7 @@
             :icon="subMenu.icon"
             :label="subMenu.title"
             default-opened
-            :header-inset-level="0.5"
+            :header-inset-level="0.3"
           >
             <q-item
               v-for="grandSubMenu in subMenu.children"
@@ -41,7 +41,7 @@
             :active="isActive(subMenu)"
             active-class="bg-secondary text-white"
             @click="handleNav(subMenu)"
-            style="padding-left: 44px"
+            style="padding-left: 32.8px"
           >
             <q-item-section avatar>
               <q-icon :name="subMenu.icon" />
