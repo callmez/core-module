@@ -35,7 +35,7 @@ class UserRegisterService
             /** @var UserInvitationService $invitationService */
             $invitationService = resolve(UserInvitationService::class);
             $invitationService->inviteUser($data['invite_code'] ?? null, $user, array_merge([
-                'invitation' => config('core::system.register.invitation', 0)
+                'invitation' => config('core::system.register.invitation', 1)
             ], $options['inviteOptions'] ?? []));
 
             return $user;

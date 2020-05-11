@@ -3,4 +3,5 @@
 return [
     'name' => 'Core',
 
+    ]
 ];

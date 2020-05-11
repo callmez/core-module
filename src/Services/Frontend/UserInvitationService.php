@@ -54,7 +54,7 @@ class UserInvitationService
      */
     public function getByToken($token, array $options = [])
     {
-        $available = $options['available'] ?? true;
+        $available = $options['available'] ?? false;
 
         $invitation = $this->one(['token' => $token], array_merge([
             'orderBy' => 'created_at',
@@ -112,7 +112,7 @@ class UserInvitationService
     {
         return $this->create([
             'user_id' => with_user_id($user),
-            'token' => $token,
+            'token' => $token ?:$this->generateUniqueToken(),
             'expired_at' => $expiredAt
         ], $options);
     }
@@ -194,7 +194,7 @@ class UserInvitationService
     {
         $usedUser = with_user($usedUser);
 
-        $invitation = $this->getByToken($token);
+        $invitation = $this->getByToken($token, ['available' => true]);
 
         $invitation->setUsed($usedUser);
 
@@ -217,7 +217,7 @@ class UserInvitationService
     {
         $usedUser = with_user($usedUser);
 
-        $invitation = $this->getByToken($token);
+        $invitation = $this->getByToken($token, ['available' => true]);
 
         $usedInvitation = $invitation->replicate();
         $usedInvitation->setUsed($usedUser);
