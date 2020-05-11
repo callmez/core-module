@@ -112,7 +112,7 @@ class UserInvitationService
     {
         return $this->create([
             'user_id' => with_user_id($user),
-            'token' => $token ?:$this->generateUniqueToken(),
+            'token' => $token === null ? $this->generateUniqueToken() : $token,
             'expired_at' => $expiredAt
         ], $options);
     }
