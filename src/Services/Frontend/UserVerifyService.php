@@ -91,9 +91,9 @@ class UserVerifyService
     /**
      * @param User $user
      */
-    protected function checkResetEmailAttempts(User $user)
+    protected function checkResetEmailAttempts($user)
     {
-        $key = $user->id . '|reset_email';
+        $key = with_user_id($user). '|reset_email';
         $maxAttempts = config('core::system.reset.email.maxAttempts', 3);
         $decaySeconds = config('core::system.reset.email.decaySeconds', 600);
         if ($this->hasTooManyAttempts($key, $maxAttempts)) {
@@ -174,9 +174,9 @@ class UserVerifyService
     /**
      * @param User $user
      */
-    protected function checkResetMobileAttempts(User $user)
+    protected function checkResetMobileAttempts($user)
     {
-        $key = $user->id . '|reset_mobile';
+        $key = with_user_id($user) . '|reset_mobile';
         $maxAttempts = config('core::system.reset.mobile.maxAttempts', 3);
         $decaySeconds = config('core::system.reset.mobile.decaySeconds', 600);
         if ($this->hasTooManyAttempts($key, $maxAttempts)) {
@@ -258,9 +258,9 @@ class UserVerifyService
      * @param User $user
      * @throws ValidationException
      */
-    protected function checkResetPasswordAttempts(User $user)
+    protected function checkResetPasswordAttempts($user)
     {
-        $key = $user->id . '|reset_password';
+        $key = with_user_id($user) . '|reset_password';
         $maxAttempts = config('core::system.change.password.maxAttempts', 30);
         $decaySeconds = config('core::system.change.password.decaySeconds', 600);
         if ($this->hasTooManyAttempts($key, $maxAttempts)) {
