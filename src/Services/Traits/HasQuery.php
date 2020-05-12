@@ -26,16 +26,22 @@ trait HasQuery
     /**
      * @return Builder
      */
-    public function query(): Builder
+    public function query(array $options = []): Builder
     {
-        return $this->model->newQuery();
+        $query = $this->model->newQuery();
+
+        if (empty($query)) {
+            return $query;
+        }
+
+        return $this->withQueryOptions($query, $options);
     }
 
     /**
      * @param $query
      * @param array $options
      */
-    protected function withQueryOptions(Builder $query, array $options)
+    protected function withQueryOptions(Builder $query, array $options): Builder
     {
         if ($where = $options['where'] ?? false) {
             $query->where($where);
@@ -64,7 +70,7 @@ trait HasQuery
      */
     public function one($where = null, array $options = [])
     {
-        $model = $this->withQueryOptions($this->query(), array_merge($options, ['where' => $where]))->first();
+        $model = $this->query(array_merge($options, ['where' => $where]))->first();
 
         if (!$model) {
             // @param \Closure|bool $exception 自定义异常设置
@@ -90,7 +96,7 @@ trait HasQuery
             return $this->paginate($where, $options);
         }
 
-        return $this->withQueryOptions($this->query(), array_merge($options, ['where' => $where]))->get();
+        return $this->query(array_merge($options, ['where' => $where]))->get();
     }
 
     /**
@@ -101,7 +107,7 @@ trait HasQuery
      */
     public function count($where = null, array $options = [])
     {
-        return $this->withQueryOptions($this->query(), array_merge($options, ['where' => $where]))->count();
+        return $this->query(array_merge($options, ['where' => $where]))->count();
     }
 
     /**
@@ -112,7 +118,7 @@ trait HasQuery
      */
     public function has($where = null, array $options = [])
     {
-        return $this->withQueryOptions($this->query(), array_merge($options, ['where' => $where]))->exists();
+        return $this->query(array_merge($options, ['where' => $where]))->exists();
     }
 
     /**
@@ -124,7 +130,7 @@ trait HasQuery
      */
     public function min($column, $where = null, array $options = [])
     {
-        return $this->withQueryOptions($this->query(), array_merge($options, ['where' => $where]))->min($column);
+        return $this->query(array_merge($options, ['where' => $where]))->min($column);
     }
 
     /**
@@ -136,7 +142,7 @@ trait HasQuery
      */
     public function max($column, $where = null, array $options = [])
     {
-        return $this->withQueryOptions($this->query(), array_merge($options, ['where' => $where]))->max($column);
+        return $this->query(array_merge($options, ['where' => $where]))->max($column);
     }
 
     /**
@@ -148,7 +154,7 @@ trait HasQuery
      */
     public function sum($column, $where = null, array $options = [])
     {
-        return $this->withQueryOptions($this->query(), array_merge($options, ['where' => $where]))->sum($column);
+        return $this->query(array_merge($options, ['where' => $where]))->sum($column);
     }
 
     /**
@@ -160,7 +166,7 @@ trait HasQuery
      */
     public function avg($column, $where = null, array $options = [])
     {
-        return $this->withQueryOptions($this->query(), array_merge($options, ['where' => $where]))->avg($column);
+        return $this->query(array_merge($options, ['where' => $where]))->avg($column);
     }
 
     /**
@@ -183,9 +189,8 @@ trait HasQuery
             $limit = $maxLimit;
         }
 
-        $query = $this->withQueryOptions($this->query(), array_merge($options, ['where' => $where]));
-
-        return $query->paginate($limit, $columns, $pageName, $page);
+        return $this->query(array_merge($options, ['where' => $where]))
+                    ->paginate($limit, $columns, $pageName, $page);
     }
 
     /**
