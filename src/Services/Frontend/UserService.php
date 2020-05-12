@@ -93,9 +93,9 @@ class UserService
      * @return bool
      * @throws UserPasswordCheckException
      */
-    public function checkPassword($userId, $payPassword, array $options = [])
+    public function checkPassword($user, $payPassword, array $options = [])
     {
-        $user = with_user($userId);
+        $user = with_user($user);
 
         if ( ! $user || ! $user->checkPassword($payPassword)) {
             if ($options['exception'] ?? true) {
@@ -116,9 +116,9 @@ class UserService
      * @return bool
      * @throws UserPayPasswordCheckException
      */
-    public function checkPayPassword($userId, $payPassword, array $options = [])
+    public function checkPayPassword($user, $payPassword, array $options = [])
     {
-        $user = with_user($userId);
+        $user = with_user($user);
 
         if ( ! $user || ! $user->checkPayPassword($payPassword)) {
             if ($options['exception'] ?? true) {

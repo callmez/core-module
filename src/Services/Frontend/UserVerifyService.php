@@ -69,11 +69,11 @@ class UserVerifyService
      */
     public function createByUser($user, $key, $type, $token = null, $expiredAt = null, array $options = [])
     {
-        $user = with_user($user);
+        $userId = with_user_id($user);
 
         /** @var UserVerify $verify */
         $verify = $this->create([
-            'user_id'    => $user->id,
+            'user_id'    => $userId,
             'key'        => $key,
             'type'       => $type,
             'token'      => $token ?: $this->generateUniqueToken($key),
@@ -89,11 +89,12 @@ class UserVerifyService
     }
 
     /**
-     * @param User $user
+     * @param int|User $user
      */
-    protected function checkResetEmailAttempts(User $user)
+    protected function checkResetEmailAttempts($user)
     {
-        $key = $user->id . '|reset_email';
+        $userId = with_user($user);
+        $key = $userId . '|reset_email';
         $maxAttempts = config('core::system.reset.email.maxAttempts', 3);
         $decaySeconds = config('core::system.reset.email.decaySeconds', 600);
         if ($this->hasTooManyAttempts($key, $maxAttempts)) {
