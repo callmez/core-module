@@ -38,4 +38,10 @@ class UserInvitation extends Model
         'used_at',
         'expired_at',
     ];
+
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+        'deletd_at'
+    ];
 }

@@ -23,6 +23,7 @@ class UserInvitationService
         getById as queryGetById;
         create as queryCreate;
     }
+
     /**
      * @var UserInvitation
      */
@@ -44,8 +45,8 @@ class UserInvitationService
     public function createWithUser($user, $token = null, $expiredAt = null, array $options = [])
     {
         return $this->create([
-            'user_id'    => with_user_id($user),
-            'token'      => $token,
+            'user_id' => with_user_id($user),
+            'token' => $token,
             'expired_at' => $expiredAt,
         ], $options);
     }
@@ -59,9 +60,9 @@ class UserInvitationService
     public function create(array $data, array $options = [])
     {
         return $this->queryCreate(array_merge($data, [
-            'token'      => $data['token'] ?: $this->generateUniqueToken(),
+            'token' => $data['token'] ?: $this->generateUniqueToken(),
             'expired_at' => $data['expired_at'] ?: Carbon::now()->addSeconds(config('core::user.invitation.expires',
-                600)),
+                86400 * 7)),
         ]), $options);
     }
 
@@ -80,7 +81,7 @@ class UserInvitationService
             $token = is_callable($tokenCallback) ? $tokenCallback() : Str::random(6);
             $invitation = $this->getByToken($token, ['exception' => false]);
 
-            if ( ! $invitation) {
+            if (!$invitation) {
                 return $token;
             } elseif ($i > $max) {
                 throw new UnexpectedValueException('Max generate user invitation token times.');
@@ -185,7 +186,7 @@ class UserInvitationService
         $invitationTrees = UserInvitationTree::whereJsonContains('data', $user->id)->get();
 
         $data = [];
-        foreach($invitationTrees as $tree) {
+        foreach ($invitationTrees as $tree) {
             $treeData = $tree->data;
             $index = array_search($user->id, $treeData) + $level;
             if (array_key_exists($index, $treeData)) {
@@ -241,7 +242,7 @@ class UserInvitationService
 
         $invitation->setUsed($usedUser);
 
-        if ( ! $invitation->save()) {
+        if (!$invitation->save()) {
             throw ModelSaveException::withModel($invitation);
         }
 
@@ -265,7 +266,7 @@ class UserInvitationService
         $usedInvitation = $invitation->replicate();
         $usedInvitation->setUsed($usedUser);
 
-        if ( ! $usedInvitation->save()) {
+        if (!$usedInvitation->save()) {
             throw ModelSaveException::withModel($usedInvitation);
         }
 
@@ -274,4 +275,13 @@ class UserInvitationService
         return $usedInvitation;
     }
 
+
+    public function getUserInvitationList(User $user, $options = [])
+    {
+        return $this->paginate([
+            'user_id' => $user->id
+        ], array_merge([
+            'orderBy' => ['id', 'desc']
+        ], $options));
+    }
 }
