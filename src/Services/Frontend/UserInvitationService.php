@@ -275,10 +275,15 @@ class UserInvitationService
         return $usedInvitation;
     }
 
-
-    public function getUserInvitationList(User $user, $options = [])
+    /**获取用户的邀请码列表
+     * @param $user
+     * @param array $options
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator|\Illuminate\Database\Eloquent\Collection
+     */
+    public function getAllByUser($user, $options = [])
     {
-        return $this->paginate([
+        $user = with_user($user);
+        return $this->all([
             'user_id' => $user->id
         ], array_merge([
             'orderBy' => ['id', 'desc']

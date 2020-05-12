@@ -10,13 +10,14 @@ use Modules\Core\Services\Frontend\UserInvitationService;
 class InvitationController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     * @return Response
+     * @param Request $request
+     * @param UserInvitationService $userInvitationService
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator|\Illuminate\Database\Eloquent\Collection
      */
     public function index(Request $request, UserInvitationService $userInvitationService)
     {
         $user = $request->user();
-        return $userInvitationService->getUserInvitationList($user);
+        return $userInvitationService->getAllByUser($user, ['paginate' => true]);
     }
 
 
