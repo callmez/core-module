@@ -3,22 +3,16 @@
 namespace Modules\Core\Services\Frontend;
 
 use Modules\Core\Models\Frontend\Label;
-use Modules\Core\Services\Traits\HasQuery;
+use Modules\Core\Services\Traits\HasListConfig;
 
 class LabelService
 {
-    use HasQuery {
-        one as queryOne;
-    }
-    /**
-     * @var Label
-     */
-    protected $model;
+    use HasListConfig;
 
-    public function __construct(Label $model)
-    {
-        $this->model = $model;
-    }
+    /**
+     * @var string
+     */
+    protected $key = 'core::label';
     
     /**
      * @param $label
@@ -27,13 +21,8 @@ class LabelService
      */
     public function getLabelInfoByLabel($label, array $options = [])
     {
+        $label = $this->getByKey($label, $options);
 
-        $label = $this->one(['label' => $label], array_merge([
-            'orderBy' => 'created_at',
-        ], $options));
-
-        return $label;
+        return $label['value'] ?? null;
     }
-
-
 }
