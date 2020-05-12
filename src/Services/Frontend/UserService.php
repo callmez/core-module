@@ -35,7 +35,7 @@ class UserService
     public function one($where = null, array $options = [])
     {
         return $this->queryOne($where, array_merge([
-            'exception' => function() {
+            'exception' => function () {
                 return new UserNotFoundException(trans('用户数据未找到'));
             }
         ], $options));
@@ -78,9 +78,9 @@ class UserService
         }
 
         return [
-            'isEmail'  => $isEmail,
+            'isEmail' => $isEmail,
             'isMobile' => $isMobile,
-            'user'     => $this->one($where, $options),
+            'user' => $this->one($where, $options),
         ];
     }
 
@@ -97,7 +97,7 @@ class UserService
     {
         $user = with_user($userId);
 
-        if ( ! $user || ! $user->checkPassword($payPassword)) {
+        if (!$user || !$user->checkPassword($payPassword)) {
             if ($options['exception'] ?? true) {
                 throw new UserPasswordCheckException('User auth failed.');
             }
@@ -120,7 +120,7 @@ class UserService
     {
         $user = with_user($userId);
 
-        if ( ! $user || ! $user->checkPayPassword($payPassword)) {
+        if (!$user || !$user->checkPayPassword($payPassword)) {
             if ($options['exception'] ?? true) {
                 throw new UserPayPasswordCheckException();
             }
@@ -129,5 +129,16 @@ class UserService
         }
 
         return true;
+    }
+
+    /**
+     * @param $user
+     * @param $password
+     * @param array $options
+     */
+    public function changePassword($user, $password, array $options = [])
+    {
+        $user = with_user($user);
+
     }
 }
