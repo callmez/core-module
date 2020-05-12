@@ -175,9 +175,9 @@ class UserVerifyService
     /**
      * @param User $user
      */
-    protected function checkResetMobileAttempts(User $user)
+    protected function checkResetMobileAttempts($user)
     {
-        $key = $user->id . '|reset_mobile';
+        $key = with_user_id($user) . '|reset_mobile';
         $maxAttempts = config('core::system.reset.mobile.maxAttempts', 3);
         $decaySeconds = config('core::system.reset.mobile.decaySeconds', 600);
         if ($this->hasTooManyAttempts($key, $maxAttempts)) {

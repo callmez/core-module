@@ -187,7 +187,7 @@ class UserInvitationService
 
         $data = [];
         foreach ($invitationTrees as $tree) {
-            $treeData = $tree->data;
+            $treeData = array_merge($tree->data, [$tree->user_id]); // 加上tree的邀请用户算一代
             $index = array_search($userId, $treeData) + $level;
             if (array_key_exists($index, $treeData)) {
                 $data[] = $treeData[$index];
