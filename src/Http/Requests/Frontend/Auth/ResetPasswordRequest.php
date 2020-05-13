@@ -29,7 +29,6 @@ class ResetPasswordRequest extends FormRequest
     public function rules()
     {
         return [
-            'mobile' => ['required', 'regex:/^1[3456789]\d{9}$/'],
             'sms' => ['required'],
             'password' => ['string', 'min:8', 'max:30', 'confirmed']
         ];

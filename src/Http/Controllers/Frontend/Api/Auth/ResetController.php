@@ -2,10 +2,12 @@
 
 namespace Modules\Core\Http\Controllers\Frontend\Api\Auth;
 
+use Illuminate\Http\Request;
 use Modules\Core\Exceptions\Frontend\Auth\UserPasswordCheckException;
 use Modules\Core\Exceptions\Frontend\Auth\UserVerifyNotFundException;
 use Modules\Core\Http\Controllers\Controller;
 use Modules\Core\Http\Requests\Frontend\Auth\ChangePasswordRequest;
+use Modules\Core\Http\Requests\Frontend\Auth\ChangePayPasswordRequest;
 use Modules\Core\Http\Requests\Frontend\Auth\ResetEmailRequest;
 use Modules\Core\Http\Requests\Frontend\Auth\ResetMobileRequest;
 use Modules\Core\Http\Requests\Frontend\Auth\ResetPasswordRequest;
@@ -40,14 +42,16 @@ class ResetController extends Controller
         return [];
     }
 
+
     /**
      * @param ResetMobileRequest $request
      * @param UserVerifyService $userVerifyService
      * @return array
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function requestResetPasswordSms(ResetMobileRequest $request, UserVerifyService $userVerifyService)
     {
-        $userVerifyService->resetPasswordNotification($request->user(), $request->mobile);
+        $userVerifyService->resetPasswordNotification($request->mobile);
 
         return [];
     }
@@ -62,13 +66,19 @@ class ResetController extends Controller
     {
         $userVerifyService->resetPassword($request->sms, $request->mobile, $request->password, [
             'exception' => function () {
-                return new UserVerifyNotFundException('Sms verify failed');
+                return new UserVerifyNotFundException('Sms Code verify failed');
             }
         ]);
 
         return [];
     }
 
+    /**
+     * @param ChangePasswordRequest $request
+     * @param UserVerifyService $userVerifyService
+     * @return array
+     * @throws \Modules\Core\Exceptions\ModelSaveException
+     */
     public function changePassword(ChangePasswordRequest $request, UserVerifyService $userVerifyService)
     {
         $userVerifyService->changePassword($request->user(), $request->old_password, $request->password, [
@@ -79,8 +89,45 @@ class ResetController extends Controller
         return [];
     }
 
-    public function resetPayPassword(ResetPayPasswordRequest $request)
-    {
 
+    /**
+     * @param Request $request
+     * @param UserVerifyService $userVerifyService
+     * @return array
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function requestResetPayPasswordSms(Request $request, UserVerifyService $userVerifyService)
+    {
+        $user = $request->user();
+        $userVerifyService->resetPayPasswordNotification($user, $user->mobile);
+
+        return [];
+    }
+
+    /**
+     * @param ResetPayPasswordRequest $request
+     * @param UserVerifyService $userVerifyService
+     * @return array
+     * @throws \Modules\Core\Exceptions\ModelSaveException
+     */
+    public function resetPayPassword(ResetPayPasswordRequest $request, UserVerifyService $userVerifyService)
+    {
+        $userVerifyService->resetPayPassword($request->user(), $request->sms, $request->password, [
+            'exception' => function () {
+                return new UserVerifyNotFundException('Sms Code verify failed');
+            }
+        ]);
+        return [];
+    }
+
+
+    public function changePayPassword(ChangePayPasswordRequest $request, UserVerifyService $userVerifyService)
+    {
+        $userVerifyService->changePayPassword($request->user(), $request->old_password, $request->password, [
+            'exception' => function () {
+                return new UserPasswordCheckException('Old password error.');
+            }
+        ]);
+        return [];
     }
 }
