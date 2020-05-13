@@ -1,17 +1,26 @@
 <?php
 
-
 namespace Modules\Core\Services\Frontend;
 
-
-use Modules\Core\Services\Traits\HasListConfig;
+use Modules\Core\Models\ListData;
+use Modules\Core\Services\Traits\HasListData;
 
 class ConfigService
 {
-    use HasListConfig;
+    use HasListData;
+
+    /**
+     * @var ListData
+     */
+    protected $model;
 
     /**
      * @var string
      */
-    protected $key = 'core::config';
+    protected $type = 'config';
+
+    public function __construct(ListData $model)
+    {
+        $this->model = $model;
+    }
 }
