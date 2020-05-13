@@ -4,6 +4,7 @@ namespace Modules\Core\Services\Frontend;
 
 use Cache;
 use App\Models\User;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Modules\Core\Services\Traits\HasQuery;
 use Modules\Core\Exceptions\Frontend\Auth\UserNotFoundException;
 use Modules\Core\Exceptions\Frontend\Auth\UserPasswordCheckException;
@@ -35,7 +36,7 @@ class UserService
     public function one($where = null, array $options = [])
     {
         return $this->queryOne($where, array_merge([
-            'exception' => function() {
+            'exception' => function () {
                 return new UserNotFoundException(trans('用户数据未找到'));
             }
         ], $options));
@@ -78,28 +79,32 @@ class UserService
         }
 
         return [
-            'isEmail'  => $isEmail,
+            'isEmail' => $isEmail,
             'isMobile' => $isMobile,
-            'user'     => $this->one($where, $options),
+            'user' => $this->one($where, $options),
         ];
     }
 
 
     /**
      * @param $userId
-     * @param $payPassword
+     * @param $password
      * @param array $options
      *
      * @return bool
      * @throws UserPasswordCheckException
      */
-    public function checkPassword($user, $payPassword, array $options = [])
-    {
-        $user = with_user($user);
 
-        if ( ! $user || ! $user->checkPassword($payPassword)) {
-            if ($options['exception'] ?? true) {
-                throw new UserPasswordCheckException('User auth failed.');
+    public function checkPassword($userId, $password, array $options = [])
+    {
+        $user = with_user($userId);
+
+        if (!$user || !$user->checkPassword($password)) {
+
+            $exception = $options['exception'] ?? true;
+
+            if ($exception) {
+                throw is_callable($exception) ? $exception() : new UserPasswordCheckException('User auth failed.');;
             }
 
             return false;
@@ -116,11 +121,11 @@ class UserService
      * @return bool
      * @throws UserPayPasswordCheckException
      */
-    public function checkPayPassword($user, $payPassword, array $options = [])
+    public function checkPayPassword($userId, $payPassword, array $options = [])
     {
-        $user = with_user($user);
+        $user = with_user($userId);
 
-        if ( ! $user || ! $user->checkPayPassword($payPassword)) {
+        if (!$user || !$user->checkPayPassword($payPassword)) {
             if ($options['exception'] ?? true) {
                 throw new UserPayPasswordCheckException();
             }
@@ -130,4 +135,6 @@ class UserService
 
         return true;
     }
+
+
 }
