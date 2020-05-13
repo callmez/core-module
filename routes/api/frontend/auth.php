@@ -21,6 +21,8 @@ Route::group([
 
         Route::post('v1/login', [LoginController::class, 'loginByGuessString'])->name('login'); // 密码登录
         Route::post('v1/register', [RegisterController::class, 'register'])->name('register'); // 用户注册
+        Route::get('v1/reset/password', [ResetController::class, 'requestResetPasswordSms'])->name('reset.password.sms'); //获取重置密码短信
+        Route::post('v1/reset/password', [ResetController::class, 'resetPassword'])->name('reset.password.post'); //重置密码
 
 //
 //        // Socialite Routes
@@ -43,7 +45,7 @@ Route::group([
 //        Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.reset');
     });
     Route::group(['middleware' => ['auth:sanctum']], function () {
-        Route::post('logout', [LogoutController::class, 'logout'])->name('logout'); // 退出登录
+        Route::post('v1/logout', [LogoutController::class, 'logout'])->name('logout'); // 退出登录
     });
 
     Route::group([
@@ -52,17 +54,15 @@ Route::group([
     ], function () {
         Route::get('info', [UserController::class, 'info'])->name('info'); // 登录会员信息
 
+        Route::get('reset/pay_password', [ResetController::class, 'requestResetPayPasswordSms'])->name('reset.pay_password.sms'); //获取重置支付密码短信
+        Route::post('reset/pay_password', [ResetController::class, 'resetPayPassword'])->name('reset.pay_password.post'); // 重置支付密码
+        Route::post('change/pay_password', [ResetController::class, 'changePayPassword'])->name('change.pay_password');//修改支付密码
 
         Route::post('reset/email', [ResetController::class, 'requestResetEmail'])->name('reset.email'); // 验证邮箱请求
         Route::post('reset/mobile', [ResetController::class, 'requestResetMobile'])->name('reset.mobile'); // 修改手机号请求
         Route::post('verify/email', [VerifyController::class, 'verifyEmail'])->name('verify.email'); // 修改邮箱
         Route::post('verify/mobile', [VerifyController::class, 'verifyMobile'])->name('verify.mobile'); // 修改手机号
-        Route::get('reset/password', [ResetController::class, 'requestResetPasswordSms'])->name('reset.password.sms'); //
-        Route::post('reset/password', [ResetController::class, 'resetPassword'])->name('reset.password.post'); //
-        Route::post('reset/pay_password', [ResetController::class, 'resetPayPassword'])->name('reset.pay_password.post'); // 修改手机号
-
-        //Route::get('password/mobile', [ChangePasswordController::class, 'requestChangePasswordSms'])->name('change.password');
-        Route::post('change/password', [ResetController::class, 'changePassword'])->name('change.password');
+        Route::post('change/password', [ResetController::class, 'changePassword'])->name('change.password');//修改登录密码
 //        // These routes can not be hit if the password is expired
 //        Route::group(['middleware' => 'password_expires'], function () {
 //            // Change Password Routes
