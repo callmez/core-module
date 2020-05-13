@@ -64,7 +64,7 @@ class ResetController extends Controller
      */
     public function resetPassword(ResetPasswordRequest $request, UserVerifyService $userVerifyService)
     {
-        $userVerifyService->resetPassword($request->sms, $request->mobile, $request->password, [
+        $userVerifyService->resetPassword($request->code, $request->mobile, $request->password, [
             'exception' => function () {
                 return new UserVerifyNotFundException('Sms Code verify failed');
             }
@@ -112,7 +112,7 @@ class ResetController extends Controller
      */
     public function resetPayPassword(ResetPayPasswordRequest $request, UserVerifyService $userVerifyService)
     {
-        $userVerifyService->resetPayPassword($request->user(), $request->sms, $request->password, [
+        $userVerifyService->resetPayPassword($request->user(), $request->code, $request->password, [
             'exception' => function () {
                 return new UserVerifyNotFundException('Sms Code verify failed');
             }

@@ -82,13 +82,13 @@ trait UserMethod
     }
 
     /**
-     * @param $email
+     * @param $mobile
      *
      * @return $this
      */
-    public function setMobileVerified($email)
+    public function setMobileVerified($mobile)
     {
-        $this->mobile = $email;
+        $this->mobile = $mobile;
         $this->mobile_verified_at = Carbon::now();
 
         return $this;

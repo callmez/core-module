@@ -23,7 +23,8 @@ class UserVerifyService
     const TYPE_RESET_PAY_PASSWORD = 'reset_pay_pasword';
     const TYPE_CHANGE_PAY_PASSWORD = 'change_pay_password';
     const TYPE_RESET_EMAIL = 'reset_email';
-    const TYPE_RESET_MOBILE = 'mobile';
+    const TYPE_RESET_MOBILE = 'reset_mobile';
+    const TYPE_SET_MOBILE = 'set_mobile';
     use HasQuery,
         HasThrottles;
 
@@ -96,21 +97,6 @@ class UserVerifyService
         return $verify;
     }
 
-    /**
-     * @param User $user
-     */
-    protected function checkResetEmailAttempts($user)
-    {
-        $key = with_user_id($user) . '|' . self::TYPE_RESET_EMAIL;
-        $maxAttempts = config('core::system.reset.email.maxAttempts', 3);
-        $decaySeconds = config('core::system.reset.email.decaySeconds', 600);
-        if ($this->hasTooManyAttempts($key, $maxAttempts)) {
-            throw ValidationException::withMessages([
-                'email' => [trans('请求次数太多')],
-            ])->status(Response::HTTP_TOO_MANY_REQUESTS);
-        }
-        $this->incrementAttempts($key, $decaySeconds);
-    }
 
     /**
      * @param $user
@@ -138,13 +124,13 @@ class UserVerifyService
             ]);
         }
 
-        $this->checkResetEmailAttempts($user);
+        $this->checkAttempts($user, self::TYPE_SET_MOBILE, self::TYPE_RESET_MOBILE);
 
         /** @var UserVerifyService $userVerifyService */
         $userVerifyService = resolve(UserVerifyService::class);
 
         /** @var UserVerify $verify */
-        $verify = $userVerifyService->createByUser($user, $email, 'reset_mobile', null, $options['createOptions'] ?? []);
+        $verify = $userVerifyService->createByUser($user, $email, self::TYPE_RESET_MOBILE, null, $options['createOptions'] ?? []);
         $verify->makeOtherExpired();
 
         $user->sendEmailVerifyNotification($verify);
@@ -182,21 +168,6 @@ class UserVerifyService
         return true;
     }
 
-    /**
-     * @param User $user
-     */
-    protected function checkResetMobileAttempts($user)
-    {
-        $key = with_user_id($user) . '|' . self::TYPE_RESET_MOBILE;
-        $maxAttempts = config('core::system.reset.mobile.maxAttempts', 3);
-        $decaySeconds = config('core::system.reset.mobile.decaySeconds', 600);
-        if ($this->hasTooManyAttempts($key, $maxAttempts)) {
-            throw ValidationException::withMessages([
-                'mobile' => [trans('请求次数太多')],
-            ])->status(Response::HTTP_TOO_MANY_REQUESTS);
-        }
-        $this->incrementAttempts($key, $decaySeconds);
-    }
 
     /**
      * @param $user
@@ -224,12 +195,12 @@ class UserVerifyService
             ]);
         }
 
-        $this->checkResetMobileAttempts($user);
+        $this->checkAttempts($user, self::TYPE_RESET_MOBILE);
 
         $token = $this->generateUniqueToken($mobile, function () {
             return random_int(100000, 999999);
         });
-        $verify = $this->createByUser($user, $mobile, 'reset_mobile', $token, $options['createOptions'] ?? []);
+        $verify = $this->createByUser($user, $mobile, self::TYPE_RESET_MOBILE, $token, $options['createOptions'] ?? []);
         $verify->makeOtherExpired();
 
         $user->sendMobileVerifyNotification($verify);
@@ -268,23 +239,6 @@ class UserVerifyService
         return true;
     }
 
-    /**
-     * @param User $user
-     * @throws ValidationException
-     */
-    protected function checkResetPasswordAttempts($user)
-    {
-        $key = with_user_id($user) . '|' . self::TYPE_RESET_PASSWORD;
-        $maxAttempts = config('core::system.change.password.maxAttempts', 3);
-        $decaySeconds = config('core::system.change.password.decaySeconds', 600);
-        if ($this->hasTooManyAttempts($key, $maxAttempts)) {
-            throw ValidationException::withMessages([
-                'mobile' => [trans('请求次数太多')],
-            ])->status(Response::HTTP_TOO_MANY_REQUESTS);
-        }
-        $this->incrementAttempts($key, $decaySeconds);
-    }
-
 
     /**
      * @param null $mobile
@@ -299,13 +253,13 @@ class UserVerifyService
         /** @var User $user */
         $user = $userService->one(['mobile' => $mobile]);
 
-        if ($user->isMobileVerified()) {
-            ValidationException::withMessages([
-                'mobile' => 'Current mobile is already verified.'
+        if (!$user->isMobileVerified()) {
+            throw ValidationException::withMessages([
+                'mobile' => 'Mobile not verified.'
             ]);
         }
 
-        $this->checkResetPasswordAttempts($user);
+        $this->checkAttempts($user, self::TYPE_RESET_PASSWORD);
 
         $token = $this->generateUniqueToken($mobile, function () {
             return random_int(100000, 999999);
@@ -363,23 +317,6 @@ class UserVerifyService
 
 
     /**
-     * @param User $user
-     * @throws ValidationException
-     */
-    protected function checkResetPayPasswordAttempts($user)
-    {
-        $key = with_user_id($user) . '|' . self::TYPE_RESET_PAY_PASSWORD;
-        $maxAttempts = config('core::system.change.password.maxAttempts', 3);
-        $decaySeconds = config('core::system.change.password.decaySeconds', 600);
-        if ($this->hasTooManyAttempts($key, $maxAttempts)) {
-            throw ValidationException::withMessages([
-                'mobile' => [trans('请求次数太多')],
-            ])->status(Response::HTTP_TOO_MANY_REQUESTS);
-        }
-        $this->incrementAttempts($key, $decaySeconds);
-    }
-
-    /**
      * @param $user
      * @param null $mobile
      * @param array $options
@@ -392,20 +329,19 @@ class UserVerifyService
         $user = with_user($user);
 
         $mobile = $mobile ?: $user->mobile;
-
         if (empty($mobile)) {
-            ValidationException::withMessages([
+            throw ValidationException::withMessages([
                 'mobile' => 'Mobile must be set.'
             ]);
         }
 
-        if ($mobile == $user->mobile && $user->isMobileVerified()) {
-            ValidationException::withMessages([
-                'mobile' => 'Current mobile is already verified.'
+        if (!$user->isMobileVerified()) {
+            throw ValidationException::withMessages([
+                'mobile' => 'Mobile not verified.'
             ]);
         }
 
-        $this->checkResetPayPasswordAttempts($user);
+        $this->checkAttempts($user, self::TYPE_RESET_PAY_PASSWORD);
 
         $token = $this->generateUniqueToken($mobile, function () {
             return random_int(100000, 999999);
@@ -418,6 +354,14 @@ class UserVerifyService
         return true;
     }
 
+    /**
+     * @param $user
+     * @param $token
+     * @param $password
+     * @param array $options
+     * @return bool
+     * @throws ModelSaveException
+     */
     public function resetPayPassword($user, $token, $password, array $options = [])
     {
         $userVerify = $this->one([
@@ -438,6 +382,15 @@ class UserVerifyService
     }
 
 
+    /**
+     * @param $user
+     * @param $oldPassword
+     * @param $newPassword
+     * @param array $options
+     * @return bool
+     * @throws ModelSaveException
+     * @throws \Modules\Core\Exceptions\Frontend\Auth\UserPayPasswordCheckException
+     */
     public function changePayPassword($user, $oldPassword, $newPassword, array $options = [])
     {
         $user = with_user($user);
@@ -448,5 +401,80 @@ class UserVerifyService
             throw ModelSaveException::withModel($user);
         }
         return true;
+    }
+
+
+    /**
+     * @param $user
+     * @param null $mobile
+     * @param array $options
+     * @return bool
+     * @throws ValidationException
+     */
+    public function setMobileNotification($user, $mobile = null, array $options = [])
+    {
+        /** @var User $user */
+        $user = with_user($user);
+        if ($user->isMobileVerified()) {
+            ValidationException::withMessages([
+                'mobile' => 'User mobile is already verified.'
+            ]);
+        }
+
+        $this->checkAttempts($user, self::TYPE_SET_MOBILE);
+        $token = $this->generateUniqueToken($mobile, function () {
+            return random_int(100000, 999999);
+        });
+        $verify = $this->createByUser($user, $mobile, self::TYPE_SET_MOBILE, $token, $options['createOptions'] ?? []);
+        $verify->makeOtherExpired();
+
+        $user->sendMobileVerifyNotification($verify);
+
+        return true;
+    }
+
+    public function setMobile($user, $mobile, $token, array $options = [])
+    {
+        $userVerify = $this->one([
+            'key' => $mobile,
+            'token' => $token,
+            'user_id' => $user->id,
+            'type' => self::TYPE_SET_MOBILE
+        ], array_merge([
+            'with' => ['user'],
+        ], $options));
+
+        $user->setMobileVerified($mobile);
+        if (!$user->save()) {
+            throw ModelSaveException::withModel($userVerify->user);
+        }
+        $userVerify->setExpired()->save();
+
+        return true;
+    }
+
+
+    protected function checkAttempts($user, $type)
+    {
+        $key = with_user_id($user) . '|' . $type;
+        $maxAttempts = $this->getMaxAttempts($type);
+        $decaySeconds = $this->getDecaySecond($type);
+        if ($this->hasTooManyAttempts($key, $maxAttempts)) {
+            throw ValidationException::withMessages([
+                'mobile' => [trans('请求次数太多')],
+            ])->status(Response::HTTP_TOO_MANY_REQUESTS);
+        }
+        $this->incrementAttempts($key, $decaySeconds);
+    }
+
+
+    protected function getMaxAttempts($type)
+    {
+        return config('core:system.' . $type . '.maxAttempts', 3);
+    }
+
+    protected function getDecaySecond($type)
+    {
+        return config('core:system.' . $type . '.decaySeconds', 600);
     }
 }
