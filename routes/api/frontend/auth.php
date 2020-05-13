@@ -62,7 +62,7 @@ Route::group([
         Route::post('reset/pay_password', [ResetController::class, 'resetPayPassword'])->name('reset.pay_password.post'); // 修改手机号
 
         //Route::get('password/mobile', [ChangePasswordController::class, 'requestChangePasswordSms'])->name('change.password');
-        //Route::post('change/password', [ChangePasswordController::class, 'changePassword'])->name('change.password');
+        Route::post('change/password', [ResetController::class, 'changePassword'])->name('change.password');
 //        // These routes can not be hit if the password is expired
 //        Route::group(['middleware' => 'password_expires'], function () {
 //            // Change Password Routes

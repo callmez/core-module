@@ -4,6 +4,7 @@ namespace Modules\Core\Services\Frontend;
 
 use Cache;
 use App\Models\User;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Modules\Core\Services\Traits\HasQuery;
 use Modules\Core\Exceptions\Frontend\Auth\UserNotFoundException;
 use Modules\Core\Exceptions\Frontend\Auth\UserPasswordCheckException;
@@ -87,19 +88,23 @@ class UserService
 
     /**
      * @param $userId
-     * @param $payPassword
+     * @param $password
      * @param array $options
      *
      * @return bool
      * @throws UserPasswordCheckException
      */
-    public function checkPassword($userId, $payPassword, array $options = [])
+
+    public function checkPassword($userId, $password, array $options = [])
     {
         $user = with_user($userId);
 
-        if (!$user || !$user->checkPassword($payPassword)) {
-            if ($options['exception'] ?? true) {
-                throw new UserPasswordCheckException('User auth failed.');
+        if (!$user || !$user->checkPassword($password)) {
+
+            $exception = $options['exception'] ?? true;
+
+            if ($exception) {
+                throw is_callable($exception) ? $exception() : new UserPasswordCheckException('User auth failed.');;
             }
 
             return false;
@@ -131,14 +136,5 @@ class UserService
         return true;
     }
 
-    /**
-     * @param $user
-     * @param $password
-     * @param array $options
-     */
-    public function changePassword($user, $password, array $options = [])
-    {
-        $user = with_user($user);
 
-    }
 }

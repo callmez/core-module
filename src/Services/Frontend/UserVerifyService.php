@@ -3,6 +3,7 @@
 namespace Modules\Core\Services\Frontend;
 
 use Closure;
+use Modules\Core\Exceptions\Frontend\Auth\UserVerifyNotFundException;
 use UnexpectedValueException;
 use Carbon\Carbon;
 use App\Models\User;
@@ -93,7 +94,7 @@ class UserVerifyService
      */
     protected function checkResetEmailAttempts($user)
     {
-        $key = with_user_id($user). '|reset_email';
+        $key = with_user_id($user) . '|reset_email';
         $maxAttempts = config('core::system.reset.email.maxAttempts', 3);
         $decaySeconds = config('core::system.reset.email.decaySeconds', 600);
         if ($this->hasTooManyAttempts($key, $maxAttempts)) {
@@ -158,7 +159,10 @@ class UserVerifyService
             'token' => $token,
             'type' => 'reset_email'
         ], [
-            'with' => ['user']
+            'with' => ['user'],
+            'exception' => function () {
+                return new UserVerifyNotFundException('Code verify fail');
+            }
         ]);
 
         $userVerify->user->email = $email;
@@ -241,7 +245,10 @@ class UserVerifyService
             'token' => $token,
             'type' => 'reset_mobile'
         ], [
-            'with' => ['user']
+            'with' => ['user'],
+            'exception' => function () {
+                return new UserVerifyNotFundException('Sms verify fail');
+            }
         ]);
 
         $userVerify->user->mobile = $mobile;
@@ -323,9 +330,9 @@ class UserVerifyService
             'key' => $mobile,
             'token' => $token,
             'type' => 'reset_password'
-        ], [
-            'with' => ['user']
-        ]);
+        ], array_merge([
+            'with' => ['user'],
+        ],$options));
 
         $userVerify->user->password = $password;
         if (!$userVerify->user->save()) {
@@ -334,5 +341,24 @@ class UserVerifyService
         $userVerify->setExpired()->save();
 
         return true;
+    }
+
+
+    /**
+     * @param $user
+     * @param $data
+     * @param array $options
+     */
+    public function changePassword($user, $oldPassword, $newPassword, array $options = [])
+    {
+        $user = with_user($user);
+        $userService = resolve(UserService::class);
+        $userService->checkPassword($user, $oldPassword, $options);
+        $user->password = $newPassword;
+        if (!$user->save()) {
+            throw ModelSaveException::withModel($user);
+        }
+        return true;
+
     }
 }
