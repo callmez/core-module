@@ -14,8 +14,6 @@ class UserMobileVerify extends Notification implements ShouldQueue
 {
     use Queueable;
 
-
-
     /**
      * @var UserVerify
      */

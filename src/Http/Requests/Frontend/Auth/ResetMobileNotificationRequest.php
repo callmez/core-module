@@ -4,7 +4,7 @@ namespace Modules\Core\Http\Requests\Frontend\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ResetEmailRequest extends FormRequest
+class ResetMobileNotificationRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,7 @@ class ResetEmailRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => ['email'],
+            'mobile' => ['required','regex:/^1[3456789]\d{9}$/'],
         ];
     }
 

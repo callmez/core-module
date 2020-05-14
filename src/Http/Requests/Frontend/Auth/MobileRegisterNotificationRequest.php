@@ -2,9 +2,10 @@
 
 namespace Modules\Core\Http\Requests\Frontend\Auth;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ResetMobileRequest extends FormRequest
+class MobileRegisterNotificationRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +25,11 @@ class ResetMobileRequest extends FormRequest
     public function rules()
     {
         return [
-            'mobile' => ['required','regex:/^1[3456789]\d{9}$/'],
+            'mobile' => [
+                'nullable',
+                Rule::phone()->country(config('core::register.mobile.countries', ['CN'])),
+                Rule::unique(User::table())
+            ],
         ];
     }
 
