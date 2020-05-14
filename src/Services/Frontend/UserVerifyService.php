@@ -3,8 +3,6 @@
 namespace Modules\Core\Services\Frontend;
 
 use Closure;
-use Modules\Core\Exceptions\Frontend\Auth\UserVerifyNotFundException;
-use phpDocumentor\Reflection\Types\Self_;
 use UnexpectedValueException;
 use Carbon\Carbon;
 use App\Models\User;
@@ -15,15 +13,17 @@ use Modules\Core\Exceptions\ModelSaveException;
 use Modules\Core\Models\Frontend\UserVerify;
 use Modules\Core\Services\Traits\HasQuery;
 use Modules\Core\Services\Traits\HasThrottles;
+use Modules\Core\Exceptions\Frontend\Auth\UserVerifyNotFundException;
 
 class UserVerifyService
 {
     const TYPE_RESET_PASSWORD = 'reset_password';
     const TYPE_CHANGE_PASSWORD = 'change_password';
-    const TYPE_RESET_PAY_PASSWORD = 'reset_pay_pasword';
+    const TYPE_RESET_PAY_PASSWORD = 'reset_pay_password';
     const TYPE_CHANGE_PAY_PASSWORD = 'change_pay_password';
     const TYPE_RESET_EMAIL = 'reset_email';
     const TYPE_RESET_MOBILE = 'mobile';
+
     use HasQuery,
         HasThrottles;
 
@@ -58,7 +58,7 @@ class UserVerifyService
             if (!$verify) {
                 return $token;
             } elseif ($i > $max) {
-                throw new UnexpectedValueException('Max generate user verify token times.');
+                throw new UnexpectedValueException(trans('超出唯一Token生成次数(:max)', ['max' => $max]));
             }
 
             $i++;
@@ -77,11 +77,11 @@ class UserVerifyService
      */
     public function createByUser($user, $key, $type, $token = null, $expiredAt = null, array $options = [])
     {
-        $user = with_user($user);
+        $userId = with_user_id($user);
 
         /** @var UserVerify $verify */
         $verify = $this->create([
-            'user_id' => $user->id,
+            'user_id' => $userId,
             'key' => $key,
             'type' => $type,
             'token' => $token ?: $this->generateUniqueToken($key),
@@ -128,13 +128,13 @@ class UserVerifyService
 
         if (empty($email)) {
             ValidationException::withMessages([
-                'mobile' => 'Email must be set.'
+                'mobile' => trans('邮箱必填')
             ]);
         }
 
-        if ($email == $user->$email && $user->isEmailVerified()) {
+        if ($email == $user->$email && $user->isEmailVerified(false)) {
             ValidationException::withMessages([
-                'mobile' => 'Current email is already verified.'
+                'mobile' => trans('当前邮箱已经验证过')
             ]);
         }
 
@@ -168,7 +168,7 @@ class UserVerifyService
         ], [
             'with' => ['user'],
             'exception' => function () {
-                return new UserVerifyNotFundException('Code verify fail');
+                return new UserVerifyNotFundException(trans('验证失败'));
             }
         ]);
 
@@ -214,13 +214,13 @@ class UserVerifyService
 
         if (empty($mobile)) {
             ValidationException::withMessages([
-                'mobile' => 'Mobile must be set.'
+                'mobile' => trans('手机号必填')
             ]);
         }
 
-        if ($mobile == $user->mobile && $user->isMobileVerified()) {
+        if ($mobile == $user->mobile && $user->isMobileVerified(false)) {
             ValidationException::withMessages([
-                'mobile' => 'Current mobile is already verified.'
+                'mobile' => trans('当前手机号已经验证过')
             ]);
         }
 
@@ -254,7 +254,7 @@ class UserVerifyService
         ], [
             'with' => ['user'],
             'exception' => function () {
-                return new UserVerifyNotFundException('Sms verify fail');
+                return new UserVerifyNotFundException(trans('验证码验证失败'));
             }
         ]);
 
@@ -299,11 +299,7 @@ class UserVerifyService
         /** @var User $user */
         $user = $userService->one(['mobile' => $mobile]);
 
-        if ($user->isMobileVerified()) {
-            ValidationException::withMessages([
-                'mobile' => 'Current mobile is already verified.'
-            ]);
-        }
+        $user->isMobileVerified();
 
         $this->checkResetPasswordAttempts($user);
 
@@ -318,7 +314,9 @@ class UserVerifyService
         return true;
     }
 
-    /**通过短信重置密码
+    /**
+     * 通过短信重置密码
+     *
      * @param $token
      * @param $mobile
      * @param array $options
@@ -333,6 +331,9 @@ class UserVerifyService
             'type' => self::TYPE_RESET_PASSWORD
         ], array_merge([
             'with' => ['user'],
+            'exception' => function () {
+                return new UserVerifyNotFundException(trans('验证码错误'));
+            }
         ], $options));
 
         $userVerify->user->password = $password;
@@ -349,7 +350,7 @@ class UserVerifyService
      * @param $data
      * @param array $options
      */
-    public function changePassword($user, $oldPassword, $newPassword, array $options = [])
+    public function resetPasswordByOldPassword($user, $oldPassword, $newPassword, array $options = [])
     {
         $user = with_user($user);
         $userService = resolve(UserService::class);
@@ -395,15 +396,11 @@ class UserVerifyService
 
         if (empty($mobile)) {
             ValidationException::withMessages([
-                'mobile' => 'Mobile must be set.'
+                'mobile' => trans('手机号必填')
             ]);
         }
 
-        if ($mobile == $user->mobile && $user->isMobileVerified()) {
-            ValidationException::withMessages([
-                'mobile' => 'Current mobile is already verified.'
-            ]);
-        }
+        $user->isMobileVerified();
 
         $this->checkResetPayPasswordAttempts($user);
 
@@ -426,6 +423,9 @@ class UserVerifyService
             'type' => self::TYPE_RESET_PAY_PASSWORD
         ], array_merge([
             'with' => ['user'],
+            'exception' => function () {
+                return new UserVerifyNotFundException(trans('验证码错误'));
+            }
         ], $options));
 
         $userVerify->user->pay_password = $password;
@@ -438,7 +438,7 @@ class UserVerifyService
     }
 
 
-    public function changePayPassword($user, $oldPassword, $newPassword, array $options = [])
+    public function resetPayPasswordByOldPassword($user, $oldPassword, $newPassword, array $options = [])
     {
         $user = with_user($user);
         $userService = resolve(UserService::class);
