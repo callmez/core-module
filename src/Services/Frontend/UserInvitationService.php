@@ -175,7 +175,7 @@ class UserInvitationService
      */
     public function getInviteesByUser($user, array $options = [])
     {
-        $user = with_user($user);
+        $userId = with_user_id($user);
 
         $level = intval($options['level'] ?? 1); // 默认获取下一代
 
@@ -183,12 +183,12 @@ class UserInvitationService
             $level = 1;
         }
         // TODO 全部查询性能问题?  增加代数缓存?
-        $invitationTrees = UserInvitationTree::whereJsonContains('data', $user->id)->get();
+        $invitationTrees = UserInvitationTree::whereJsonContains('data', $userId)->get();
 
         $data = [];
         foreach ($invitationTrees as $tree) {
-            $treeData = $tree->data;
-            $index = array_search($user->id, $treeData) + $level;
+            $treeData = array_merge($tree->data, [$tree->user_id]); // 加上tree的邀请用户算一代
+            $index = array_search($userId, $treeData) + $level;
             if (array_key_exists($index, $treeData)) {
                 $data[] = $treeData[$index];
             }
@@ -276,15 +276,14 @@ class UserInvitationService
     }
 
     /**获取用户的邀请码列表
-     * @param $user
+     * @param $userId
      * @param array $options
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator|\Illuminate\Database\Eloquent\Collection
      */
     public function getAllByUser($user, $options = [])
     {
-        $user = with_user($user);
         return $this->all([
-            'user_id' => $user->id
+            'user_id' => with_user_id($user)
         ], array_merge([
             'orderBy' => ['id', 'desc']
         ], $options));

@@ -23,9 +23,14 @@ trait UserInvitationMethod
         return !empty($this->used_user_id);
     }
 
-    public function setUsed(User $user)
+    /**
+     * @param int|User $user
+     *
+     * @return $this
+     */
+    public function setUsed($user)
     {
-        $this->used_user_id = $user->id;
+        $this->used_user_id = with_user_id($user);
         $this->used_at = Carbon::now();
 
         return $this;
