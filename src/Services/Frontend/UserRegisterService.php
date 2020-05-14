@@ -3,9 +3,11 @@
 namespace Modules\Core\Services\Frontend;
 
 use App\Models\User;
-use Illuminate\Notifications\AnonymousNotifiable;
 use Illuminate\Support\Facades\DB;
+
+use Illuminate\Notifications\AnonymousNotifiable;
 use Modules\Core\Events\Frontend\UserRegistered;
+use Modules\Core\Notifications\Frontend\UserMobileVerify;
 use Modules\Core\Services\Traits\HasThrottles;
 use PascalDeVink\ShortUuid\ShortUuid;
 
@@ -60,7 +62,7 @@ class UserRegisterService
      *
      * @return bool
      */
-    public function registerMobileNotification($mobile, array $options = [])
+    public function registerByMobileNotification($mobile, array $options = [])
     {
         $this->checkKeyAttempts(
             $mobile . '|' . self::TYPE_MOBILE_REGISTER,
@@ -72,12 +74,11 @@ class UserRegisterService
         $token = $userVerifyService->generateUniqueToken($mobile, function () {
             return random_int(100000, 999999);
         });
-        $verify = $userVerifyService->createWithKey($mobile, 'register_mobile', $token, $options['createOptions'] ?? []);
-        $verify->makeOtherExpired();
+        $verify = $userVerifyService->createWithKey($mobile, static::TYPE_MOBILE_REGISTER, $token, $options['createOptions'] ?? []);
 
         /** @var AnonymousNotifiable $notifiable */
         $notifiable = resolve(AnonymousNotifiable::class);
-        $notifiable->send($verify);
+        $notifiable->notify(new UserMobileVerify($verify));
 
         return true;
     }
@@ -109,7 +110,12 @@ class UserRegisterService
                 'password' => $data['password'],
                 'mobile' => $data['mobile'],
                 'email' => $data['email'] ?? ''
-            ], $options['createOptions'] ?? []);
+            ], array_merge([
+                'beforeSave' => function($model) {
+                    /** @var User $model */
+                    $model->setMobileVerified($model->mobile); // 标记为邮箱已验证
+                }
+            ], $options['createOptions'] ?? []));
 
             /** @var UserInvitationService $invitationService */
             $invitationService = resolve(UserInvitationService::class);

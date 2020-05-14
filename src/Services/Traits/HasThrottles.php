@@ -2,7 +2,9 @@
 
 namespace Modules\Core\Services\Traits;
 
+use Illuminate\Http\Response;
 use Illuminate\Cache\RateLimiter;
+use Illuminate\Validation\ValidationException;
 
 trait HasThrottles
 {
@@ -55,6 +57,7 @@ trait HasThrottles
                 'email' => [trans('请求次数太多')],
             ])->status(Response::HTTP_TOO_MANY_REQUESTS);
         }
+
         $this->incrementAttempts($key, $decaySeconds);
     }
 

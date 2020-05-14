@@ -233,6 +233,12 @@ trait HasQuery
     {
         $model = $this->query()->newModelInstance($data);
 
+        $beforeSave = $options['beforeSave'] ?? false;
+
+        if (is_callable($beforeSave)) {
+            $beforeSave($model);
+        }
+
         if (!$model->save()) {
             // @param \Closure|bool $exception 自定义异常设置
             $exception = $options['exception'] ?? true;
