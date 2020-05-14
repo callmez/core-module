@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use LangleyFoxall\LaravelNISTPasswordRules\PasswordRules;
 use Modules\Core\Rules\Auth\UnusedPassword;
 
-class ChangePasswordRequest extends FormRequest
+class ResetPayPasswordByOldPasswordRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,8 +26,8 @@ class ChangePasswordRequest extends FormRequest
     public function rules()
     {
         return [
-            'old_password' => ['required', 'string', 'min:8', 'max:30'],
-            'password' => ['required', 'string', 'min:8', 'max:30', 'confirmed']
+            'old_password' => ['required', 'regex:/^\d{6}$/'],
+            'password' => ['required', 'regex:/^\d{6}$/', 'confirmed']
         ];
     }
 }

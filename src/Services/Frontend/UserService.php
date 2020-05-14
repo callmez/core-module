@@ -4,11 +4,9 @@ namespace Modules\Core\Services\Frontend;
 
 use Cache;
 use App\Models\User;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Validation\ValidationException;
 use Modules\Core\Services\Traits\HasQuery;
 use Modules\Core\Exceptions\Frontend\Auth\UserNotFoundException;
-use Modules\Core\Exceptions\Frontend\Auth\UserPasswordCheckException;
-use Modules\Core\Exceptions\Frontend\Auth\UserPayPasswordCheckException;
 
 class UserService
 {
@@ -87,24 +85,25 @@ class UserService
 
 
     /**
-     * @param $userId
+     * @param $user
      * @param $password
      * @param array $options
      *
      * @return bool
-     * @throws UserPasswordCheckException
      */
 
-    public function checkPassword($userId, $password, array $options = [])
+    public function checkPassword($user, $password, array $options = [])
     {
-        $user = with_user($userId);
+        $user = with_user($user);
 
         if (!$user || !$user->checkPassword($password)) {
 
             $exception = $options['exception'] ?? true;
 
             if ($exception) {
-                throw is_callable($exception) ? $exception() : new UserPasswordCheckException('User auth failed.');;
+                throw is_callable($exception) ? $exception() : ValidationException::withMessages([
+                    trans('密码验证失败')
+                ]);
             }
 
             return false;
@@ -119,15 +118,18 @@ class UserService
      * @param array $options
      *
      * @return bool
-     * @throws UserPayPasswordCheckException
      */
-    public function checkPayPassword($userId, $payPassword, array $options = [])
+    public function checkPayPassword($user, $payPassword, array $options = [])
     {
-        $user = with_user($userId);
+        $user = with_user($user);
 
         if (!$user || !$user->checkPayPassword($payPassword)) {
-            if ($options['exception'] ?? true) {
-                throw new UserPayPasswordCheckException();
+            $exception = $options['exception'] ?? true;
+
+            if ($exception) {
+                throw is_callable($exception) ? $exception() : ValidationException::withMessages([
+                    trans('支付密码验证失败')
+                ]);;
             }
 
             return false;

@@ -50,32 +50,26 @@ Route::group([
 
     Route::group([
         'prefix' => 'v1/auth',
+    ], function () {
+        Route::get('reset/password', [ResetController::class, 'requestResetPassword'])->name('reset.password.request'); // 获取重置支付密码短信
+        Route::post('reset/password', [ResetController::class, 'resetPassword'])->name('reset.password'); // 重置登录密码(旧密码)
+    });
+
+    Route::group([
+        'prefix' => 'v1/auth',
         'middleware' => ['auth:sanctum'],
     ], function () {
         Route::get('info', [UserController::class, 'info'])->name('info'); // 登录会员信息
 
-        Route::get('reset/pay_password', [ResetController::class, 'requestResetPayPasswordSms'])->name('reset.pay_password.sms'); //获取重置支付密码短信
-        Route::post('reset/pay_password', [ResetController::class, 'resetPayPassword'])->name('reset.pay_password.post'); // 重置支付密码
-        Route::post('change/pay_password', [ResetController::class, 'changePayPassword'])->name('change.pay_password');//修改支付密码
-//
-//        Route::get('set/mobile', [VerifyController::class, 'requestSetMobileSms'])->name('set.mobile.sms'); // 获取设置手机号短信
-//        Route::post('set/mobile', [VerifyController::class, 'setMobile'])->name('set.mobile'); // 设置手机号
+        Route::post('reset/password_by_old', [ResetController::class, 'resetPasswordByOldPassword'])->name('reset.password_by_old'); // 修改登录密码(旧密码)
 
+        Route::get('reset/pay_password', [ResetController::class, 'requestResetPayPassword'])->name('reset.pay_password.request'); // 获取重置支付密码短信
+        Route::post('reset/pay_password', [ResetController::class, 'resetPayPassword'])->name('reset.pay_password'); // 重置支付密码(短信验证码)
+        Route::post('reset/pay_password_by_old', [ResetController::class, 'resetPayPasswordByOldPassword'])->name('reset.pay_password_by_old'); // 修改支付密码(旧支付密码)
 
         Route::post('reset/email', [ResetController::class, 'requestResetEmail'])->name('reset.email'); // 验证邮箱请求
         Route::post('reset/mobile', [ResetController::class, 'requestResetMobile'])->name('reset.mobile'); // 修改手机号请求
         Route::post('verify/email', [VerifyController::class, 'verifyEmail'])->name('verify.email'); // 修改邮箱
-        Route::post('verify/mobile', [VerifyController::class, 'verifyMobile'])->name('verify.mobile'); // 设置绑定手机号
-        Route::get('verify/mobile', [VerifyController::class, 'requestSetMobileSms'])->name('verify.mobile'); // 验证绑定手机号短信
-        Route::post('change/password', [ResetController::class, 'changePassword'])->name('change.password');//修改登录密码
-//        // These routes can not be hit if the password is expired
-//        Route::group(['middleware' => 'password_expires'], function () {
-//            // Change Password Routes
-//            Route::patch('password/update', [UpdatePasswordController::class, 'update'])->name('password.update');
-//        });
-//
-//        // Password expired routes
-//        Route::get('password/expired', [PasswordExpiredController::class, 'expired'])->name('password.expired');
-//        Route::patch('password/expired', [PasswordExpiredController::class, 'update'])->name('password.expired.update');
+        Route::post('verify/mobile', [VerifyController::class, 'verifyMobile'])->name('verify.mobile'); // 修改手机号
     });
 });
