@@ -10,13 +10,12 @@ use Modules\Core\Models\Admin\Traits\Scope\AdminMenuScope;
 
 class AdminMenu extends Model
 {
-    const STATUS_ENABLED = 1;
-    const STATUS_DISABLED = 0;
-
     use HasFail,
         HasTableName,
         DynamicRelationship;
 
     use AdminMenuScope;
 
+    const STATUS_ENABLED = 1;
+    const STATUS_DISABLED = 0;
 }
