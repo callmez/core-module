@@ -65,8 +65,8 @@ class ResetController extends Controller
      *
      * @param ResetPasswordRequest $request
      * @param UserResetService $userResetService
-     * @return bool
-     * @throws \Modules\Core\Exceptions\ModelSaveException
+     *
+     * @return array
      */
     public function resetPassword(ResetPasswordRequest $request, UserResetService $userResetService)
     {
@@ -82,7 +82,6 @@ class ResetController extends Controller
      * @param UserResetService $userResetService
      *
      * @return array
-     * @throws \Modules\Core\Exceptions\ModelSaveException
      */
     public function resetPasswordByOldPassword(ResetPasswordByOldPasswordRequest $request, UserResetService $userResetService)
     {
@@ -112,8 +111,8 @@ class ResetController extends Controller
      *
      * @param ResetPayPasswordRequest $request
      * @param UserResetService $userResetService
+     *
      * @return array
-     * @throws \Modules\Core\Exceptions\ModelSaveException
      */
     public function resetPayPassword(ResetPayPasswordRequest $request, UserResetService $userResetService)
     {

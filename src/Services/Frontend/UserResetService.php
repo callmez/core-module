@@ -4,7 +4,6 @@ namespace Modules\Core\Services\Frontend;
 
 use App\Models\User;
 use Illuminate\Validation\ValidationException;
-use Modules\Core\Exceptions\ModelSaveException;
 use Modules\Core\Services\Traits\HasThrottles;
 
 class UserResetService
@@ -81,9 +80,7 @@ class UserResetService
         ], $options));
 
         $userVerify->user->email = $email;
-        if (!$userVerify->user->save()) {
-            throw ModelSaveException::withModel($userVerify->user);
-        }
+        $userVerify->user->saveIfFail();
 
         $userVerify->setExpired()->save();
 
@@ -147,9 +144,7 @@ class UserResetService
         ], $options));
 
         $userVerify->user->mobile = $mobile;
-        if (!$userVerify->user->save()) {
-            throw ModelSaveException::withModel($userVerify->user);
-        }
+        $userVerify->user->saveIfFail();
 
         $userVerify->setExpired()->save();
 
@@ -188,13 +183,12 @@ class UserResetService
     }
 
     /**
-     * 通过短信重置密码
-     *
-     * @param $token
      * @param $mobile
+     * @param $token
+     * @param $password
      * @param array $options
+     *
      * @return bool
-     * @throws ModelSaveException
      */
     public function resetPassword($mobile, $token, $password, array $options = [])
     {
@@ -203,9 +197,8 @@ class UserResetService
         ], $options));
 
         $userVerify->user->password = $password;
-        if (!$userVerify->user->save()) {
-            throw ModelSaveException::withModel($userVerify->user);
-        }
+        $userVerify->user->saveIfFail();
+
         $userVerify->setExpired()->save();
         return true;
     }
@@ -222,9 +215,8 @@ class UserResetService
         $userService = resolve(UserService::class);
         $userService->checkPassword($user, $oldPassword, $options);
         $user->password = $newPassword;
-        if (!$user->save()) {
-            throw ModelSaveException::withModel($user);
-        }
+        $user->saveIfFail();
+
         return true;
     }
 
@@ -273,9 +265,8 @@ class UserResetService
         ], $options));
 
         $userVerify->user->pay_password = $password;
-        if (!$userVerify->user->save()) {
-            throw ModelSaveException::withModel($userVerify->user);
-        }
+        $userVerify->user->saveIfFail();
+
         $userVerify->setExpired()->save();
 
         return true;
@@ -288,9 +279,8 @@ class UserResetService
         $userService = resolve(UserService::class);
         $userService->checkPayPassword($user, $oldPassword, $options);
         $user->pay_password = $newPassword;
-        if (!$user->save()) {
-            throw ModelSaveException::withModel($user);
-        }
+        $user->saveIfFail();
+
         return true;
     }
 }
