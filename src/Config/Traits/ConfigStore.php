@@ -21,9 +21,11 @@ trait ConfigStore
     {
         $path = $this->getSettingsCachedPath();
 
-        if (file_exists($path)) {
-            $this->set(require $path);
+        if (!file_exists($path)) {
+            $this->cacheSettingsToFile();
         }
+
+        $this->set(require $path);
     }
 
     public function getSettingsCachedPath()

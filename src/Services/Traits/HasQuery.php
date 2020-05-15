@@ -37,7 +37,7 @@ trait HasQuery
     {
         $query = $this->model->newQuery();
 
-        if (empty($query)) {
+        if (empty($options)) {
             return $query;
         }
 
