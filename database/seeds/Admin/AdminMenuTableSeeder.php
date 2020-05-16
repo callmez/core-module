@@ -16,14 +16,14 @@ class AdminMenuTableSeeder extends Seeder
     {
         $user = AdminMenu::create([
             'title' => '用户管理',
-            'icon' => 'layui-icon-user',
+            'icon' => 'perm_identity',
             'url' => '',
             'status' => 1,
         ]);
 
         $system = AdminMenu::create([
             'title' => '系统管理',
-            'icon' => 'icon-set',
+            'icon' => 'settings',
             'url' => '',
             'status' => 1,
         ]);
@@ -31,6 +31,7 @@ class AdminMenuTableSeeder extends Seeder
         $role = AdminMenu::create([
             'title' => '角色权限',
             'parent_id' => $system->id,
+            'icon' => 'verified_user',
             'url' => route('admin.auth.roles', [], false),
             'status' => 1,
         ]);
@@ -38,6 +39,7 @@ class AdminMenuTableSeeder extends Seeder
         $module = AdminMenu::create([
             'title' => '模块管理',
             'parent_id' => $system->id,
+            'icon' => 'extension',
             'url' => route('admin.module.modules', [], false),
             'status' => 1,
         ]);
