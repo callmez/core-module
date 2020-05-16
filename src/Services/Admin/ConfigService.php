@@ -20,13 +20,39 @@ class ConfigService
     }
 
 
-    public function update(string $module, string $key, string $value)
+    /**
+     * @param $where
+     * @param array $options
+     * @return array
+     */
+    public function listForAdminEdit($where, $options = [])
     {
-        $config = $this->one([
-            'module' => $module,
-            'key' => $this->key
-        ]);
-        $config->setValue($key, $value);
-        return $config->save();
+        $data = $this->all($where, $options);
+        $configList = [];
+        foreach ($data as $config) {
+            foreach ($config->value as $item) {
+                $configList[] = $item;
+            }
+        }
+        return $configList;
     }
+
+
+    /**
+     * @param array $data
+     * @return bool
+     */
+    public function setConfig(array $data)
+    {
+        $configList = $this->listForAdminEdit(['key' => $this->key]);
+        $keys = array_column($configList, 'key');
+        $values = array_intersect_key($data, array_flip($keys));
+        foreach ($configList as &$config) {
+            $config['value'] = $values[$config['key']];
+        }
+        $model = $this->one(['key' => $this->key]);
+        $model->value = $configList;
+        return $model->save();
+    }
+
 }

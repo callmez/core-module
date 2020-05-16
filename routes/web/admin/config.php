@@ -8,5 +8,6 @@ Route::group([
     'prefix' => 'config',
     'as' => 'config.'
 ], function () {
-    Route::get('/', [ConfigController::class, 'index'])->name('config');
+    Route::get('/', [ConfigController::class, 'index'])->name('index');
+    Route::post('/', [ConfigController::class, 'update'])->name('update');
 });

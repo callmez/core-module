@@ -21,9 +21,5 @@ class ConfigController extends Controller
         return $configService->all(['key' => 'config']);
     }
 
-    public function update(ConfigRequest $request, ConfigService $configService)
-    {
-        $configService->update($request->module,$request->key,$request->value);
-        return [];
-    }
+
 }

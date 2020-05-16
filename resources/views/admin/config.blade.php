@@ -3,105 +3,148 @@
 @section('content')
     <div class="layui-card">
         <div class="layui-card-body">
-            <script type="text/html" id="tool-bar">
-            </script>
-            <table id="config-table" lay-filter="config-table"></table>
+            <form method="post" class="layui-form" action="{{route('admin.config.update')}}">
+                {{csrf_field()}}
+                @foreach($configList as $config)
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">{{$config['title']}}</label>
+                        <div class="layui-input-inline">
+                            @if($config['type'] === 'image')
+                                <div class="layui-upload">
+                                    <button type="button" class="layui-btn" id="{{$config['key']}}_btn">上传{{$config['title']}}</button>
+                                    <div class="layui-upload-list">
+                                        @if($config['value'] ==='')
+                                            <img src="" class="layui-upload-img" id="{{$config['key']}}_image">
+                                        @else
+                                            <img src="{{$config['value']}}" class="layui-upload-img" id="{{$config['key']}}_image">
+                                        @endif
+                                        <p id="{{$config['key']}}_text"></p>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="{{$config['key']}}" value="{{$config['value']}}"
+                                       placeholder="请输入{{$config['title']}}" autocomplete="off" class="layui-input">
+                            @elseif($config['type'] === 'image_list')
+                                <div class="layui-upload">
+                                    <button type="button" class="layui-btn" id="{{$config['key']}}_btn">上传{{$config['title']}}</button>
+                                    <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
+                                        预览图：
+                                        <div class="layui-upload-list" id="{{$config['key']}}_image">
+                                            @foreach($config['value'] as $image)
+                                                <div class="image-preview-box">
+                                                    <img src="{{$image}}" class="layui-upload-img">
+                                                    <input type="hidden" name="{{$config['key']}}[]" value="{{$image}}"/>
+                                                    <button type="button" class="layui-btn layui-btn-danger layui-btn-xs">删除</button>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </blockquote>
+                                </div>
+
+                            @else
+                                <input type="text" name="{{$config['key']}}" value="{{$config['value']}}"
+                                       placeholder="请输入{{$config['title']}}" autocomplete="off" class="layui-input">
+                            @endif
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">{{$config['description']}}</div>
+                    </div>
+                @endforeach
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
-    <div class="" id="add-config-box" style="display:none;">
-        <form class="layui-form" action="">
-            <div class="layui-form-item">
-                <label class="layui-form-label">模块</label>
-                <div class="layui-input-block">
-                    <input type="text" name="module" required  lay-verify="required" placeholder="请输入模块名" autocomplete="off" class="layui-input">
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">Key</label>
-                <div class="layui-input-block">
-                    <input type="text" name="key" required  lay-verify="required" placeholder="请输入Key" autocomplete="off" class="layui-input">
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">Value</label>
-                <div class="layui-input-block">
-                    <input type="text" name="value" required  lay-verify="required" placeholder="请输入Value" autocomplete="off" class="layui-input">
-                </div>
-            </div>
-        </form>
-    </div>
+
 @endsection
 
 @push('after-scripts')
 
     <script>
-        layui.use('table', function () {
-            var table = layui.table;
-            var $ = layui.$;
-            //第一个实例
-            table.render({
-                elem: '#config-table'
-                , url: '{{ route('admin.api.config.index')}}' //数据接口
-                , parseData: function (res) { //res 即为原始返回的数据
-                    let result = {
-                        'code': res.message ? 400 : 0, //解析接口状态
-                        'msg': res.message || '加载失败', //解析提示文本
-                        'count': res.length, //解析数据长度
-                        'data': [] //解析数据列表
-                    }
-                    if (result.code === 0) {
-                        for (let p in res) {
-                            for (let q in res[p].value) {
-                                result.data.push({
-                                    'module': res[p].module,
-                                    'key': q,
-                                    'value': res[p].value[q]
-                                });
+        layui.use('upload', function () {
+            var $ = layui.jquery
+                , upload = layui.upload;
 
+            //普通图片上传
+            @foreach($configList as $config)
+                @if($config['type'] === 'image')
+                    var uploadInst = upload.render({
+                        elem: '#{{$config['key']}}_btn'
+                        , url: '{{route('admin.api.media.upload')}}'
+                        , before: function (obj) {
+                            //预读本地文件示例，不支持ie8
+                            obj.preview(function (index, file, result) {
+                                $('#{{$config['key']}}_image').attr('src', result); //图片链接（base64）
+                            });
+                        }
+                        , done: function (res) {
+                            if (res.message === undefined) {
+                                //上传成功
+                                $("input[name='{{$config['key']}}']").val(res.path);
+                            } else {
+                                layer.msg('上传失败');
                             }
                         }
-                    }
-                    console.log(result);
-                    return result
-                }
-                , page: false //开启分页
-                , cols: [[ //表头
-                    {field: 'module', title: '模块', width: 300, sort: true, fixed: 'left', edit: 'text'},
-                    {field: 'key', title: 'Key', width: 300, sort: true, fixed: 'left', edit: 'text'}
-                    , {field: 'value', title: 'Value', fixed: 'left', edit: 'text'}
+                        , error: function () {
+                        }
+                    });
+                @elseif($config['type'] ==='image_list')
+                    //多图片上传
+                    upload.render({
+                        elem: '#{{$config['key']}}_btn'
+                        ,url: '{{route('admin.api.media.upload')}}'
+                        ,multiple: true
+                        ,done: function(res){
+                            if (res.message === undefined) {
+                                //上传成功
+                                $('#{{$config['key']}}_image').append('<div class="image-preview-box"><img src="'+ res.url +'" class="layui-upload-img"><input type="hidden" name="{{$config['key']}}[]" value="'+res.path+'"/><button type="button" class="layui-btn layui-btn-danger layui-btn-xs">删除</button></div>')
+                                imageBindRemove();
+                            } else {
+                                layer.msg('上传失败');
+                            }
+                        }
+                    });
+                @endif
+            @endforeach
 
-                ]]
-                ,toolbar: 'tool-bar' //开启头部工具栏，并为其绑定左侧模板
-                ,defaultToolbar: [ {
-                    title: '提示' //标题
-                    ,layEvent: 'add_config' //事件名，用于 toolbar 事件中使用
-                    ,icon: 'layui-icon-addition' //图标类名
-                }]
-            });
-
-            table.on('edit(config-table)', function (obj) {
-                $.ajax({
-                    url: '{{route('admin.api.config.update')}}',
-                    type: 'patch',
-                    data: {key: obj.data.key, value: obj.data.value, module: obj.data.module},
-                    success: function (res) {
-                        console.log(res)
-                    }
+            function imageBindRemove()
+            {
+                $(".image-preview-box > .layui-btn").unbind('click').bind('click',function(){
+                    $(this).parent().remove();
                 });
-            });
-
-            table.on('toolbar(config-table)', function(obj){
-                var checkStatus = table.checkStatus(obj.config.id);
-                switch(obj.event){
-                    //自定义头工具栏右侧图标 - 提示
-                    case 'add_config':
-                        $("#add-config-box").show();
-                        break;
-                };
-            });
-
+            }
+            imageBindRemove();
         });
     </script>
 @endpush
+<style>
+    .layui-form-label {
+        box-sizing: initial;
+    }
+
+    .layui-form-item .layui-input-inline {
+        width: 400px !important;
+    }
+
+    .layui-upload-img {
+        width: 100px;
+        height: 100px;
+        margin:10px;
+    }
+    .layui-upload-list{
+        overflow: hidden;
+    }
+    .image-preview-box{
+        float: left;
+        overflow: hidden;
+        text-align: center;
+        display: inline-flex;
+        flex-direction: column;
+    }
+    .image-preview-box .layui-btn{
+        margin: 0px 10px;
+    }
+</style>
 
 

@@ -8,6 +8,17 @@ use Illuminate\Http\Request;
 class ConfigRequest extends FormRequest
 {
 
+
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public function authorize()
+    {
+        return $this->user()->isAdmin();
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -16,8 +27,6 @@ class ConfigRequest extends FormRequest
     public function rules()
     {
         return [
-            'key' => 'required',
-            'module' => 'required'
         ];
     }
 
