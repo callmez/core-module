@@ -1,16 +1,14 @@
 <?php
 
-namespace Modules\Core\Http\Requests\Frontend\Auth;
+namespace Modules\Core\Http\Requests\Admin\Config;
 
-use Modules\Core\Rules\Auth\UnusedPassword;
 use Illuminate\Foundation\Http\FormRequest;
-use LangleyFoxall\LaravelNISTPasswordRules\PasswordRules;
+use Illuminate\Http\Request;
 
-/**
- * Class ResetPasswordRequest.
- */
-class ResetPasswordRequest extends FormRequest
+class ConfigRequest extends FormRequest
 {
+
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -18,7 +16,7 @@ class ResetPasswordRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return $this->user()->isAdmin();
     }
 
     /**
@@ -29,8 +27,7 @@ class ResetPasswordRequest extends FormRequest
     public function rules()
     {
         return [
-            'code' => ['required'],
-            'password' => ['string', 'min:8', 'max:30', 'confirmed']
         ];
     }
+
 }
