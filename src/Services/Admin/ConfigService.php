@@ -4,6 +4,7 @@
 namespace Modules\Core\Services\Admin;
 
 
+use Modules\Core\Config\Repository;
 use Modules\Core\Models\Config;
 use Modules\Core\Services\Traits\HasListConfig;
 use Modules\Core\Services\Traits\HasQuery;
@@ -52,7 +53,8 @@ class ConfigService
         }
         $model = $this->one(['key' => $this->key]);
         $model->value = $configList;
-        return $model->save();
+        $model->save();
+        resolve(Repository::class)->cacheSettingsToFile();
     }
 
 }
