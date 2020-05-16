@@ -55,6 +55,7 @@ class ConfigService
         $model->value = $configList;
         $model->save();
         resolve(Repository::class)->cacheSettingsToFile();
+
     }
 
 }

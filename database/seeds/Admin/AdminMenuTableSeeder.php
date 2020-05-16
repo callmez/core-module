@@ -42,6 +42,14 @@ class AdminMenuTableSeeder extends Seeder
             'status' => 1,
         ]);
 
+
+        $config = AdminMenu::create([
+            'title' => '系统配置',
+            'parent_id' => $system->id,
+            'url' => route('admin.config.index', [], false),
+            'status' => 1,
+        ]);
+
 //        $queue = AdminMenu::create([
 //            'title' => '队列监控',
 //            'parent_id' => $system->id,
